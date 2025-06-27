@@ -1,0 +1,65 @@
+publiccodeYmlVersion: "0.4"
+name: "EDIParse"
+genericName: "REST-API - EDIFACT Message Parser"
+url: "https://github.com/h2nguyen/EDIParse"
+landingURL: "https://github.com/h2nguyen/EDIParse"
+softwareVersion: "1.2.0"
+releaseDate: "2025-07-02"
+logo: docs/assets/logo.png
+platforms:
+  - linux
+  - windows
+  - mac
+usedBy:
+  - Energy sector companies
+categories:    # Categories that describe your software
+  - edi-edifact-message-processing
+  - online-parser
+  - api-middleware
+  - data-analytics
+developmentStatus: development
+softwareType: "standalone/web"
+
+localisation:
+  localisationReady: true
+  availableLanguages:
+    - en
+
+description:
+  en:
+    shortDescription: >
+      A fast and extensible REST API service that parses EDIFACT message text inputs or files and returns structured JSON output.
+    longDescription: >
+      EDIParse is a lightweight and extensible REST API service that parses EDIFACT message text inputs or files
+      (e.g. APERAK, MSCONS, etc.) and returns structured JSON output. Built with Python and Pydantic, the service offers type-safe,
+      high-performance parsing for energy and logistics data exchange formats.
+      
+      The service follows a clean hexagonal architecture pattern with a clear separation between the application and domain layers.
+      It is designed to be easily extensible to support additional EDIFACT message types beyond the currently supported MSCONS and APERAK formats.
+      
+      EDIParse is containerized and can be deployed using Docker, making it easy to integrate into existing microservices and ETL pipelines.
+      The API is implemented using FastAPI, providing automatic documentation and validation.
+      
+      The parser uses a factory pattern to handle different segment types and message types, with each segment type having its own converter
+      and handler. This modular design allows for easy extension and maintenance of the codebase.
+      
+      The project includes comprehensive documentation, including architecture documentation, parsing process documentation for different
+      message types, and API generation documentation.
+    features:
+    - Currently, supports EDIFACT message types of MSCONS, APERAK
+    - Converts raw EDIFACT into clean, nested JSON structures
+    - Fully extensible architecture using clean and hexagonal architecture concept
+    - FastAPI-powered REST endpoints
+    - Pydantic v2 for modern data validation and serialization
+    - Easy integration into existing microservices and ETL pipelines
+    screenshots:
+      - docs/assets/application-via-swagger-ui.png
+
+legal:
+  license: Apache-2.0
+
+maintenance:
+  type: "community"
+  contacts:
+    - name: "Viet Hai Nguyen"
+      email: "me@viethainguyen.de"

@@ -1,0 +1,229 @@
+openapi: 3.1.1
+
+info:
+  title: EDIParse - A Rest-API for parsing EDIFACT-specific messages
+  version: 1.2.0
+  description: |
+    This [OpenAPI-Spezifikation](https://www.openapis.org/) describes the Rest-API of EDIParse,
+    a REST API application that parses EDIFACT-specific messages in the energy sector (in DE/AT/CH).
+  license:
+    name: Apache License, Version 2.0
+    url: https://github.com/h2nguyen/EDIParse/blob/main/LICENSE
+
+servers:
+  - url: http://0.0.0.0:{port}
+    description: Local server
+    variables:
+      port:
+        enum:
+          - "8000"
+        default: "8000"
+
+paths:
+  /parse-string:
+    post:
+      summary: Trigger the process to parse the provided EDIFACT messages (e.g., APERAK, MSCONS, etc.) given in string format.
+      tags:
+        - EDIFACT Parser
+      operationId: parse_string_input
+      parameters:
+        - name: limit_mode
+          in: query
+          description: If set to true, enables a parsing limit for the maximum number of lines. By default, the limit is 2442 lines.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      requestBody:
+        $ref: '#/components/requestBodies/EdifactMessageStringToParse'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The parsed EDIFACT message
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /parse-file:
+    post:
+      summary: Trigger the process to parse the provided EDIFACT messages (e.g., APERAK, MSCONS, etc.) from a file.
+      tags:
+        - EDIFACT Parser
+      operationId: parse_file
+      parameters:
+        - name: limit_mode
+          in: query
+          description: If set to true, enables a parsing limit for the maximum number of lines. By default, the limit is 2442 lines.
+          required: true
+          schema:
+            type: boolean
+            default: true
+      requestBody:
+        $ref: '#/components/requestBodies/EdifactMessageFileToParse'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The parsed EDIFACT-specific message
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /download-parsed-string:
+    post:
+      summary: Trigger the process to parse the provided EDIFACT messages (e.g., APERAK, MSCONS, etc.) in string format and download the result as a JSON file.
+      tags:
+        - EDIFACT Parser
+      operationId: download_parsed_string_input
+      requestBody:
+        $ref: '#/components/requestBodies/EdifactMessageStringToParse'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=edifact_message_parsed_20250531_235959.json
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The parsed EDIFACT-specific message as a downloadable JSON file
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /download-parsed-file:
+    post:
+      summary: Trigger the process to parse the provided EDIFACT messages (e.g., APERAK, MSCONS, etc.) from a file and download the result as a JSON file.
+      tags:
+        - EDIFACT Parser
+      operationId: download_parsed_file
+      requestBody:
+        $ref: '#/components/requestBodies/EdifactMessageFileToParse'
+      responses:
+        '201':
+          description: Created
+          headers:
+            Content-Disposition:
+              schema:
+                type: string
+                example: attachment; filename=edifact_message_parsed_20250531_235959.json
+          content:
+            application/json:
+              schema:
+                type: object
+                description: The parsed EDIFACT-specific message as a downloadable JSON file
+        '400':
+          description: Bad request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+components:
+  requestBodies:
+    EdifactMessageStringToParse:
+      description: The raw EDIFACT-specific message (e.g., APERAK, MSCONS, etc.) in plain text format.
+      required: true
+      content:
+        text/plain:
+          schema:
+            type: string
+          examples:
+            insert_your_data:
+              summary: Insert your data ...
+              value: ""
+            mscons_sample:
+              summary: Sample of an EDIFACT-MSCONS message
+              value: |
+                UNA:+.? '
+                UNB+UNOC:3+4012345678901:14+4012345678901:14+200426:1151+ABC4711++TL++++1'
+                UNH+1+MSCONS:D:04B:UN:2.4c+UNB_DE0020_nr_1+1:C'
+                BGM+7+MSI5422+9'
+                DTM+137:202106011315?+00:303'
+                RFF+AGI:AFN9523'
+                DTM+293:20210601060030?+00:304'
+                NAD+MS+9920455302123::293'
+                CTA+IC+:P GETTY'
+                COM+no-reply@example.com:EM'
+                NAD+MR+4012345678901::9'
+                UNS+D'
+                NAD+DP'
+                LOC+237+11XUENBSOLS----X+11XVNBSOLS-----X'
+                DTM+163:202102012300?+00:303'
+                DTM+164:202102022300?+00:303'
+                LIN+1'
+                PIA+5+1-1?:1.29.1:SRW'
+                QTY+220:4250.465:D54'
+                DTM+163:202101012300?+00:303'
+                DTM+164:202101312315?+00:303'
+                QTY+220:4250.465:D54'
+                DTM+163:202101312315?+00:303'
+                DTM+164:202101312320?+00:303'
+                UNT+2+1'
+                UNZ+1+ABC4711'
+            aperak_sample:
+              summary: Sample of an EDIFACT-APERAK message
+              value: |
+                UNB+UNOC:3+9900204000002:500+4012345000023:500+210408:1010+121234567ABC7D'
+                UNH+1234EF66EF3QAJ+APERAK:D:07B:UN:2.1i'
+                BGM+313+AFBM5422'
+                DTM+137:202104081015?+00:303'
+                RFF+ACE:TG9523'
+                DTM+171:202104081015?+00:303'
+                RFF+AGO:12312'
+                DTM+171:202104081016?+00:303'
+                DTM+173:202104081017?+00:303'
+                RFF+TN:1'
+                NAD+MS+9900204000002::293'
+                CTA+IC+:Example Energiedatenmanagement'
+                COM+info@example.com:EM'
+                NAD+MR+4012345000023::293'
+                ERC+Z10'
+                FTX+ABO+++DE00056266802AO6G56M11SN51G21M24S:201204181115?+00?:303'
+                RFF+ACW:9878u7987gh7'
+                FTX+AAO+++Die Marktlokation ist bei Netzbetreiber Gasverteilung AG:ggf. weiterer Text'
+                FTX+Z02+++Referenz Vorgangsnummer (aus Anfragenachricht):RFF?+TN?:TG9523'
+                RFF+AGO:798790034532'
+                FTX+AAO+++Die Marktlokation ist bei Netzbetreiber Gasverteilung AG:ggf. weiterer Text'
+                FTX+Z02+++Referenz Vorgangsnummer (aus Anfragenachricht):RFF?+TN?:TG9523'
+                ERC+Z10'
+                RFF+ACW:9211574a24fa'
+                RFF+AGO:9211574a24fa'
+                FTX+AAO+++Die Marktlokation ist bei Netzbetreiber Gasverteilung AG:ggf. weiterer Text'
+                FTX+Z02+++Referenz Vorgangsnummer (aus Anfragenachricht):RFF?+TN?:TG9523'
+                ERC+Z18'
+                RFF+TN:200815'
+                FTX+AAO+++Die Marktlokation ist bei Netzbetreiber Gasverteilung AG:ggf. weiterer Text'
+                FTX+Z02+++Referenz Vorgangsnummer (aus Anfragenachricht):RFF?+TN?:TG9523'
+                RFF+Z08:4399901957459'
+                ERC+Z10'
+                RFF+ACW:123ABD931EF'
+                RFF+AGO:123ABD931EF'
+                ERC+Z20'
+                RFF+ACW:93AF1274CDQ'
+                RFF+AGO:93AF1274CDQ'
+                UNT+8+1234EF66EF3QAJ'
+                UNZ+1+121234567ABC7D'
+    EdifactMessageFileToParse:
+      description: The raw EDIFACT-specific message (e.g., APERAK, MSCONS, etc.) provided as a file.
+      required: true
+      content:
+        application/octet-stream:
+          schema:
+            type: string
+            format: binary

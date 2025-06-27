@@ -1,0 +1,553 @@
+{
+  "una_service_string_advice": {
+    "component_separator": ":",
+    "decimal_mark": ",",
+    "element_separator": "+",
+    "release_character": "?",
+    "reserved": " ",
+    "segment_terminator": "'"
+  },
+  "unb_nutzdaten_kopfsegment": {
+    "absender_der_uebertragungsdatei": {
+      "marktpartneridentifikationsnummer": "4012345678901",
+      "teilnehmerbezeichnung_qualifier": "14"
+    },
+    "anwendungsreferenz": "TL",
+    "datenaustauschreferenz": "ABC4711",
+    "datum_uhrzeit_der_erstellung": {
+      "datum": "200426",
+      "uhrzeit": "1151"
+    },
+    "empfaenger_der_uebertragungsdatei": {
+      "marktpartneridentifikationsnummer": "4012345678901",
+      "teilnehmerbezeichnung_qualifier": "14"
+    },
+    "syntax_bezeichner": {
+      "syntax_kennung": "UNOC",
+      "syntax_versionsnummer": "3"
+    },
+    "test_kennzeichen": "1"
+  },
+  "unh_unt_nachrichten": [
+    {
+      "bgm_beginn_der_nachricht": {
+        "dokumenten_nachrichten_identifikation": {
+          "dokumentennummer": "MSI5422"
+        },
+        "dokumenten_nachrichtenname": {
+          "dokumentenname_code": "7"
+        },
+        "nachrichtenfunktion_code": "9"
+      },
+      "dtm_nachrichtendatum": [
+        {
+          "bezeichner": "Nachrichtendatum",
+          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202106011315+00",
+          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303",
+          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "137"
+        }
+      ],
+      "sg1_referenzen": [
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Referenzangaben",
+            "referenz_qualifier": "AGI",
+            "referenz_identifikation": "AFN9523"
+          },
+          "dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma": [
+            {
+              "bezeichner": "Versionsangabe marktlokationsscharfe Allokationsliste Gas (MMMA)",
+              "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "293",
+              "datum_oder_uhrzeit_oder_zeitspanne_wert": "20210601060030+00",
+              "datums_oder_uhrzeit_oder_zeitspannen_format_code": "304"
+            }
+          ]
+        },
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Referenz auf vorherige Stammdatenmeldung des MSB",
+            "referenz_qualifier": "Z30",
+            "referenz_identifikation": "UTILMDXYZ_1235"
+          },
+          "dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma": []
+        },
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Prüfidentifikator",
+            "referenz_qualifier": "Z13",
+            "referenz_identifikation": "13002"
+          },
+          "dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma": []
+        }
+      ],
+      "sg2_marktpartnern": [
+        {
+          "nad_marktpartner": {
+            "bezeichner": "MP-ID Absender",
+            "beteiligter_qualifier": "MS",
+            "identifikation_des_beteiligten": {
+              "beteiligter_identifikation": "9920455302123",
+              "verantwortliche_stelle_fuer_die_codepflege_code": "293"
+            }
+          },
+          "sg4_kontaktinformationen": [
+            {
+              "cta_ansprechpartner": {
+                "funktion_des_ansprechpartners_code": "IC",
+                "abteilung_oder_bearbeiter": {
+                  "abteilung_oder_bearbeiter": "P GETTY"
+                }
+              },
+              "com_kommunikationsverbindung": [
+                {
+                  "kommunikationsverbindung": {
+                    "kommunikationsadresse_identifikation": "003222271020",
+                    "kommunikationsadresse_qualifier": "TE"
+                  }
+                },
+                {
+                  "kommunikationsverbindung": {
+                    "kommunikationsadresse_identifikation": "no-reply@example.com",
+                    "kommunikationsadresse_qualifier": "EM"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nad_marktpartner": {
+            "bezeichner": "MP-ID Empfänger",
+            "beteiligter_qualifier": "MR",
+            "identifikation_des_beteiligten": {
+              "beteiligter_identifikation": "4012345678901",
+              "verantwortliche_stelle_fuer_die_codepflege_code": "9"
+            }
+          },
+          "sg4_kontaktinformationen": []
+        }
+      ],
+      "sg5_liefer_bzw_bezugsorte": [
+        {
+          "nad_name_und_adresse": {
+            "bezeichner": "Name und Adresse",
+            "beteiligter_qualifier": "DP",
+            "identifikation_des_beteiligten": null
+          },
+          "sg6_wert_und_erfassungsangaben_zum_objekt": [
+            {
+              "loc_identifikationsangabe": {
+                "ortsangabe_qualifier": "237",
+                "ortsangabe": {
+                  "ortsangabe_code": "11XUENBSOLS----X"
+                },
+                "zugehoeriger_ort_1_identifikation": {
+                  "erster_zugehoeriger_platz_ort_code": "11XVNBSOLS-----X"
+                }
+              },
+              "dtm_zeitraeume": [
+                {
+                  "bezeichner": "Beginn Messperiode Übertragungszeitraum",
+                  "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "163",
+                  "datum_oder_uhrzeit_oder_zeitspanne_wert": "202102012300+00",
+                  "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                },
+                {
+                  "bezeichner": "Ende Messperiode Übertragungszeitraum",
+                  "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "164",
+                  "datum_oder_uhrzeit_oder_zeitspanne_wert": "202102022300+00",
+                  "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                },
+                {
+                  "bezeichner": "Gültigkeit, Beginndatum Profilschar",
+                  "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "157",
+                  "datum_oder_uhrzeit_oder_zeitspanne_wert": "202002",
+                  "datums_oder_uhrzeit_oder_zeitspannen_format_code": "610"
+                }
+              ],
+              "sg7_referenzangaben": [
+                {
+                  "rff_referenzangabe": {
+                    "bezeichner": "Gerätenummer",
+                    "referenz_qualifier": "MG",
+                    "referenz_identifikation": "8465929523"
+                  }
+                },
+                {
+                  "rff_referenzangabe": {
+                    "bezeichner": "Konfigurations-ID",
+                    "referenz_qualifier": "AGK",
+                    "referenz_identifikation": "34590456ujdfsdghdlktztwqq-053trg"
+                  }
+                }
+              ],
+              "sg8_zeitreihentypen": [
+                {
+                  "cci_zeitreihentyp": {
+                    "klassentyp_code": "15",
+                    "merkmalsbeschreibung": {
+                      "merkmal_code": "BI1"
+                    }
+                  }
+                }
+              ],
+              "sg9_positionsdaten": [
+                {
+                  "lin_lfd_position": {
+                    "positionsnummer": "1"
+                  },
+                  "pia_produktidentifikation": {
+                    "produkt_erzeugnisnummer_qualifier": "5",
+                    "waren_leistungsnummer_identifikation": {
+                      "produkt_leistungsnummer": "1-1:1.29.1",
+                      "art_der_produkt_leistungsnummer_code": "SRW"
+                    }
+                  },
+                  "sg10_mengen_und_statusangaben": [
+                    {
+                      "qty_mengenangaben": {
+                        "menge_qualifier": "220",
+                        "menge": 4250.465,
+                        "masseinheit_code": "D54"
+                      },
+                      "dtm_zeitangaben": [
+                        {
+                          "bezeichner": "Beginn Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "163",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101012300+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Ende Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "164",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101312315+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Ablesedatum",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "9",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202107011655+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Nutzungszeitpunkt",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "7",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202106012200+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        }
+                      ],
+                      "sts_statusangaben": []
+                    },
+                    {
+                      "qty_mengenangaben": {
+                        "menge_qualifier": "220",
+                        "menge": 4250.465,
+                        "masseinheit_code": "D54"
+                      },
+                      "dtm_zeitangaben": [
+                        {
+                          "bezeichner": "Beginn Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "163",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101312315+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Ende Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "164",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101312320+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        }
+                      ],
+                      "sts_statusangaben": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unh_nachrichtenkopfsegment": {
+        "allgemeine_zuordnungsreferenz": "UNB_DE0020_nr_1",
+        "nachrichten_kennung": {
+          "anwendungscode_der_zustaendigen_organisation": "2.4c",
+          "freigabenummer_des_nachrichtentyps": "04B",
+          "nachrichtentyp_kennung": "MSCONS",
+          "versionsnummer_des_nachrichtentyps": "D",
+          "verwaltende_organisation": "UN"
+        },
+        "nachrichten_referenznummer": "1",
+        "status_der_uebermittlung": {
+          "erste_und_letzte_uebermittlung": "C",
+          "uebermittlungsfolgenummer": "1"
+        }
+      },
+      "uns_abschnitts_kontrollsegment": {
+        "abschnittskennung_codiert": "D"
+      },
+      "unt_nachrichtenendsegment": {
+        "anzahl_der_segmente_in_einer_nachricht": 2,
+        "nachrichten_referenznummer": "1"
+      }
+    },
+    {
+      "bgm_beginn_der_nachricht": {
+        "dokumenten_nachrichten_identifikation": {
+          "dokumentennummer": "MSI5422"
+        },
+        "dokumenten_nachrichtenname": {
+          "dokumentenname_code": "7"
+        },
+        "nachrichtenfunktion_code": "9"
+      },
+      "dtm_nachrichtendatum": [
+        {
+          "bezeichner": "Nachrichtendatum",
+          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202106011315+00",
+          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303",
+          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "137"
+        }
+      ],
+      "sg1_referenzen": [
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Referenzangaben",
+            "referenz_qualifier": "AGI",
+            "referenz_identifikation": "AFN9523"
+          },
+          "dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma": [
+            {
+              "bezeichner": "Versionsangabe marktlokationsscharfe Allokationsliste Gas (MMMA)",
+              "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "293",
+              "datum_oder_uhrzeit_oder_zeitspanne_wert": "20210601060030+00",
+              "datums_oder_uhrzeit_oder_zeitspannen_format_code": "304"
+            }
+          ]
+        },
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Referenz auf vorherige Stammdatenmeldung des MSB",
+            "referenz_qualifier": "Z30",
+            "referenz_identifikation": "UTILMDXYZ_1235"
+          },
+          "dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma": []
+        },
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Prüfidentifikator",
+            "referenz_qualifier": "Z13",
+            "referenz_identifikation": "13002"
+          },
+          "dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma": []
+        }
+      ],
+      "sg2_marktpartnern": [
+        {
+          "nad_marktpartner": {
+            "bezeichner": "MP-ID Absender",
+            "beteiligter_qualifier": "MS",
+            "identifikation_des_beteiligten": {
+              "beteiligter_identifikation": "9920455302123",
+              "verantwortliche_stelle_fuer_die_codepflege_code": "293"
+            }
+          },
+          "sg4_kontaktinformationen": [
+            {
+              "cta_ansprechpartner": {
+                "funktion_des_ansprechpartners_code": "IC",
+                "abteilung_oder_bearbeiter": {
+                  "abteilung_oder_bearbeiter": "P GETTY"
+                }
+              },
+              "com_kommunikationsverbindung": [
+                {
+                  "kommunikationsverbindung": {
+                    "kommunikationsadresse_identifikation": "003222271020",
+                    "kommunikationsadresse_qualifier": "TE"
+                  }
+                },
+                {
+                  "kommunikationsverbindung": {
+                    "kommunikationsadresse_identifikation": "no-reply@example.com",
+                    "kommunikationsadresse_qualifier": "EM"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "nad_marktpartner": {
+            "bezeichner": "MP-ID Empfänger",
+            "beteiligter_qualifier": "MR",
+            "identifikation_des_beteiligten": {
+              "beteiligter_identifikation": "4012345678901",
+              "verantwortliche_stelle_fuer_die_codepflege_code": "9"
+            }
+          },
+          "sg4_kontaktinformationen": []
+        }
+      ],
+      "sg5_liefer_bzw_bezugsorte": [
+        {
+          "nad_name_und_adresse": {
+            "bezeichner": "Name und Adresse",
+            "beteiligter_qualifier": "DP",
+            "identifikation_des_beteiligten": null
+          },
+          "sg6_wert_und_erfassungsangaben_zum_objekt": [
+            {
+              "loc_identifikationsangabe": {
+                "ortsangabe_qualifier": "237",
+                "ortsangabe": {
+                  "ortsangabe_code": "11XUENBSOLS----X"
+                },
+                "zugehoeriger_ort_1_identifikation": {
+                  "erster_zugehoeriger_platz_ort_code": "11XVNBSOLS-----X"
+                }
+              },
+              "dtm_zeitraeume": [
+                {
+                  "bezeichner": "Beginn Messperiode Übertragungszeitraum",
+                  "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "163",
+                  "datum_oder_uhrzeit_oder_zeitspanne_wert": "202102012300+00",
+                  "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                },
+                {
+                  "bezeichner": "Ende Messperiode Übertragungszeitraum",
+                  "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "164",
+                  "datum_oder_uhrzeit_oder_zeitspanne_wert": "202102022300+00",
+                  "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                },
+                {
+                  "bezeichner": "Gültigkeit, Beginndatum Profilschar",
+                  "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "157",
+                  "datum_oder_uhrzeit_oder_zeitspanne_wert": "202002",
+                  "datums_oder_uhrzeit_oder_zeitspannen_format_code": "610"
+                }
+              ],
+              "sg7_referenzangaben": [
+                {
+                  "rff_referenzangabe": {
+                    "bezeichner": "Gerätenummer",
+                    "referenz_qualifier": "MG",
+                    "referenz_identifikation": "8465929523"
+                  }
+                },
+                {
+                  "rff_referenzangabe": {
+                    "bezeichner": "Konfigurations-ID",
+                    "referenz_qualifier": "AGK",
+                    "referenz_identifikation": "34590456ujdfsdghdlktztwqq-053trg"
+                  }
+                }
+              ],
+              "sg8_zeitreihentypen": [
+                {
+                  "cci_zeitreihentyp": {
+                    "klassentyp_code": "15",
+                    "merkmalsbeschreibung": {
+                      "merkmal_code": "BI1"
+                    }
+                  }
+                }
+              ],
+              "sg9_positionsdaten": [
+                {
+                  "lin_lfd_position": {
+                    "positionsnummer": "1"
+                  },
+                  "pia_produktidentifikation": null,
+                  "sg10_mengen_und_statusangaben": [
+                    {
+                      "qty_mengenangaben": {
+                        "menge_qualifier": "220",
+                        "menge": 4250.465,
+                        "masseinheit_code": "D54"
+                      },
+                      "dtm_zeitangaben": [
+                        {
+                          "bezeichner": "Beginn Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "163",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101012300+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Ende Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "164",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101312315+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Ablesedatum",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "9",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202107011655+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Nutzungszeitpunkt",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "7",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202106012200+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        }
+                      ],
+                      "sts_statusangaben": []
+                    },
+                    {
+                      "qty_mengenangaben": {
+                        "menge_qualifier": "220",
+                        "menge": 4250.465,
+                        "masseinheit_code": "D54"
+                      },
+                      "dtm_zeitangaben": [
+                        {
+                          "bezeichner": "Beginn Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "163",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101312315+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        },
+                        {
+                          "bezeichner": "Ende Messperiode",
+                          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "164",
+                          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202101312320+00",
+                          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+                        }
+                      ],
+                      "sts_statusangaben": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "unh_nachrichtenkopfsegment": {
+        "allgemeine_zuordnungsreferenz": "UNB_DE0020_nr_1",
+        "nachrichten_kennung": {
+          "anwendungscode_der_zustaendigen_organisation": "2.4c",
+          "freigabenummer_des_nachrichtentyps": "04B",
+          "nachrichtentyp_kennung": "MSCONS",
+          "versionsnummer_des_nachrichtentyps": "D",
+          "verwaltende_organisation": "UN"
+        },
+        "nachrichten_referenznummer": "1",
+        "status_der_uebermittlung": {
+          "erste_und_letzte_uebermittlung": "C",
+          "uebermittlungsfolgenummer": "1"
+        }
+      },
+      "uns_abschnitts_kontrollsegment": {
+        "abschnittskennung_codiert": "D"
+      },
+      "unt_nachrichtenendsegment": {
+        "anzahl_der_segmente_in_einer_nachricht": 2,
+        "nachrichten_referenznummer": "1"
+      }
+    }
+  ],
+  "unz_nutzdaten_endsegment": {
+    "datenaustauschreferenz": "ABC4711",
+    "datenaustauschzaehler": 2
+  }
+}
