@@ -27,8 +27,7 @@ This document provides guidelines and instructions for developing and maintainin
 This Python project uses [OpenAPI Generator](https://openapi-generator.tech) to generate the API endpoints (DTOs and
 router endpoints) while the core business logic is manually created following a clean (hexagonal) architecture pattern:
 
-- API version: 1.2.0
-- Generator version: 7.14.0-SNAPSHOT
+- Generator version: 7.14.0-SNAPSHOT (project's latest from current commit)
 - Build package: org.openapitools.codegen.languages.PythonFastAPIServerCodegen
 
 > NOTE: Before starting the project, please generate the missing APIs first, see
@@ -332,12 +331,13 @@ The current version can be found in the [pyproject.toml](pyproject.toml) file.
 
 ### Version Consistency
 
-There are two important places specifying the version numbers in this project:
+There are several important places specifying the version numbers in this project:
 
-1. **Project Version**: Defined in `pyproject.toml` (e.g., `1.2.0`)
-2. **API Version**: Defined in the OpenAPI specification (e.g., `1.2.0`)
+1. **Project Version**: Defined in  [`pyproject.toml`](pyproject.toml)
+2. **API Version**: Defined in the [project's OpenAPI specification](docs/ediparse.openapi.yaml)
+2. **Version on OpenCode**: Defined in the [publiccode.yml](publiccode.yml)
 
-Please ensure those places contain the same version number.
+Please ensure those places contain the same version number when a new version is released.
 
 ### When to Update Versions
 

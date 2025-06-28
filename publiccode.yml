@@ -3,7 +3,7 @@ name: "EDIParse"
 genericName: "REST-API - EDIFACT Message Parser"
 url: "https://gitlab.opencode.de/govtech-deutschland/govtools/ediparse"
 landingURL: "https://gitlab.opencode.de/govtech-deutschland/govtools/ediparse"
-softwareVersion: "1.2.0"
+softwareVersion: "1.2.1"
 releaseDate: "2025-07-02"
 logo: project_square_logo.png
 platforms:
