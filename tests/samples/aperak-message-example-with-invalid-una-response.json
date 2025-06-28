@@ -1,0 +1,356 @@
+{
+  "una_service_string_advice": {
+    "component_separator": ":",
+    "element_separator": "+",
+    "decimal_mark": ".",
+    "release_character": "?",
+    "reserved": " ",
+    "segment_terminator": "'"
+  },
+  "unb_nutzdaten_kopfsegment": {
+    "syntax_bezeichner": {
+      "syntax_kennung": "UNOC",
+      "syntax_versionsnummer": "3"
+    },
+    "absender_der_uebertragungsdatei": {
+      "marktpartneridentifikationsnummer": "9900204000002",
+      "teilnehmerbezeichnung_qualifier": "500"
+    },
+    "empfaenger_der_uebertragungsdatei": {
+      "marktpartneridentifikationsnummer": "4012345000023",
+      "teilnehmerbezeichnung_qualifier": "500"
+    },
+    "datum_uhrzeit_der_erstellung": {
+      "datum": "210408",
+      "uhrzeit": "1010"
+    },
+    "datenaustauschreferenz": "121234567ABC7D",
+    "anwendungsreferenz": null,
+    "test_kennzeichen": null
+  },
+  "unh_unt_nachrichten": [
+    {
+      "unh_nachrichtenkopfsegment": {
+        "nachrichten_referenznummer": "1234EF66EF3QAJ",
+        "nachrichten_kennung": {
+          "nachrichtentyp_kennung": "APERAK",
+          "versionsnummer_des_nachrichtentyps": "D",
+          "freigabenummer_des_nachrichtentyps": "07B",
+          "verwaltende_organisation": "UN",
+          "anwendungscode_der_zustaendigen_organisation": "2.1i"
+        },
+        "allgemeine_zuordnungsreferenz": null,
+        "status_der_uebermittlung": null
+      },
+      "bgm_beginn_der_nachricht": {
+        "dokumenten_nachrichtenname": {
+          "dokumentenname_code": "313"
+        },
+        "dokumenten_nachrichten_identifikation": {
+          "dokumentennummer": "AFBM5422"
+        },
+        "nachrichtenfunktion_code": null
+      },
+      "dtm_nachrichtendatum": [
+        {
+          "bezeichner": "Dokumentendatum",
+          "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "137",
+          "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081015+00",
+          "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+        }
+      ],
+      "unt_nachrichtenendsegment": {
+        "anzahl_der_segmente_in_einer_nachricht": 8,
+        "nachrichten_referenznummer": "1234EF66EF3QAJ"
+      },
+      "sg2_referenzen": [
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Referenzangaben",
+            "referenz_qualifier": "ACE",
+            "referenz_identifikation": "TG9523"
+          },
+          "dtm_referenzdatum": [
+            {
+              "bezeichner": null,
+              "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "171",
+              "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081015+00",
+              "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+            }
+          ]
+        },
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+            "referenz_qualifier": "AGO",
+            "referenz_identifikation": "12312"
+          },
+          "dtm_referenzdatum": [
+            {
+              "bezeichner": null,
+              "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "171",
+              "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081016+00",
+              "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+            },
+            {
+              "bezeichner": null,
+              "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "173",
+              "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081017+00",
+              "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
+            }
+          ]
+        },
+        {
+          "rff_referenzangaben": {
+            "bezeichner": "Referenznummer des Vorgangs",
+            "referenz_qualifier": "TN",
+            "referenz_identifikation": "1"
+          },
+          "dtm_referenzdatum": []
+        }
+      ],
+      "sg3_marktpartnern": [
+        {
+          "nad_marktpartner": {
+            "bezeichner": "MP-ID Absender",
+            "beteiligter_qualifier": "MS",
+            "identifikation_des_beteiligten": {
+              "beteiligter_identifikation": "9900204000002",
+              "verantwortliche_stelle_fuer_die_codepflege_code": "293"
+            }
+          },
+          "cta_ansprechpartnern": [
+            {
+              "funktion_des_ansprechpartners_code": "IC",
+              "abteilung_oder_bearbeiter": {
+                "abteilung_oder_bearbeiter": "Example Energiedatenmanagement"
+              }
+            }
+          ],
+          "com_kommunikationsverbindungen": [
+            {
+              "kommunikationsverbindung": {
+                "kommunikationsadresse_identifikation": "info@example.com",
+                "kommunikationsadresse_qualifier": "EM"
+              }
+            }
+          ]
+        },
+        {
+          "nad_marktpartner": {
+            "bezeichner": "MP-ID Empfänger",
+            "beteiligter_qualifier": "MR",
+            "identifikation_des_beteiligten": {
+              "beteiligter_identifikation": "4012345000023",
+              "verantwortliche_stelle_fuer_die_codepflege_code": "293"
+            }
+          },
+          "cta_ansprechpartnern": [],
+          "com_kommunikationsverbindungen": []
+        }
+      ],
+      "sg4_fehler_beschreibung": [
+        {
+          "erc_error_code": {
+            "fehlercode": {
+              "anwendungsfehler_code": "Z10"
+            }
+          },
+          "ftx_freier_text": {
+            "textbezug_qualifier": "ABO",
+            "text": {
+              "freier_text_m": "DE00056266802AO6G56M11SN51G21M24S",
+              "freier_text_c": "201204181115+00:303"
+            }
+          },
+          "sg5_nachrichtenreferenzen": [
+            {
+              "rff_referenz": {
+                "bezeichner": "Referenznummer der Nachricht",
+                "referenz_qualifier": "ACW",
+                "referenz_identifikation": "9878u7987gh7"
+              },
+              "ftx_referenz_texte": [
+                {
+                  "textbezug_qualifier": "AAO",
+                  "text": {
+                    "freier_text_m": "Die Marktlokation ist bei Netzbetreiber Gasverteilung AG",
+                    "freier_text_c": "ggf. weiterer Text"
+                  }
+                },
+                {
+                  "textbezug_qualifier": "Z02",
+                  "text": {
+                    "freier_text_m": "Referenz Vorgangsnummer (aus Anfragenachricht)",
+                    "freier_text_c": "RFF+TN:TG9523"
+                  }
+                }
+              ]
+            },
+            {
+              "rff_referenz": {
+                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "referenz_qualifier": "AGO",
+                "referenz_identifikation": "798790034532"
+              },
+              "ftx_referenz_texte": [
+                {
+                  "textbezug_qualifier": "AAO",
+                  "text": {
+                    "freier_text_m": "Die Marktlokation ist bei Netzbetreiber Gasverteilung AG",
+                    "freier_text_c": "ggf. weiterer Text"
+                  }
+                },
+                {
+                  "textbezug_qualifier": "Z02",
+                  "text": {
+                    "freier_text_m": "Referenz Vorgangsnummer (aus Anfragenachricht)",
+                    "freier_text_c": "RFF+TN:TG9523"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "erc_error_code": {
+            "fehlercode": {
+              "anwendungsfehler_code": "Z10"
+            }
+          },
+          "ftx_freier_text": null,
+          "sg5_nachrichtenreferenzen": [
+            {
+              "rff_referenz": {
+                "bezeichner": "Referenznummer der Nachricht",
+                "referenz_qualifier": "ACW",
+                "referenz_identifikation": "9211574a24fa"
+              },
+              "ftx_referenz_texte": []
+            },
+            {
+              "rff_referenz": {
+                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "referenz_qualifier": "AGO",
+                "referenz_identifikation": "9211574a24fa"
+              },
+              "ftx_referenz_texte": [
+                {
+                  "textbezug_qualifier": "AAO",
+                  "text": {
+                    "freier_text_m": "Die Marktlokation ist bei Netzbetreiber Gasverteilung AG",
+                    "freier_text_c": "ggf. weiterer Text"
+                  }
+                },
+                {
+                  "textbezug_qualifier": "Z02",
+                  "text": {
+                    "freier_text_m": "Referenz Vorgangsnummer (aus Anfragenachricht)",
+                    "freier_text_c": "RFF+TN:TG9523"
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "erc_error_code": {
+            "fehlercode": {
+              "anwendungsfehler_code": "Z18"
+            }
+          },
+          "ftx_freier_text": null,
+          "sg5_nachrichtenreferenzen": [
+            {
+              "rff_referenz": {
+                "bezeichner": "Referenznummer des Vorgangs",
+                "referenz_qualifier": "TN",
+                "referenz_identifikation": "200815"
+              },
+              "ftx_referenz_texte": [
+                {
+                  "textbezug_qualifier": "AAO",
+                  "text": {
+                    "freier_text_m": "Die Marktlokation ist bei Netzbetreiber Gasverteilung AG",
+                    "freier_text_c": "ggf. weiterer Text"
+                  }
+                },
+                {
+                  "textbezug_qualifier": "Z02",
+                  "text": {
+                    "freier_text_m": "Referenz Vorgangsnummer (aus Anfragenachricht)",
+                    "freier_text_c": "RFF+TN:TG9523"
+                  }
+                }
+              ]
+            },
+            {
+              "rff_referenz": {
+                "bezeichner": "Netzbetreiber",
+                "referenz_qualifier": "Z08",
+                "referenz_identifikation": "4399901957459"
+              },
+              "ftx_referenz_texte": []
+            }
+          ]
+        },
+        {
+          "erc_error_code": {
+            "fehlercode": {
+              "anwendungsfehler_code": "Z10"
+            }
+          },
+          "ftx_freier_text": null,
+          "sg5_nachrichtenreferenzen": [
+            {
+              "rff_referenz": {
+                "bezeichner": "Referenznummer der Nachricht",
+                "referenz_qualifier": "ACW",
+                "referenz_identifikation": "123ABD931EF"
+              },
+              "ftx_referenz_texte": []
+            },
+            {
+              "rff_referenz": {
+                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "referenz_qualifier": "AGO",
+                "referenz_identifikation": "123ABD931EF"
+              },
+              "ftx_referenz_texte": []
+            }
+          ]
+        },
+        {
+          "erc_error_code": {
+            "fehlercode": {
+              "anwendungsfehler_code": "Z20"
+            }
+          },
+          "ftx_freier_text": null,
+          "sg5_nachrichtenreferenzen": [
+            {
+              "rff_referenz": {
+                "bezeichner": "Referenznummer der Nachricht",
+                "referenz_qualifier": "ACW",
+                "referenz_identifikation": "93AF1274CDQ"
+              },
+              "ftx_referenz_texte": []
+            },
+            {
+              "rff_referenz": {
+                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "referenz_qualifier": "AGO",
+                "referenz_identifikation": "93AF1274CDQ"
+              },
+              "ftx_referenz_texte": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "unz_nutzdaten_endsegment": {
+    "datenaustauschzaehler": 1,
+    "datenaustauschreferenz": "121234567ABC7D"
+  }
+}

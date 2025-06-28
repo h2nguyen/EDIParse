@@ -168,7 +168,7 @@ class EdifactParser:
         index = edifact_text.find(SegmentType.UNA)
         if index > 0:
             logger.warning(f"Removing invalid prefix from UNA segment '{edifact_text[:index]}'")
-            return edifact_text[index:EdifactConstants.UNA_SEGMENT_MAX_LENGTH]
+            return edifact_text[index:index + EdifactConstants.UNA_SEGMENT_MAX_LENGTH]
 
         return None
 
