@@ -1,11 +1,11 @@
 publiccodeYmlVersion: "0.4"
 name: "EDIParse"
 genericName: "REST-API - EDIFACT Message Parser"
-url: "https://github.com/h2nguyen/EDIParse"
-landingURL: "https://github.com/h2nguyen/EDIParse"
+url: "https://gitlab.opencode.de/govtech-deutschland/govtools/ediparse"
+landingURL: "https://gitlab.opencode.de/govtech-deutschland/govtools/ediparse"
 softwareVersion: "1.2.0"
 releaseDate: "2025-07-02"
-logo: docs/assets/logo.png
+logo: project_square_logo.png
 platforms:
   - linux
   - windows
@@ -17,7 +17,7 @@ categories:    # Categories that describe your software
   - online-parser
   - api-middleware
   - data-analytics
-developmentStatus: development
+developmentStatus: stable
 softwareType: "standalone/web"
 
 localisation:
