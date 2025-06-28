@@ -210,7 +210,12 @@ class EdifactSyntaxHelper:
         Returns:
             A list of string segments.
         """
-        return string_content.split(EdifactSyntaxHelper.get_segment_terminator(context))
+        return EdifactSyntaxHelper.__escape_split(
+            string_content=string_content,
+            escape_symbol=EdifactSyntaxHelper.get_release_indicator(context),
+            delimiter=EdifactSyntaxHelper.get_segment_terminator(context),
+            include_escape_symbol=True
+        )
 
     @staticmethod
     def split_components(

@@ -1,9 +1,9 @@
 publiccodeYmlVersion: "0.4"
 name: "EDIParse"
 genericName: "REST-API - EDIFACT Message Parser"
-url: "https://gitlab.opencode.de/govtech-deutschland/govtools/ediparse"
+url: "https://github.com/h2nguyen/EDIParse"
 landingURL: "https://gitlab.opencode.de/govtech-deutschland/govtools/ediparse"
-softwareVersion: "1.2.1"
+softwareVersion: "1.2.2"
 releaseDate: "2025-07-02"
 logo: project_square_logo.png
 platforms:
@@ -13,12 +13,32 @@ platforms:
 usedBy:
   - Energy sector companies
 categories:    # Categories that describe your software
-  - edi-edifact-message-processing
-  - online-parser
   - api-middleware
   - data-analytics
+  - edi-edifact-message-processing
+  - electronic-data-interchange
+  - online-parser
 developmentStatus: stable
 softwareType: "standalone/web"
+intendedAudience:
+  countries:
+    - de
+  scope:
+    - business-processes
+    - data-exchange
+    - document-types
+    - edifact
+    - electronic-data-interchange
+    - energy
+    - hierarchical-structure
+    - industry-specific-applications
+    - infrastructures
+    - inter-organizational-communication
+    - local-authorities
+    - logistics
+    - standardization
+    - syntax-rules
+    - transportation
 
 localisation:
   localisationReady: true
@@ -26,25 +46,47 @@ localisation:
     - en
 
 description:
+  de:
+    shortDescription: >-
+      EDIParse wandelt EDIFACT-Nachrichten in strukturierte Daten um und unterstützt flexible Integration in Geschäftsprozesse.
+    longDescription: >-
+      EDIParse unterstützt aktuell die wichtigsten Formate für den elektronischen Datenaustausch im Energie- und
+      Logistikbereich, darunter MSCONS und APERAK. Das System wandelt komplexe EDIFACT-Nachrichten zuverlässig in
+      übersichtliche, klar strukturierte Datensätze um. Dadurch wird die Weiterverarbeitung und Analyse von
+      Geschäftsdaten erheblich erleichtert.
+
+      Mit seiner flexiblen Struktur ist EDIParse darauf ausgelegt, weitere Nachrichtentypen und individuelle
+      Anforderungen unkompliziert abzudecken. Die Lösung kann reibungslos in bestehende Geschäftsprozesse eingebunden
+      werden und unterstützt Unternehmen dabei, den digitalen Austausch von Informationen effizient, transparent und
+      nachvollziehbar zu gestalten.
+
+      Durch die fachliche Ausrichtung auf gängige Branchenstandards bietet EDIParse Unternehmen einen entscheidenden
+      Mehrwert: Die Automatisierung und Optimierung von Abläufen im energiewirtschaftlichen und logistischen
+      Datenaustausch.
+    features:
+      - Unterstützt derzeit die EDIFACT-Nachrichtentypen MSCONS und APERAK
+      - Wandelt rohe EDIFACT-Daten in saubere, verschachtelte JSON-Strukturen um
+      - Vollständig erweiterbare Architektur auf Basis von Clean und Hexagonal Architecture
+      - REST-API Schnittstelle mittels FastAPI
+      - Moderne Datenvalidierung und Serialisierung mit Pydantic v2
+      - Einfache Integration in bestehende Microservices- und ETL-Pipelines
+    screenshots:
+      - docs/assets/application-via-swagger-ui.png
+
   en:
-    shortDescription: >
-      A fast and extensible REST API service that parses EDIFACT message text inputs or files and returns structured JSON output.
-    longDescription: >
-      EDIParse is a lightweight and extensible REST API service that parses EDIFACT message text inputs or files
-      (e.g. APERAK, MSCONS, etc.) and returns structured JSON output. Built with Python and Pydantic, the service offers type-safe,
-      high-performance parsing for energy and logistics data exchange formats.
-      
-      The service follows a clean hexagonal architecture pattern with a clear separation between the application and domain layers.
-      It is designed to be easily extensible to support additional EDIFACT message types beyond the currently supported MSCONS and APERAK formats.
-      
-      EDIParse is containerized and can be deployed using Docker, making it easy to integrate into existing microservices and ETL pipelines.
-      The API is implemented using FastAPI, providing automatic documentation and validation.
-      
-      The parser uses a factory pattern to handle different segment types and message types, with each segment type having its own converter
-      and handler. This modular design allows for easy extension and maintenance of the codebase.
-      
-      The project includes comprehensive documentation, including architecture documentation, parsing process documentation for different
-      message types, and API generation documentation.
+    shortDescription: >-
+      EDIParse converts EDIFACT messages into structured data and supports flexible integration into business processes.
+    longDescription: >-
+      EDIParse currently supports the key formats for electronic data interchange in the energy and logistics sectors,
+      including MSCONS and APERAK. The system reliably transforms complex EDIFACT messages into clear, well-structured
+      data sets. This significantly simplifies the subsequent processing and analysis of business data.
+
+      Thanks to its flexible design, EDIParse is prepared to easily accommodate additional message types and individual
+      business requirements. The solution can be seamlessly integrated into existing business processes, enabling
+      companies to exchange information digitally in an efficient, transparent, and traceable manner.
+
+      By focusing on established industry standards, EDIParse delivers substantial added value to companies: it enables
+      the automation and optimization of workflows in energy and logistics data exchange.
     features:
     - Currently, supports EDIFACT message types of MSCONS, APERAK
     - Converts raw EDIFACT into clean, nested JSON structures
