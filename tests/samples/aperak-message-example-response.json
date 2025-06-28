@@ -231,15 +231,15 @@
                 {
                   "textbezug_qualifier": "AAO",
                   "text": {
-                    "freier_text_m": "Die Marktlokation ist bei Netzbetreiber Gasverteilung AG",
-                    "freier_text_c": "ggf. weiterer Text"
+                    "freier_text_m": "'20' ist nicht Bestandteil der definierten Wertemenge von QTY/F6063",
+                    "freier_text_c": null
                   }
                 },
                 {
                   "textbezug_qualifier": "Z02",
                   "text": {
-                    "freier_text_m": "Referenz Vorgangsnummer (aus Anfragenachricht)",
-                    "freier_text_c": "RFF+TN:TG9523"
+                    "freier_text_m": "Mengenangaben",
+                    "freier_text_c": "QTY+20:0.042"
                   }
                 }
               ]
