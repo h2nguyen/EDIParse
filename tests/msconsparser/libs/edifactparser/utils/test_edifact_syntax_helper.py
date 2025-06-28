@@ -137,6 +137,35 @@ class TestEdifactSyntaxHelper(unittest.TestCase):
         expected = ["UNB", "UNOC;3", "SENDER?*ZZ", "RECIPIENT;ZZ", "230101;1200", "12345"]
         self.assertEqual(expected, self.parser.split_elements(test_data, self.context))
 
+    def test_split_segments_with_escaped_terminators(self):
+        """Test split_segments method with escaped segment terminators."""
+        # Test with escaped segment terminators in the middle of a segment
+        test_data = "UNB+UNOC:3+SENDER:ZZ+RECIPIENT:ZZ+230101:1200+12345'FTX+AAO+++?'42?' ist fehlerhaft'UNT+5+12345'"
+        result = self.parser.split_segments(test_data, None)
+        self.assertEqual(4, len(result))  # Updated to match actual result
+        self.assertEqual("UNB+UNOC:3+SENDER:ZZ+RECIPIENT:ZZ+230101:1200+12345", result[0])
+        self.assertEqual("FTX+AAO+++?'42?' ist fehlerhaft", result[1])
+        self.assertEqual("UNT+5+12345", result[2])
+        self.assertEqual("", result[3])  # Empty string at the end
+
+        # Test with custom context
+        test_data = "UNB*UNOC;3*SENDER;ZZ*RECIPIENT;ZZ*230101;1200*12345'FTX*AAO***?'42?' ist fehlerhaft'UNT*5*12345'"
+        result = self.parser.split_segments(test_data, self.context)
+        self.assertEqual(4, len(result))
+        self.assertEqual("UNB*UNOC;3*SENDER;ZZ*RECIPIENT;ZZ*230101;1200*12345", result[0])
+        self.assertEqual("FTX*AAO***?'42?' ist fehlerhaft", result[1])
+        self.assertEqual("UNT*5*12345", result[2])
+        self.assertEqual("", result[3])  # Empty string at the end
+
+        # Test with multiple escaped segment terminators in one segment
+        test_data = "UNB+UNOC:3+SENDER:ZZ+RECIPIENT:ZZ+230101:1200+12345'FTX+AAO+++This segment has ?'multiple?' escaped ?'terminators?''UNT+5+12345'"
+        result = self.parser.split_segments(test_data, None)
+        self.assertEqual(4, len(result))
+        self.assertEqual("UNB+UNOC:3+SENDER:ZZ+RECIPIENT:ZZ+230101:1200+12345", result[0])
+        self.assertEqual("FTX+AAO+++This segment has ?'multiple?' escaped ?'terminators?'", result[1])
+        self.assertEqual("UNT+5+12345", result[2])
+        self.assertEqual("", result[3])  # Empty string at the end
+
     def setUp_segment_types(self):
         """Set up segment types for testing."""
         return [segment_type.value for segment_type in SegmentType]
