@@ -1,6 +1,6 @@
 [project]
 name = "EDIParse"
-version = "1.2.2"
+version = "1.2.3"
 description = "EDIParse is a lightweight and extensible REST API service that parses EDIFACT message text inputs or files (e.g. MSCONS) and returns structured JSON output. Built with Python and Pydantic, the service offers type-safe, high-performance parsing for energy and logistics data exchange formats."
 authors = [
     { name="Viet Hai Nguyen", email="me@viethainguyen.de" }

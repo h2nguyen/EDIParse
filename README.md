@@ -3,8 +3,8 @@
 # EDIParse – A Fast and Extensible EDIFACT-to-JSON REST API
 
 **EDIParse** is a lightweight and extensible REST API service that parses **EDIFACT message** text inputs or files
-(e.g. APERAK, MSCONS, etc.) and returns structured JSON output. Built with Python and Pydantic, the service offers type-safe,
-high-performance parsing for energy and logistics data exchange formats.
+(e.g. APERAK, MSCONS, etc.) and returns structured JSON output. Built with Python and Pydantic, the service offers
+type-safe, high-performance parsing for energy and logistics data exchange formats.
 
 ## Key Features
 - 📦 CURRENTLY, only supports EDIFACT message types: **MSCONS**, **APERAK**
@@ -108,9 +108,13 @@ To run the server on a Docker container, please execute the following from the r
    ```
 
    The Dockerfile uses a multi-stage build process:
+   - `openapi_generator` stage: Generates API endpoints from OpenAPI specification
    - `builder` stage: Installs the application and dependencies
    - `test_runner` stage: Runs the tests
    - `service` stage: Creates the final image for deployment
+
+   For detailed information about the Docker build process, including important notes about file copying and known
+   issues, see the [Docker Build Process Documentation](docs/docker-build-process.md).
 
 2. **Running with Docker Compose**:
    ```bash
@@ -361,8 +365,8 @@ The project includes comprehensive documentation:
 
 The project also includes additional utilities:
 
-- **PDF to Markdown Conversion**: The project includes functionality to convert PDF documents to Markdown format using the docling library. See the [PDF to Markdown Examples](tests/examples/README.md) for usage instructions and examples.
-- [API Generation Documentation](docs/generate-openapi-endpoints.md): Explains how to generate the API endpoints from the OpenAPI specification.
+- [API Generation Documentation](docs/generate-openapi-endpoints.md): Explains how to generate the API endpoints from
+  the OpenAPI specification.
 
 ## License
 
@@ -382,4 +386,5 @@ For detailed information on how to contribute, please refer to our [`CONTRIBUTIN
 
 ## Last words
 
-> Please refer to project documentation and scripts in the [docs](docs) and [scripts](scripts) directories for more details.
+> Please refer to project documentation and scripts in the [docs](docs) and [scripts](scripts) directories for more
+> details.

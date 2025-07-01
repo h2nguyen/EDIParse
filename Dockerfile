@@ -5,6 +5,32 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal:latest AS base
 RUN microdnf install -y python39 python39-pip && \
     microdnf clean all
 
+# OpenAPI Generator stage
+FROM base AS openapi_generator
+
+WORKDIR /tmp/openapi-gen
+
+# Copy OpenAPI specification
+COPY docs/ediparse.openapi.yaml ./
+
+# Generate API endpoints from OpenAPI specification
+RUN microdnf install -y tar gzip java-11-openjdk && \
+    microdnf clean all && \
+    # Download OpenAPI generator
+    curl -o openapi-generator-cli.jar https://repo1.maven.org/maven2/org/openapitools/openapi-generator-cli/7.14.0/openapi-generator-cli-7.14.0.jar && \
+    # Run OpenAPI generator in a separate directory to avoid conflicts with existing code
+    java -jar openapi-generator-cli.jar generate \
+    -p packageName=ediparse.adapters.inbound.rest \
+    -i ediparse.openapi.yaml \
+    -g python-fastapi \
+    -o /tmp/generated-api && \
+    # Create the directory structure for the generated files
+    mkdir -p /generated/ediparse/adapters/inbound/rest && \
+    # Copy all generated files except edifact_parser_api.py
+    cp -r /tmp/generated-api/src/ediparse/adapters/inbound/rest/* /generated/ediparse/adapters/inbound/rest/ && \
+    # Remove the edifact_parser_api.py file to avoid overwriting the custom version
+    rm -f /generated/ediparse/adapters/inbound/rest/apis/edifact_parser_api.py
+
 # Builder stage
 FROM base AS builder
 
@@ -20,6 +46,9 @@ ENV PATH="/venv/bin:$PATH"
 # Copy only necessary files for installation
 COPY pyproject.toml LICENSE.txt README.md ./
 COPY src src/
+
+# Copy generated API files from openapi_generator stage, excluding edifact_parser_api.py
+COPY --from=openapi_generator /generated/ediparse/adapters/inbound/rest/ src/ediparse/adapters/inbound/rest/
 
 # Install application dependencies using uv
 RUN uv pip install --no-cache-dir .

@@ -2,7 +2,7 @@ openapi: 3.1.1
 
 info:
   title: EDIParse - A Rest-API for parsing EDIFACT-specific messages
-  version: 1.2.2
+  version: 1.2.3
   description: |
     This [OpenAPI-Spezifikation](https://www.openapis.org/) describes the Rest-API of EDIParse,
     a REST API application that parses EDIFACT-specific messages in the energy sector (in DE/AT/CH).
