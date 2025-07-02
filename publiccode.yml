@@ -3,7 +3,7 @@ name: "EDIParse"
 genericName: "REST-API - EDIFACT Message Parser"
 url: "https://github.com/h2nguyen/EDIParse"
 landingURL: "https://github.com/h2nguyen/EDIParse"
-softwareVersion: "1.2.3"
+softwareVersion: "1.2.4"
 releaseDate: "2025-07-02"
 logo: project_square_logo.png
 platforms:
