@@ -17,7 +17,7 @@ import re
 from typing import Optional
 
 from ..wrappers.context import ParsingContext
-from ..wrappers.constants import EdifactConstants
+from ..wrappers.constants import EdifactConstants, SegmentType
 from ..exceptions import MSCONSParserException
 
 logger = logging.getLogger(__name__)
@@ -322,6 +322,32 @@ class EdifactSyntaxHelper:
                 return string_content[index:]
 
         return string_content
+
+    @staticmethod
+    def find_and_get_una_segment(edifact_text: str) -> Optional[str]:
+        """
+        Checks for the UNA segment in the EDIFACT text.
+        Searches for the first hit string that starts with "UNA" and ends with the single quote "'"
+        and has the size of exactly 9 characters.
+
+        Args:
+            edifact_text (str): The EDIFACT text to parse
+
+        Returns:
+            Optional[str]: The UNA segment if found, None otherwise
+        """
+        # Search for a string that starts with "UNA", ends with "'", and has exactly 9 characters
+        match = re.search(fr"{SegmentType.UNA}.{{5}}'", edifact_text)
+        if match and len(match.group()) == 9:
+            una_segment_string = match.group()
+
+            # If UNA is not in the beginning, log a warning
+            if match.start() > 0:
+                logger.warning(f"Removing invalid prefix from UNA segment '{edifact_text[:match.start()]}'")
+
+            return una_segment_string
+
+        return None
 
     @staticmethod
     def __escape_split(

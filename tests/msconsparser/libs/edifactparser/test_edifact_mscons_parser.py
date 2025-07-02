@@ -5,7 +5,7 @@ from pathlib import Path
 
 from ediparse.libs.edifactparser.exceptions import EdifactParserException
 from ediparse.libs.edifactparser.parser import EdifactParser
-from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.libs.edifactparser.utils.edifact_syntax_helper import EdifactSyntaxHelper
 from ediparse.libs.edifactparser.wrappers.constants import SegmentType, SegmentGroup
 from ediparse.libs.edifactparser.wrappers.segments import EdifactInterchange
 

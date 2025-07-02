@@ -27,6 +27,27 @@ The MSCONS message type is integrated into the application's architecture using 
 3. **Discriminated Unions**: Pydantic v2's Discriminated Unions feature is used to automatically determine the correct message type during deserialization based on the 'message_type' field.
 
 ```python
+from abc import ABC
+from typing import Optional, Literal, Union, Annotated, List
+from pydantic import BaseModel, Field
+
+from ediparse.libs.edifactparser.wrappers.constants import (
+   EdifactMessageType
+)
+from ediparse.libs.edifactparser.wrappers.segments import (
+   SegmentUNH, SegmentBGM, SegmentDTM, SegmentUNT,
+   SegmentUNA, SegmentUNB, SegmentUNZ, SegmentUNS
+)
+
+from ediparse.libs.edifactparser.mods.aperak.segments import (
+   EdifactAperakMessage
+)
+
+from ediparse.libs.edifactparser.mods.mscons.segments import (
+   SegmentGroup1, SegmentGroup2, SegmentGroup5
+)
+
+
 # AbstractEdifactMessage (base class)
 class AbstractEdifactMessage(BaseModel, ABC):
     """
@@ -695,6 +716,7 @@ from typing import Optional
 from ediparse.libs.edifactparser.converters import SegmentConverter
 from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
 class XYZSegmentConverter(SegmentConverter[SegmentXYZ]):
@@ -1026,9 +1048,10 @@ For segments that require special handling:
 
 ```python
 import logging
+import re
 from typing import Optional
 
-from ediparse.libs.edifactparser.wrappers.constants import EdifactConstants, SegmentType
+from ediparse.libs.edifactparser.wrappers.constants import SegmentType
 
 logger = logging.getLogger(__name__)
 
@@ -1043,16 +1066,20 @@ def __initialize_una_segment_logic_return_if_has_una_segment(self, edifact_text:
    Returns:
        bool: True if UNA segment was found and initialized, False otherwise
    """
-   una_segment = self.__find_una_segment(edifact_text)
+   una_segment = self.__syntax_parser.find_and_get_una_segment(edifact_text)
    if una_segment:
       self.__initialize_una_segment(una_segment)
       return True
    return False
 
 
-def __find_una_segment(self, edifact_text: str) -> Optional[str]:
+# Note: This functionality has been moved to EdifactSyntaxHelper.find_and_get_una_segment method
+# The EdifactSyntaxHelper.find_and_get_una_segment method is implemented as follows:
+def find_and_get_una_segment(edifact_text: str) -> Optional[str]:
    """
    Checks for the UNA segment in the EDIFACT text.
+   Searches for the first hit string that starts with "UNA" and ends with the single quote "'"
+   and has the size of exactly 9 characters.
 
    Args:
        edifact_text (str): The EDIFACT text to parse
@@ -1060,15 +1087,16 @@ def __find_una_segment(self, edifact_text: str) -> Optional[str]:
    Returns:
        Optional[str]: The UNA segment if found, None otherwise
    """
-   # Check for the UNA segment at the beginning of the text
-   if edifact_text.startswith(SegmentType.UNA):
-      return edifact_text[:EdifactConstants.UNA_SEGMENT_MAX_LENGTH]
+   # Search for a string that starts with "UNA", ends with "'", and has exactly 9 characters
+   match = re.search(fr"{SegmentType.UNA}.{{5}}'", edifact_text)
+   if match and len(match.group()) == 9:
+      una_segment_string = match.group()
 
-   # Check for UNA segment is somewhere in the middle of the text
-   index = edifact_text.find(SegmentType.UNA)
-   if index > 0:
-      logger.warning(f"Removing invalid prefix from UNA segment '{edifact_text[:index]}'")
-      return edifact_text[index:EdifactConstants.UNA_SEGMENT_MAX_LENGTH]
+      # If UNA is not in the beginning, log a warning
+      if match.start() > 0:
+         logger.warning(f"Removing invalid prefix from UNA segment '{edifact_text[:match.start()]}'")
+
+      return una_segment_string
 
    return None
 
