@@ -143,34 +143,11 @@ class EdifactParser:
         Returns:
             bool: True if UNA segment was found and initialized, False otherwise
         """
-        una_segment = self.__find_una_segment(edifact_text)
+        una_segment = self.__syntax_parser.find_and_get_una_segment(edifact_text)
         if una_segment:
             self.__initialize_una_segment(una_segment)
             return True
         return False
-
-    @staticmethod
-    def __find_una_segment(edifact_text: str) -> Optional[str]:
-        """
-        Checks for the UNA segment in the EDIFACT text.
-
-        Args:
-            edifact_text (str): The EDIFACT text to parse
-
-        Returns:
-            Optional[str]: The UNA segment if found, None otherwise
-        """
-        # Check for the UNA segment at the beginning of the text
-        if edifact_text.startswith(SegmentType.UNA):
-            return edifact_text[:EdifactConstants.UNA_SEGMENT_MAX_LENGTH]
-
-        # Check for UNA segment is somewhere in the middle of the text
-        index = edifact_text.find(SegmentType.UNA)
-        if index > 0:
-            logger.warning(f"Removing invalid prefix from UNA segment '{edifact_text[:index]}'")
-            return edifact_text[index:index + EdifactConstants.UNA_SEGMENT_MAX_LENGTH]
-
-        return None
 
     def __initialize_una_segment(self, una_segment: str) -> None:
         """

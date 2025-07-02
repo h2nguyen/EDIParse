@@ -272,6 +272,45 @@ class TestEdifactSyntaxHelper(unittest.TestCase):
         expected = "SENDER"
         self.assertEqual(expected, self.parser.get_cleaned_value(test_data, self.context))
 
+    def test_find_and_get_una_segment(self):
+        """Test find_and_get_una_segment method with various UNA segment formats."""
+        # Test with valid UNA segment
+        valid_una = "UNA:+.? '"
+        self.assertEqual(valid_una, self.parser.find_and_get_una_segment(valid_una))
+
+        # Test with UNA segment that has a prefix
+        prefixed_una = "PREFIX_UNA:+.? '"
+        self.assertEqual("UNA:+.? '", self.parser.find_and_get_una_segment(prefixed_una))
+
+        # Test with UNA segment that has a wrong midfix
+        prefixed_una = "PREFIX_UNAT:+.? '"
+        self.assertIsNone(self.parser.find_and_get_una_segment(prefixed_una))
+
+        # Test with UNA segment that's too short
+        short_una = "UNA:+.?"
+        self.assertIsNone(self.parser.find_and_get_una_segment(short_una))
+
+        # Test with UNA segment followed by additional characters
+        # The method should still find the UNA segment
+        long_una = "UNA:+.? 'EXTRA"
+        self.assertEqual("UNA:+.? '", self.parser.find_and_get_una_segment(long_una))
+
+        # Test with no UNA segment
+        no_una = "This text has no UNA segment"
+        self.assertIsNone(self.parser.find_and_get_una_segment(no_una))
+
+        # Test with UNA segment using SegmentType.UNA constant
+        valid_una_with_constant = f"{SegmentType.UNA}:+.? '"
+        self.assertEqual(valid_una_with_constant, self.parser.find_and_get_una_segment(valid_una_with_constant))
+
+        # Test with complex prefix containing special characters
+        complex_prefix_una = "[ANY_PREFIX_123§$%:_-ABCefg]:UNA:+.? '"
+        self.assertEqual("UNA:+.? '", self.parser.find_and_get_una_segment(complex_prefix_una))
+
+        # Test with multiple UNA segments - should find the first one
+        multiple_una = "UNA:+.? 'Some text UNA:+.? '"
+        self.assertEqual("UNA:+.? '", self.parser.find_and_get_una_segment(multiple_una))
+
 
 if __name__ == '__main__':
     unittest.main()
