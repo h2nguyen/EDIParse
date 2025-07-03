@@ -841,7 +841,7 @@ end note
 The application uses a modular folder structure to organize message type-specific code:
 
 ```
-src/ediparse/libs/edifactparser/
+src/ediparse/infrastructure/libs/edifactparser/
 ├── mods/
 │   ├── aperak/
 │   │   ├── group_state_resolver.py
@@ -874,17 +874,17 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 1. **Create a new module in the 'mods' folder**:
    ```
-   src/ediparse/libs/edifactparser/mods/orders/
+   src/ediparse/infrastructure/libs/edifactparser/mods/orders/
    ```
 
 2. **Create message-specific models**:
    ```python
-   # src/ediparse/libs/edifactparser/mods/orders/segments/message_structure.py
+   # src/ediparse/infrastructure/libs/edifactparser/mods/orders/segments/message_structure.py
    from typing import Literal
    from pydantic import Field
 
-   from ediparse.libs.edifactparser.wrappers.constants import EdifactMessageType
-   from ediparse.libs.edifactparser.wrappers.segments.base import AbstractEdifactMessage
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+   from ediparse.infrastructure.libs.edifactparser.wrappers.segments.base import AbstractEdifactMessage
 
    class EdifactOrdersMessage(AbstractEdifactMessage):
        """
@@ -901,8 +901,8 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 3. **Create segment groups for the message type**:
    ```python
-   # src/ediparse/libs/edifactparser/mods/orders/segments/segment_group.py
-   from pydantic import BaseModel, Field
+   # src/ediparse/infrastructure/libs/edifactparser/mods/orders/segments/segment_group.py
+   from pydantic import BaseModel
 
    class SegmentGroup1(BaseModel):
        """
@@ -914,12 +914,12 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 4. **Create a group state resolver**:
    ```python
-   # src/ediparse/libs/edifactparser/mods/orders/group_state_resolver.py
+   # src/ediparse/infrastructure/libs/edifactparser/mods/orders/group_state_resolver.py
    from typing import Optional
 
-   from ediparse.libs.edifactparser.resolvers.group_state_resolver import GroupStateResolver
-   from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
-   from ediparse.libs.edifactparser.wrappers.context import ParsingContext
+   from ediparse.infrastructure.libs.edifactparser.resolvers import GroupStateResolver
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
+   from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
 
    class OrdersGroupStateResolver(GroupStateResolver):
        @staticmethod
@@ -935,7 +935,8 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 5. **Add the message type to the constants**:
    ```python
-   # src/ediparse/libs/edifactparser/wrappers/constants.py
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import StrEnum
+   # src/ediparse/infrastructure/libs/edifactparser/wrappers/constants.py
    class EdifactMessageType(StrEnum):
        """
        The EDIFACT message types supported by the parser.
@@ -947,12 +948,12 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 6. **Update the EdifactMessageUnion**:
    ```python
-   # src/ediparse/libs/edifactparser/wrappers/segments/message_structure.py
+   # src/ediparse/infrastructure/libs/edifactparser/wrappers/segments/message_structure.py
    from typing import Union, Annotated
    from pydantic import Field
-   from ediparse.libs.edifactparser.mods.aperak.segments.message_structure import EdifactAperakMessage
-   from ediparse.libs.edifactparser.mods.mscons.segments.message_structure import EdifactMSconsMessage
-   from ediparse.libs.edifactparser.mods.orders.segments.message_structure import EdifactOrdersMessage
+   from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments.message_structure import EdifactAperakMessage
+   from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments.message_structure import EdifactMSconsMessage
+   from ediparse.infrastructure.libs.edifactparser.mods.orders.segments.message_structure import EdifactOrdersMessage
 
    EdifactMessageUnion = Annotated[
        Union[
@@ -966,11 +967,10 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 7. **Register the group state resolver**:
    ```python
-   # src/ediparse/libs/edifactparser/resolvers/group_state_resolver_factory.py
-   from ediparse.libs.edifactparser.wrappers.constants import EdifactMessageType
-   from ediparse.libs.edifactparser.mods.aperak.group_state_resolver import AperakGroupStateResolver
-   from ediparse.libs.edifactparser.mods.mscons.group_state_resolver import MsconsGroupStateResolver
-   from ediparse.libs.edifactparser.mods.orders.group_state_resolver import OrdersGroupStateResolver
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+   from ediparse.infrastructure.libs.edifactparser.mods.aperak.group_state_resolver import AperakGroupStateResolver
+   from ediparse.infrastructure.libs.edifactparser.mods.mscons.group_state_resolver import MsconsGroupStateResolver
+   from ediparse.infrastructure.libs.edifactparser.mods.orders.group_state_resolver import OrdersGroupStateResolver
 
    def __register_resolvers(self) -> None:
        self.__handlers = {
@@ -982,12 +982,12 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 8. **Create a parsing context for the message type**:
    ```python
-   # src/ediparse/libs/edifactparser/mods/orders/context.py
+   # src/ediparse/infrastructure/libs/edifactparser/mods/orders/context.py
    from typing import Optional
 
-   from ediparse.libs.edifactparser.wrappers.segments import EdifactInterchange
-   from ediparse.libs.edifactparser.mods.orders.segments.message_structure import EdifactOrdersMessage
-   from ediparse.libs.edifactparser.mods.orders.segments.segment_group import SegmentGroup1, SegmentGroup2  # etc.
+   from ediparse.infrastructure.libs.edifactparser.wrappers.segments import EdifactInterchange
+   from ediparse.infrastructure.libs.edifactparser.mods.orders.segments import EdifactOrdersMessage
+   from ediparse.infrastructure.libs.edifactparser.mods.orders.segments import SegmentGroup1, SegmentGroup2  # etc.
 
    class OrdersParsingContext:
        def __init__(self):
@@ -1001,12 +1001,12 @@ To add support for a new EDIFACT message type (e.g., ORDERS), follow these steps
 
 9. **Register the parsing context factory**:
    ```python
-   # src/ediparse/libs/edifactparser/wrappers/context_factory.py
-   from ediparse.libs.edifactparser.wrappers.constants import EdifactMessageType
-   from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-   from ediparse.libs.edifactparser.mods.aperak.context import APERAKParsingContext
-   from ediparse.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
-   from ediparse.libs.edifactparser.mods.orders.context import OrdersParsingContext
+   # src/ediparse/infrastructure/libs/edifactparser/wrappers/context_factory.py
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+   from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+   from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
+   from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+   from ediparse.infrastructure.libs.edifactparser.mods.orders.context import OrdersParsingContext
 
    def create_context(self, message_type: EdifactMessageType) -> ParsingContext:
        if message_type == EdifactMessageType.APERAK:

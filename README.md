@@ -166,7 +166,7 @@ To run the server on a Docker container, please execute the following from the r
    import unittest
    from pathlib import Path
 
-   from ediparse.libs.edifactparser.parser import EdifactParser
+   from ediparse.infrastructure.libs import EdifactParser
 
 
    class TestSimpleEdifactParsers(unittest.TestCase):
@@ -253,19 +253,19 @@ To run the server on a Docker container, please execute the following from the r
          │       │   ├── models               # Contains domain models of the business logic
          │       │   └── ports                # Contains domain interfaces (inbound/outbound ports)
          │       │       └── inbound          # Contains inbound ports (interfaces implemented by use cases)
-         │       ├── infrastructure           # Contains cross-cutting concerns like logging
-         │       └── libs                     # Contains library code that can be extracted as separate packages
-         │           └── edifactparser        # Parser library for EDIFACT specific messages
-         │               ├── converters       # Contains segment converters
-         │               ├── exceptions       # Contains parser-specific exceptions
-         │               ├── handlers         # Contains segment handlers
-         │               ├── mods             # Contains message-specific implementations
-         │               │   ├── aperak       # Contains APERAK-specific implementations (see specific documentation)
-         │               │   └── mscons       # Contains MSCONS-specific implementations (see specific documentation)
-         │               ├── resolvers        # Contains segment group resolvers
-         │               ├── utils            # Contains utility and helper functions
-         │               └── wrappers         # Contains library model wrappers
-         │                   └── segments     # Contains common and global wrappers shared between message types
+         │       └── infrastructure           # Contains infrastructure components
+         │           └── libs                 # Contains library code that can be extracted as separate packages
+         │               └── edifactparser    # Parser library for EDIFACT specific messages
+         │                   ├── converters   # Contains segment converters
+         │                   ├── exceptions   # Contains parser-specific exceptions
+         │                   ├── handlers     # Contains segment handlers
+         │                   ├── mods         # Contains message-specific implementations
+         │                   │   ├── aperak   # Contains APERAK-specific implementations (see specific documentation)
+         │                   │   └── mscons   # Contains MSCONS-specific implementations (see specific documentation)
+         │                   ├── resolvers    # Contains segment group resolvers
+         │                   ├── utils        # Contains utility and helper functions
+         │                   └── wrappers     # Contains library model wrappers
+         │                       └── segments # Contains common and global wrappers shared between message types
          └── tests                            # Contain all tests of the project
 
 > NOTE: Thus our root domain code source is `src/ediparse`.

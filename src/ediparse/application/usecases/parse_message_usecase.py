@@ -15,7 +15,7 @@ implementation details.
 from typing import Any
 
 from ediparse.domain.ports.inbound import MessageParserPort
-from ediparse.libs.edifactparser.parser import EdifactParser
+from ediparse.infrastructure.libs.edifactparser.parser import EdifactParser
 
 
 class ParseMessageUseCase(MessageParserPort):

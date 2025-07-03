@@ -34,65 +34,69 @@ from abc import ABC
 from typing import Optional, Literal, Union, Annotated
 from pydantic import BaseModel, Field
 
-from ediparse.libs.edifactparser.wrappers.constants import (
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import (
    EdifactMessageType
 )
-from ediparse.libs.edifactparser.wrappers.segments import (
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import (
    SegmentUNH, SegmentBGM, SegmentDTM, SegmentUNT,
    SegmentUNA, SegmentUNB, SegmentUNZ
 )
 
-from ediparse.libs.edifactparser.mods.mscons.segments import (
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import (
    EdifactMSconsMessage
 )
 
-from ediparse.libs.edifactparser.mods.aperak.segments import (
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments import (
    SegmentGroup2, SegmentGroup3, SegmentGroup4
 )
 
+
 # AbstractEdifactMessage (base class)
 class AbstractEdifactMessage(BaseModel, ABC):
-    """
-    Abstract base class for all EDIFACT message types.
-    """
-    unh_nachrichtenkopfsegment: Optional[SegmentUNH] = None
-    bgm_beginn_der_nachricht: Optional[SegmentBGM] = None
-    dtm_nachrichtendatum: list[SegmentDTM] = Field(default_factory=list)
-    unt_nachrichtenendsegment: Optional[SegmentUNT] = None
+   """
+   Abstract base class for all EDIFACT message types.
+   """
+   unh_nachrichtenkopfsegment: Optional[SegmentUNH] = None
+   bgm_beginn_der_nachricht: Optional[SegmentBGM] = None
+   dtm_nachrichtendatum: list[SegmentDTM] = Field(default_factory=list)
+   unt_nachrichtenendsegment: Optional[SegmentUNT] = None
+
 
 # EdifactAperakMessage (concrete implementation)
 class EdifactAperakMessage(AbstractEdifactMessage):
-    """
-    Represents an APERAK message within an interchange.
-    """
-    message_type: Literal[EdifactMessageType.APERAK] = Field(
-        default=EdifactMessageType.APERAK,
-        exclude=True
-    )
+   """
+   Represents an APERAK message within an interchange.
+   """
+   message_type: Literal[EdifactMessageType.APERAK] = Field(
+      default=EdifactMessageType.APERAK,
+      exclude=True
+   )
 
-    # APERAK-specific fields
-    sg2_referenzen: list[SegmentGroup2] = Field(default_factory=list)
-    sg3_marktpartnern: list[SegmentGroup3] = Field(default_factory=list)
-    sg4_fehler_beschreibung: list[SegmentGroup4] = Field(default_factory=list)
+   # APERAK-specific fields
+   sg2_referenzen: list[SegmentGroup2] = Field(default_factory=list)
+   sg3_marktpartnern: list[SegmentGroup3] = Field(default_factory=list)
+   sg4_fehler_beschreibung: list[SegmentGroup4] = Field(default_factory=list)
+
 
 # EdifactMessageUnion (discriminated union)
 EdifactMessageUnion = Annotated[
-    Union[
-        EdifactAperakMessage,
-        EdifactMSconsMessage,
-    ],
-    Field(discriminator="message_type")
+   Union[
+      EdifactAperakMessage,
+      EdifactMSconsMessage,
+   ],
+   Field(discriminator="message_type")
 ]
+
 
 # EdifactInterchange (composition)
 class EdifactInterchange(BaseModel):
-    """
-    Combines all messages, framed by UNB...UNZ.
-    """
-    una_service_string_advice: Optional[SegmentUNA] = None
-    unb_nutzdaten_kopfsegment: SegmentUNB = None
-    unh_unt_nachrichten: list[EdifactMessageUnion] = Field(default_factory=list)
-    unz_nutzdaten_endsegment: SegmentUNZ = None
+   """
+   Combines all messages, framed by UNB...UNZ.
+   """
+   una_service_string_advice: Optional[SegmentUNA] = None
+   unb_nutzdaten_kopfsegment: SegmentUNB = None
+   unh_unt_nachrichten: list[EdifactMessageUnion] = Field(default_factory=list)
+   unz_nutzdaten_endsegment: SegmentUNZ = None
 ```
 
 This architecture allows the application to handle multiple message types within a single interchange and to easily add support for new message types without modifying existing code. For more details on how to extend the application with new message types, see the [Architecture Documentation](architecture.md#112-extending-with-new-message-types).
@@ -116,8 +120,8 @@ The parser library is organized as follows:
 
 4. **Wrappers**: Define the structure of the parsed data (context models)
    - Models for interchanges, messages, segment groups, and specific segments
-   - Common models are defined in the libs/edifactparser/wrappers/segments directory
-   - Message-specific models are defined in the libs/edifactparser/mods/aperak/segments and libs/edifactparser/mods/mscons/segments directories
+   - Common models are defined in the infrastructure/libs/edifactparser/wrappers/segments directory
+   - Message-specific models are defined in the infrastructure/libs/edifactparser/mods/aperak/segments and infrastructure/libs/edifactparser/mods/mscons/segments directories
 
 5. **Context**: Maintains state during the parsing process
    - ParsingContext keeps track of the current state of the parsing process
@@ -318,8 +322,8 @@ All resolvers implement the `GroupStateResolver` abstract base class, which prov
 from abc import ABC
 from typing import Optional
 
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
 
 
 class GroupStateResolver(ABC):
@@ -352,9 +356,9 @@ The `AperakGroupStateResolver` determines the segment group for APERAK messages:
 ```python
 from typing import Optional
 
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup, SegmentType
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-from ediparse.libs.edifactparser.resolvers.group_state_resolver import GroupStateResolver
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup, SegmentType
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.resolvers import GroupStateResolver
 
 
 class AperakGroupStateResolver(GroupStateResolver):
@@ -413,10 +417,10 @@ Resolvers are registered in the `GroupStateResolverFactory` class, which maintai
 import logging
 from typing import Dict, Optional
 
-from ediparse.libs.edifactparser.wrappers.constants import EdifactMessageType
-from ediparse.libs.edifactparser.resolvers.group_state_resolver import GroupStateResolver
-from ediparse.libs.edifactparser.mods.mscons.group_state_resolver import MsconsGroupStateResolver
-from ediparse.libs.edifactparser.mods.aperak.group_state_resolver import AperakGroupStateResolver
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+from ediparse.infrastructure.libs.edifactparser.resolvers import GroupStateResolver
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.group_state_resolver import MsconsGroupStateResolver
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.group_state_resolver import AperakGroupStateResolver
 
 logger = logging.getLogger(__name__)
 
@@ -486,9 +490,9 @@ All segment handlers extend the abstract `SegmentHandler` class, which provides 
 from abc import ABC, abstractmethod
 from typing import Optional, TypeVar, Generic
 
-from ediparse.libs.edifactparser.converters import SegmentConverter
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.converters import SegmentConverter
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 T = TypeVar('T')
 
@@ -572,12 +576,12 @@ The `BGMSegmentHandler` processes BGM (Beginning of Message) segments:
 
 ```python
 from typing import Optional
-from ediparse.libs.edifactparser.converters import BGMSegmentConverter
-from ediparse.libs.edifactparser.handlers import SegmentHandler
-from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
-from ediparse.libs.edifactparser.wrappers.segments import SegmentBGM
+from ediparse.infrastructure.libs.edifactparser.converters import BGMSegmentConverter
+from ediparse.infrastructure.libs.edifactparser.handlers import SegmentHandler
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentBGM
 
 
 class BGMSegmentHandler(SegmentHandler[SegmentBGM]):
@@ -616,27 +620,23 @@ class BGMSegmentHandler(SegmentHandler[SegmentBGM]):
 Handlers are registered in the `SegmentHandlerFactory` class, which maintains a mapping of segment types to handler instances:
 
 ```python
-import logging
-from typing import Dict, Optional
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 
-# Keep this style to avoid circular imports
-from ediparse.libs.edifactparser.utils.edifact_syntax_helper import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentType
 
-from ediparse.libs.edifactparser.wrappers.constants import SegmentType
-
-from ediparse.libs.edifactparser.handlers.bgm_segment_handler import BGMSegmentHandler
-from ediparse.libs.edifactparser.handlers.com_segment_handler import COMSegmentHandler
-from ediparse.libs.edifactparser.handlers.cta_segment_handler import CTASegmentHandler
-from ediparse.libs.edifactparser.handlers.dtm_segment_handler import DTMSegmentHandler
-from ediparse.libs.edifactparser.handlers.erc_segment_handler import ERCSegmentHandler
-from ediparse.libs.edifactparser.handlers.ftx_segment_handler import FTXSegmentHandler
-from ediparse.libs.edifactparser.handlers.nad_segment_handler import NADSegmentHandler
-from ediparse.libs.edifactparser.handlers.rff_segment_handler import RFFSegmentHandler
-from ediparse.libs.edifactparser.handlers.una_segment_handler import UNASegmentHandler
-from ediparse.libs.edifactparser.handlers.unb_segment_handler import UNBSegmentHandler
-from ediparse.libs.edifactparser.handlers.unh_segment_handler import UNHSegmentHandler
-from ediparse.libs.edifactparser.handlers.unt_segment_handler import UNTSegmentHandler
-from ediparse.libs.edifactparser.handlers.unz_segment_handler import UNZSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.bgm_segment_handler import BGMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.com_segment_handler import COMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.cta_segment_handler import CTASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.dtm_segment_handler import DTMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.nad_segment_handler import NADSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.rff_segment_handler import RFFSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.una_segment_handler import UNASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.unb_segment_handler import UNBSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.unh_segment_handler import UNHSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.unt_segment_handler import UNTSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.unz_segment_handler import UNZSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.erc_segment_handler import ERCSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.ftx_segment_handler import FTXSegmentHandler
 
 
 def __register_handlers(self, syntax_parser: EdifactSyntaxHelper) -> None:
@@ -684,10 +684,10 @@ Converters implement the `SegmentConverter` abstract base class, which provides:
 import logging
 from abc import ABC, abstractmethod
 from typing import Optional, TypeVar, Generic
-from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
-from ediparse.libs.edifactparser.exceptions import APERAKParserException
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.exceptions import APERAKParserException
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 logger = logging.getLogger(__name__)
 T = TypeVar('T')
@@ -782,11 +782,11 @@ The `ERCSegmentConverter` transforms ERC segment components into a `SegmentERC` 
 
 ```python
 from typing import Optional
-from ediparse.libs.edifactparser.converters import SegmentConverter
-from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
-from ediparse.libs.edifactparser.wrappers.segments import (
+from ediparse.infrastructure.libs.edifactparser.converters import SegmentConverter
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import (
    SegmentERC, Anwendungsfehler
 )
 
@@ -853,10 +853,10 @@ For example, to create a converter for a new segment type "XYZ":
 
 ```python
 from typing import Optional
-from ediparse.libs.edifactparser.converters import SegmentConverter
-from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
-from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.converters import SegmentConverter
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
 class XYZSegmentConverter(SegmentConverter[SegmentXYZ]):
@@ -897,8 +897,8 @@ The `ParsingContext` contains:
 
 ```python
 from typing import Optional
-from ediparse.libs.edifactparser.wrappers.segments import EdifactInterchange
-from ediparse.libs.edifactparser.mods.aperak.segments import (
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import EdifactInterchange
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments import (
    EdifactAperakMessage, SegmentGroup2, SegmentGroup3,
    SegmentGroup4, SegmentGroup5
 )
@@ -977,16 +977,16 @@ The context is gradually built up as each segment is processed, resulting in a c
 
 The parsed data is structured according to context models defined in the following directories:
 
-1. Common models in `libs/edifactparser/wrappers/segments`:
+1. Common models in `infrastructure/libs/edifactparser/wrappers/segments`:
    - `base.py`: Contains the `AbstractEdifactMessage` base class
    - `message_structure.py`: Contains the `EdifactInterchange` class and `EdifactMessageUnion` discriminated union
    - `message.py`, `reference.py`, `partner.py`, `error.py`: Models for common segments used across message types
 
-2. APERAK-specific models in `libs/edifactparser/mods/aperak/segments`:
+2. APERAK-specific models in `infrastructure/libs/edifactparser/mods/aperak/segments`:
    - `message_structure.py`: Contains the `EdifactAperakMessage` class
    - `segment_group.py`: Models for APERAK segment groups
 
-3. MSCONS-specific models in `libs/edifactparser/mods/mscons/segments`:
+3. MSCONS-specific models in `infrastructure/libs/edifactparser/mods/mscons/segments`:
    - `message_structure.py`: Contains the `EdifactMSconsMessage` class
    - `segment_group.py`: Models for MSCONS segment groups
 
@@ -1005,7 +1005,7 @@ modify existing behavior. For information about the parser's role in the overall
 To extend the parser to support a new segment type, follow these steps:
 
 1. **Define the segment type constant**:
-   Add the new segment type to `libs/edifactparser/wrappers/segments/constants.py`:
+   Add the new segment type to `infrastructure/libs/edifactparser/wrappers/segments/constants.py`:
    ```python
    class SegmentType:
        # Existing segment types...
@@ -1013,7 +1013,7 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 2. **Create a context model for the segment**:
-   Create a new class in one of the files in `libs/edifactparser/wrappers/segments/` (e.g., `message.py`, `interchange.py`):
+   Create a new class in one of the files in `infrastructure/libs/edifactparser/wrappers/segments/` (e.g., `message.py`, `interchange.py`):
    ```python
    from typing import Optional
 
@@ -1026,9 +1026,9 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 3. **Export the new model**:
-   Add the new model to `libs/edifactparser/wrappers/aperak/segments/__init__.py`:
+   Add the new model to `infrastructure/libs/edifactparser/wrappers/aperak/segments/__init__.py`:
    ```python
-   from ediparse.libs.edifactparser.mods.aperak.segments.message_structure import SegmentXYZ
+   from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments.message_structure import SegmentXYZ
 
    __all__ = [
        # Existing exports...
@@ -1037,13 +1037,13 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 4. **Implement a converter for the segment**:
-   Create a new converter in the `libs/edifactparser/converters` directory:
+   Create a new converter in the `infrastructure/libs/edifactparser/converters` directory:
    ```python
    from typing import Optional
-   from ediparse.libs.edifactparser.converters import SegmentConverter
-   from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
-   from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-   from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
+   from ediparse.infrastructure.libs.edifactparser.converters import SegmentConverter
+   from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+   from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
    class XYZSegmentConverter(SegmentConverter[SegmentXYZ]):
        def __init__(self, syntax_parser: EdifactSyntaxHelper):
@@ -1068,14 +1068,13 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 5. **Implement a handler for the segment**:
-   Create a new handler in the `libs/edifactparser/handlers` directory:
+   Create a new handler in the `infrastructure/libs/edifactparser/handlers` directory:
    ```python
    from typing import Optional
 
-   from ediparse.libs.edifactparser.handlers import SegmentHandler
-   from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
-   from ediparse.libs.edifactparser.wrappers.context import ParsingContext
-   from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup
+   from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+   from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
    class XYZSegmentHandler(SegmentHandler[SegmentXYZ]):
        def __init__(self, syntax_parser: EdifactSyntaxHelper):
@@ -1093,10 +1092,10 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 6. **Register the handler**:
-   Add the new handler to `SegmentHandlerFactory.__register_handlers()` in `libs/edifactparser/handlers/segment_handler_factory.py`:
+   Add the new handler to `SegmentHandlerFactory.__register_handlers()` in `infrastructure/libs/edifactparser/handlers/segment_handler_factory.py`:
    ```python
-   from ediparse.libs.edifactparser.wrappers.constants import SegmentType
-   from ediparse.libs.edifactparser.utils import EdifactSyntaxHelper
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentType
+   from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 
    def __register_handlers(self, syntax_parser: EdifactSyntaxHelper) -> None:
        # Initialize handlers for each segment type
@@ -1107,12 +1106,12 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 7. **Update segment group determination**:
-   If the new segment affects segment group determination, update the appropriate resolver class in `libs/edifactparser/mods/{message_type}/group_state_resolver.py`:
+   If the new segment affects segment group determination, update the appropriate resolver class in `infrastructure/libs/edifactparser/mods/{message_type}/group_state_resolver.py`:
    ```python
    from typing import Optional
-   from ediparse.libs.edifactparser.resolvers.group_state_resolver import GroupStateResolver
-   from ediparse.libs.edifactparser.wrappers.constants import SegmentGroup, SegmentType
-   from ediparse.libs.edifactparser.wrappers.context import ParsingContext
+   from ediparse.infrastructure.libs.edifactparser.resolvers import GroupStateResolver
+   from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup, SegmentType
+   from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
 
    class AperakGroupStateResolver(GroupStateResolver):
        @staticmethod
@@ -1135,7 +1134,7 @@ To extend the parser to support a new segment type, follow these steps:
    ```
 
 8. **Add tests**:
-   Create tests for the new converter and handler in the `tests/ediparse/libs/edifactparser/converters` and `tests/ediparse/libs/edifactparser/handlers` directories.
+   Create tests for the new converter and handler in the `tests/ediparse/infrastructure/libs/edifactparser/converters` and `tests/ediparse/infrastructure/libs/edifactparser/handlers` directories.
 
 ### Modifying Existing Behavior
 
@@ -1179,7 +1178,7 @@ import logging
 import re
 from typing import Optional
 
-from ediparse.libs.edifactparser.wrappers.constants import SegmentType
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentType
 
 logger = logging.getLogger(__name__)
 
@@ -1325,7 +1324,7 @@ The parser includes comprehensive unit tests for each component:
 To run the tests:
 
 ```bash
-python -m unittest discover tests/ediparse/libs/edifactparser
+python -m unittest discover tests/ediparse/infrastructure/libs/edifactparser
 ```
 
 ### Debugging Tips
