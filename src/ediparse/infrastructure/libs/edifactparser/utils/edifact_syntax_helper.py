@@ -317,7 +317,7 @@ class EdifactSyntaxHelper:
             index = string_content.find(segment_type)
             if index > 0:
                 line_number = context.segment_count
-                logger.warning(
+                logger.debug(
                     f"L{line_number} -> Removing invalid prefix from segment data '{string_content[:index]}' from '{string_content}'")
                 return string_content[index:]
 
@@ -343,7 +343,7 @@ class EdifactSyntaxHelper:
 
             # If UNA is not in the beginning, log a warning
             if match.start() > 0:
-                logger.warning(f"Removing invalid prefix from UNA segment '{edifact_text[:match.start()]}'")
+                logger.debug(f"Removing invalid prefix from UNA segment '{edifact_text[:match.start()]}'")
 
             return una_segment_string
 

@@ -145,7 +145,7 @@ class SegmentConverter(ABC, Generic[T]):
                 raise AttributeError(f"UNA decimal_mark is None or empty.")
         except AttributeError as ex:
             decimal_mark = EdifactConstants.DOT_DECIMAL
-            logger.warning(
+            logger.debug(
                 f"Decimal mark not found in UNA service string advice."
                 f" Using '{EdifactConstants.DOT_DECIMAL}' as default value."
                 f" Original error: '{ex}'"

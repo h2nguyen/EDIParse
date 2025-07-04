@@ -58,7 +58,7 @@ class DTMSegmentHandler(SegmentHandler[SegmentDTM]):
                 context.current_sg10.dtm_zeitangaben.append(segment)
             else:
                 # Unknown segment group
-                logger.warning(f"Keine Behandlung für DTM-Segment '{segment}' definiert.")
+                logger.debug(f"Keine Behandlung für DTM-Segment '{segment}' definiert.")
         elif EdifactMessageType.APERAK == context.message_type:
             if current_segment_group is None:
                 context.current_message.dtm_nachrichtendatum.append(segment)
@@ -66,4 +66,4 @@ class DTMSegmentHandler(SegmentHandler[SegmentDTM]):
                 context.current_sg2.dtm_referenzdatum.append(segment)
             else:
                 # Unknown segment group
-                logger.warning(f"Keine Behandlung für DTM-Segment '{segment}' definiert.")
+                logger.debug(f"Keine Behandlung für DTM-Segment '{segment}' definiert.")
