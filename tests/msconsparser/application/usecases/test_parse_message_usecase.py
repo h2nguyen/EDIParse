@@ -3,7 +3,7 @@ from unittest.mock import MagicMock
 
 from ediparse.application.usecases.parse_message_usecase import ParseMessageUseCase
 from ediparse.domain.ports.inbound import MessageParserPort
-from ediparse.libs.edifactparser.parser import EdifactParser
+from ediparse.infrastructure.libs.edifactparser.parser import EdifactParser
 
 
 class TestParseMessageUseCase(unittest.TestCase):

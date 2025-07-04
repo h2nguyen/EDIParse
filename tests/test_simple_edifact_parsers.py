@@ -2,7 +2,7 @@ import os
 import unittest
 from pathlib import Path
 
-from ediparse.libs.edifactparser.parser import EdifactParser
+from ediparse.infrastructure.libs.edifactparser.parser import EdifactParser
 
 
 class TestSimpleEdifactParsers(unittest.TestCase):

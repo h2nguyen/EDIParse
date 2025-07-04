@@ -6,7 +6,7 @@ from fastapi import status
 from starlette.responses import JSONResponse
 
 from ediparse.adapters.inbound.rest.impl.parse_edifact_specific_message_routers import ParseEdifactMessageRouter
-from ediparse.libs.edifactparser.exceptions import CONTRLException, EdifactParserException
+from ediparse.infrastructure.libs.edifactparser.exceptions import CONTRLException, EdifactParserException
 
 
 class TestParseEdifactMessageRouter(unittest.TestCase):

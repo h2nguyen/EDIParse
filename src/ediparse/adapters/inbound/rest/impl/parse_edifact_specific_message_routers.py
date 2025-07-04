@@ -25,7 +25,7 @@ from pydantic import StrictStr, Field, StrictBool, StrictBytes
 from starlette.responses import JSONResponse
 
 from ediparse.adapters.inbound.rest.apis.edifact_parser_api_base import BaseEDIFACTParserApi
-from ediparse.libs.edifactparser.exceptions import CONTRLException, EdifactParserException
+from ediparse.infrastructure.libs.edifactparser.exceptions import CONTRLException, EdifactParserException
 from ediparse.application.services import ParserService
 
 logger = logging.getLogger(__name__)
