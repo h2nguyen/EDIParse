@@ -35,6 +35,7 @@ class TestEdifactParser(unittest.TestCase):
         """Test that the parser initializes correctly."""
         self.assertIsNotNone(self.parser._EdifactParser__handler_factory)
         self.assertIsNotNone(self.parser._EdifactParser__resolver_factory)
+        self.assertIsNotNone(self.parser._EdifactParser__context_factory)
         # Context is private, so we don't test it directly
 
     def test_parse_empty_string(self):

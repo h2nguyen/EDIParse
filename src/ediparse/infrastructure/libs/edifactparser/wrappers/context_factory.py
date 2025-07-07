@@ -11,16 +11,20 @@ The factory includes methods for both explicit creation based on a known message
 and automatic identification of the message type from the raw EDIFACT text.
 """
 
+import importlib
+import inspect
+import logging
+import os
+import pkgutil
 import re
 from functools import lru_cache
 from typing import Optional
 
-from . import EdifactSyntaxHelper
+from .context import ParsingContext
 from ..exceptions import EdifactParserException
-from ..wrappers.context import ParsingContext
 from ..mods.module_constants import EdifactMessageType
-from ..mods.aperak.context import APERAKParsingContext
-from ..mods.mscons.context import MSCONSParsingContext
+
+logger = logging.getLogger(__name__)
 
 
 class ParsingContextFactory:
@@ -41,8 +45,74 @@ class ParsingContextFactory:
     without modifying existing code, following the Open/Closed Principle.
     """
 
+    def __init__(self):
+        """
+        Initialize the factory by registering all parsing contexts.
+
+        This constructor creates a dictionary mapping EDIFACT message types to their respective
+        context instances.
+        """
+        self.__contexts: dict[EdifactMessageType, ParsingContext] = {}
+        self.__register_contexts()
+
+    def __register_contexts(self) -> None:
+        """
+        Initialize and register the contexts dictionary with instances of all parsing contexts.
+        """
+        # Initialize contexts for each message type by discovering them in the mods folder
+        self.__contexts = self.__discover_contexts()
+
     @staticmethod
-    def create_context(message_type: EdifactMessageType) -> ParsingContext:
+    def __discover_contexts() -> dict[EdifactMessageType, ParsingContext]:
+        """
+        Dynamically discover and instantiate all parsing contexts in the mods folder.
+
+        Returns:
+            A dictionary mapping message types to their respective parsing context instances.
+        """
+        contexts = {}
+
+        # Get the path to the mods folder
+        mods_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'mods')
+
+        # Iterate through all modules in the mods folder
+        for _, mod_name, is_pkg in pkgutil.iter_modules([mods_path]):
+            if is_pkg:
+                # Check if this module has a context.py file
+                context_filename = "context.py"
+                context_path = os.path.join(mods_path, mod_name, context_filename)
+
+                if os.path.exists(context_path):
+                    try:
+                        # Import the module
+                        module_name = f"..mods.{mod_name}.context"
+                        module = importlib.import_module(module_name, package=__package__)
+
+                        # Find all classes in the module that inherit from ParsingContext
+                        for name, obj in inspect.getmembers(module, inspect.isclass):
+                            if issubclass(obj, ParsingContext) and obj != ParsingContext:
+                                # Extract the message type from the class name
+                                # The class name should follow the pattern <MessageType>ParsingContext
+                                expected_suffix = "ParsingContext"
+                                if name.endswith(expected_suffix):
+                                    message_type_name = name.replace(expected_suffix, '')
+
+                                    # Check if this message type is defined in the EdifactMessageType enum
+                                    try:
+                                        # Convert to uppercase to match the enum values
+                                        message_type = EdifactMessageType(message_type_name.upper())
+                                        # Instantiate the context and add it to the dictionary
+                                        contexts[message_type] = obj()
+                                    except ValueError:
+                                        logger.warning(
+                                            f"Message type {message_type_name} not found in EdifactMessageType enum."
+                                        )
+                    except (ImportError, AttributeError) as e:
+                        logger.warning(f"Error importing parsing context for module {mod_name}: {e}.")
+
+        return contexts
+
+    def create_context(self, message_type: EdifactMessageType) -> ParsingContext:
         """
         Create a ParsingContext instance based on the message type.
 
@@ -53,17 +123,15 @@ class ParsingContextFactory:
             A ParsingContext instance appropriate for the message type.
 
         Raises:
-            ValueError: If the message type is not supported.
+            EdifactParserException: If the message type is not supported.
         """
-        if message_type == EdifactMessageType.MSCONS:
-            return MSCONSParsingContext()
-        elif message_type == EdifactMessageType.APERAK:
-            return APERAKParsingContext()
+        context = self.__contexts.get(message_type)
+        if context:
+            return context
         else:
             raise EdifactParserException(f"Unsupported message type: {message_type}")
 
-    @staticmethod
-    def identify_and_create_context(edifact_text: str, parsing_context: ParsingContext) -> ParsingContext:
+    def identify_and_create_context(self, edifact_text: str, parsing_context: ParsingContext) -> ParsingContext:
         """
         Identify the message type from the EDIFACT text and create an appropriate context.
 
@@ -82,8 +150,8 @@ class ParsingContextFactory:
             EdifactParserException: If no valid message type is found in the EDIFACT message.
         """
         for message_type in EdifactMessageType:
-            if ParsingContextFactory._find_message_type(edifact_text, message_type.value, parsing_context):
-                return ParsingContextFactory.create_context(message_type)
+            if self._find_message_type(edifact_text, message_type.value, parsing_context):
+                return self.create_context(message_type)
 
         raise EdifactParserException("No valid message type found in the EDIFACT message.")
 
@@ -104,6 +172,9 @@ class ParsingContextFactory:
         Returns:
             True if the message type value is found in the text, False otherwise.
         """
+        # Import EdifactSyntaxHelper here to avoid circular imports
+        from ..utils import EdifactSyntaxHelper
+
         prefix: str = EdifactSyntaxHelper.get_element_separator(parsing_context)
         suffix: str = EdifactSyntaxHelper.get_component_separator(parsing_context)
         message_type_value_with_prefix_and_suffix = f"{prefix}{message_type_value}{suffix}"

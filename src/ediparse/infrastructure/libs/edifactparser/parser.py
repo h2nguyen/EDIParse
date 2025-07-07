@@ -4,12 +4,13 @@ import logging
 from typing import Optional
 
 from .exceptions import EdifactParserException
-from .resolvers.group_state_resolver_factory import GroupStateResolverFactory
-from .utils import EdifactSyntaxHelper, ParsingContextFactory
 from .handlers import SegmentHandlerFactory
-from .wrappers.context import ParsingContext, InitialParsingContext
-from .wrappers.segments import EdifactInterchange
+from .resolvers.group_state_resolver_factory import GroupStateResolverFactory
+from .utils import EdifactSyntaxHelper
 from .wrappers.constants import EdifactConstants, SegmentType
+from .wrappers.context import ParsingContext, InitialParsingContext
+from .wrappers.context_factory import ParsingContextFactory
+from .wrappers.segments import EdifactInterchange
 
 logger = logging.getLogger(__name__)
 
@@ -31,12 +32,14 @@ class EdifactParser:
     def __init__(
             self,
             handler_factory: Optional[SegmentHandlerFactory] = None,
-            resolver_factory: Optional[GroupStateResolverFactory] = None
+            resolver_factory: Optional[GroupStateResolverFactory] = None,
+            context_factory: Optional[ParsingContextFactory] = None
     ) -> None:
         self.__context: Optional[ParsingContext] = InitialParsingContext()
         self.__syntax_parser = EdifactSyntaxHelper()
         self.__handler_factory = handler_factory or SegmentHandlerFactory(self.__syntax_parser)
         self.__resolver_factory = resolver_factory or GroupStateResolverFactory()
+        self.__context_factory = context_factory or ParsingContextFactory()
 
     def parse(self, edifact_text: str, max_lines_to_parse: int = -1) -> EdifactInterchange:
         """
@@ -62,7 +65,7 @@ class EdifactParser:
             interchange_cached = self.__context.interchange
 
         # Updates the parsing context by specifying the algorithm to be used for the message type to be parsed (e.g., APERAK, MSCONS, etc.).
-        self.__context = ParsingContextFactory.identify_and_create_context(
+        self.__context = self.__context_factory.identify_and_create_context(
             edifact_text=edifact_text, parsing_context=self.__context
         )
         if interchange_cached:

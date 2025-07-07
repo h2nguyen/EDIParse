@@ -7,7 +7,7 @@ for creating instances of ParsingContext subclasses based on the EDIFACT message
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.exceptions import EdifactParserException
-from ediparse.infrastructure.libs.edifactparser.utils import ParsingContextFactory
+from ediparse.infrastructure.libs.edifactparser.wrappers.context_factory import ParsingContextFactory
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
 from ediparse.infrastructure.libs.edifactparser.wrappers.context import InitialParsingContext
@@ -21,6 +21,8 @@ class TestParsingContextFactory(unittest.TestCase):
         """Set up the test case."""
         # Initialize a default parsing context for tests
         self.default_context = InitialParsingContext()
+        # Initialize the factory
+        self.factory = ParsingContextFactory()
 
     def tearDown(self):
         """Clean up after the test case."""
@@ -33,7 +35,7 @@ class TestParsingContextFactory(unittest.TestCase):
         message_type = EdifactMessageType.MSCONS
 
         # Act
-        context = ParsingContextFactory.create_context(message_type)
+        context = self.factory.create_context(message_type)
 
         # Assert
         self.assertIsInstance(context, MSCONSParsingContext)
@@ -45,7 +47,7 @@ class TestParsingContextFactory(unittest.TestCase):
         message_type = EdifactMessageType.APERAK
 
         # Act
-        context = ParsingContextFactory.create_context(message_type)
+        context = self.factory.create_context(message_type)
 
         # Assert
         self.assertIsInstance(context, APERAKParsingContext)
@@ -58,7 +60,7 @@ class TestParsingContextFactory(unittest.TestCase):
 
         # Act & Assert
         with self.assertRaises(EdifactParserException) as context:
-            ParsingContextFactory.create_context(mock_type)
+            self.factory.create_context(mock_type)
         self.assertIn("Unsupported message type", str(context.exception))
 
     def test_identify_and_create_context_mscons(self):
@@ -77,7 +79,7 @@ RFF+Z13:13002'
         """
 
         # Act
-        context = ParsingContextFactory.identify_and_create_context(edifact_text, self.default_context)
+        context = self.factory.identify_and_create_context(edifact_text, self.default_context)
 
         # Assert
         self.assertIsInstance(context, MSCONSParsingContext)
@@ -95,7 +97,7 @@ RFF+ACE:TG9523'
         """
 
         # Act
-        context = ParsingContextFactory.identify_and_create_context(edifact_text, self.default_context)
+        context = self.factory.identify_and_create_context(edifact_text, self.default_context)
 
         # Assert
         self.assertIsInstance(context, APERAKParsingContext)
@@ -118,7 +120,7 @@ RFF+Z13:13002'
 
         # Act & Assert
         with self.assertRaises(EdifactParserException) as context:
-            ParsingContextFactory.identify_and_create_context(edifact_text, self.default_context)
+            self.factory.identify_and_create_context(edifact_text, self.default_context)
         self.assertEqual("No valid message type found in the EDIFACT message.", str(context.exception))
 
     def test_find_message_type(self):
@@ -135,7 +137,7 @@ RFF+Z13:13002'
 
         # Act & Assert
         for string_content, message_type_value, expected_result in test_cases:
-            result = ParsingContextFactory._find_message_type(
+            result = self.factory._find_message_type(
                 string_content, 
                 message_type_value, 
                 self.default_context
