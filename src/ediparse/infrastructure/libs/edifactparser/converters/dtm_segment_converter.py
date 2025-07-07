@@ -3,9 +3,10 @@
 from typing import Optional
 
 from . import SegmentConverter
+from ..mods.module_constants import EdifactMessageType
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.context import ParsingContext
-from ..wrappers.constants import SegmentGroup, EdifactMessageType
+from ..wrappers.constants import SegmentGroup
 from ..wrappers.segments import SegmentDTM
 
 

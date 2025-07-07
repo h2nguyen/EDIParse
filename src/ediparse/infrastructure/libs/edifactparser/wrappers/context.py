@@ -11,7 +11,7 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from pydantic import BaseModel
 
-from .constants import EdifactMessageType
+from ..mods.module_constants import EdifactMessageType
 from .segments.base import AbstractEdifactMessage
 from .segments.message_structure import EdifactInterchange
 

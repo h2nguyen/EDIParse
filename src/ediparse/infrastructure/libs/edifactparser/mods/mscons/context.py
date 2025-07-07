@@ -21,7 +21,7 @@ from .segments import (
     SegmentGroup10 as MscSG10,
 )
 from ...wrappers.context import ParsingContext
-from ...wrappers.constants import EdifactMessageType
+from ..module_constants import EdifactMessageType
 
 
 class MSCONSParsingContext(ParsingContext):

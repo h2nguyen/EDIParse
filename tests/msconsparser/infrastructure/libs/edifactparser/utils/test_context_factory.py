@@ -9,7 +9,7 @@ import unittest
 from ediparse.infrastructure.libs.edifactparser.exceptions import EdifactParserException
 from ediparse.infrastructure.libs.edifactparser.utils import ParsingContextFactory
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
-from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
 from ediparse.infrastructure.libs.edifactparser.wrappers.context import InitialParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 

@@ -13,8 +13,9 @@ from .una_segment_handler import UNASegmentHandler
 from .unb_segment_handler import UNBSegmentHandler
 from .unt_segment_handler import UNTSegmentHandler
 from .unz_segment_handler import UNZSegmentHandler
+from ..mods.module_constants import EdifactMessageType
 from ..utils.edifact_syntax_helper import EdifactSyntaxHelper
-from ..wrappers.constants import SegmentType, EdifactMessageType
+from ..wrappers.constants import SegmentType
 from ..wrappers.context import ParsingContext
 
 logger = logging.getLogger(__name__)
@@ -132,10 +133,6 @@ class SegmentHandlerFactory:
                                         message_type = EdifactMessageType(message_type_name)
                                         # Instantiate the handler and add it to the dictionary
                                         handlers[message_type] = obj(syntax_parser)
-                                        #logger.debug(
-                                        #    f"Registered {segment_type} segment handler "
-                                        #    f"for message type {message_type}."
-                                        #)
                                     except ValueError:
                                         logger.warning(
                                             f"Message type {message_type_name} not found in EdifactMessageType enum."

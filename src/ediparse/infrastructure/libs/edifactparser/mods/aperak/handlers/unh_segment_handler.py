@@ -7,7 +7,8 @@ from ....handlers.unh_segment_handler import UNHSegmentHandler
 from ....exceptions import EdifactParserException
 from ....utils import EdifactSyntaxHelper
 from ....wrappers.context import ParsingContext
-from ....wrappers.constants import SegmentGroup, EdifactMessageType
+from ....wrappers.constants import SegmentGroup
+from ....mods.module_constants import EdifactMessageType
 from ....wrappers.segments.message import SegmentUNH
 from ..segments import EdifactAperakMessage
 

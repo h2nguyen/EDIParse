@@ -18,7 +18,7 @@ from typing import Optional
 from . import EdifactSyntaxHelper
 from ..exceptions import EdifactParserException
 from ..wrappers.context import ParsingContext
-from ..wrappers.constants import EdifactMessageType
+from ..mods.module_constants import EdifactMessageType
 from ..mods.aperak.context import APERAKParsingContext
 from ..mods.mscons.context import MSCONSParsingContext
 

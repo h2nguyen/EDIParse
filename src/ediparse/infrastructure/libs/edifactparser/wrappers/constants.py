@@ -39,16 +39,6 @@ class EdifactConstants:
     DEFAULT_RESERVED_INDICATOR: str = " "  # Default character that marks reserved use of a component, currently it must be a space.
     DEFAULT_SEGMENT_TERMINATOR: str = "'"  # Default character that marks the end of a segment.
 
-
-class EdifactMessageType(StrEnum):
-    """
-    The EDIFACT message types supported by the parser.
-    """
-    APERAK = "APERAK"
-    MSCONS = "MSCONS"
-
-    # Add more EDIFACT message types as needed...
-
 class SegmentGroup(StrEnum):
     """
     Segment groups in EDIFACT message structures.

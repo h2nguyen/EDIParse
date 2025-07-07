@@ -1,37 +1,28 @@
 import unittest
 from unittest import mock
 
-# Import message-type-specific segment handlers
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.com_segment_handler import MSCONSCOMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.com_segment_handler import APERAKCOMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.cta_segment_handler import MSCONSCTASegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.cta_segment_handler import APERAKCTASegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.dtm_segment_handler import MSCONSDTMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.dtm_segment_handler import APERAKDTMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.ftx_segment_handler import APERAKFTXSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.nad_segment_handler import MSCONSNADSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.nad_segment_handler import APERAKNADSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.rff_segment_handler import MSCONSRFFSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.rff_segment_handler import APERAKRFFSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.unh_segment_handler import MSCONSUNHSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.unh_segment_handler import APERAKUNHSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.erc_segment_handler import APERAKERCSegmentHandler
-
-# Import standard segment handlers
-from ediparse.infrastructure.libs.edifactparser.handlers.erc_segment_handler import ERCSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.unb_segment_handler import UNBSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.bgm_segment_handler import BGMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.cci_segment_handler import CCISegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.lin_segment_handler import LINSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.loc_segment_handler import LOCSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.pia_segment_handler import PIASegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.qty_segment_handler import QTYSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.sts_segment_handler import STSSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.handlers.segment_handler_factory import SegmentHandlerFactory
 from ediparse.infrastructure.libs.edifactparser.handlers.una_segment_handler import UNASegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.uns_segment_handler import UNSSegmentHandler
+# Import standard segment handlers
+from ediparse.infrastructure.libs.edifactparser.handlers.unb_segment_handler import UNBSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.unt_segment_handler import UNTSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.unz_segment_handler import UNZSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.segment_handler_factory import SegmentHandlerFactory
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.com_segment_handler import APERAKCOMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.cta_segment_handler import APERAKCTASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.dtm_segment_handler import APERAKDTMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.erc_segment_handler import APERAKERCSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.ftx_segment_handler import APERAKFTXSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.nad_segment_handler import APERAKNADSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.rff_segment_handler import APERAKRFFSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.unh_segment_handler import APERAKUNHSegmentHandler
+# Import message-type-specific segment handlers
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.com_segment_handler import MSCONSCOMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.cta_segment_handler import MSCONSCTASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.dtm_segment_handler import MSCONSDTMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.nad_segment_handler import MSCONSNADSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.rff_segment_handler import MSCONSRFFSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.unh_segment_handler import MSCONSUNHSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentType
 
@@ -49,7 +40,7 @@ class TestSegmentHandlerFactory(unittest.TestCase):
         # For segment types that require a message-type-specific context
         from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
         from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
-        from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+        from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
 
         # Create contexts with message types
         mscons_context = MSCONSParsingContext()
@@ -107,7 +98,7 @@ class TestSegmentHandlerFactory(unittest.TestCase):
         # Create contexts with message types for testing message-type-specific handlers
         from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
         from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
-        from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+        from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
         from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 
         # MSCONS context
@@ -170,7 +161,7 @@ class TestSegmentHandlerFactory(unittest.TestCase):
     def test_all_message_types_have_message_specific_segment_handlers(self):
         """Test that all message types defined in EdifactMessageType have corresponding message-specific segment handlers."""
         # Arrange
-        from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+        from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
         from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
         from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 

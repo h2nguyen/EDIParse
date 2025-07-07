@@ -9,7 +9,7 @@ from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCON
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentUNH
-from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
 
 
 class TestMSCONSUNHSegmentHandler(unittest.TestCase):

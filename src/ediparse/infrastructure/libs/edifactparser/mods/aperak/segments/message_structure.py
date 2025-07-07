@@ -10,7 +10,7 @@ from typing import Optional, Literal
 from pydantic import Field
 
 from .segment_group import SegmentGroup2, SegmentGroup3, SegmentGroup4
-from ....wrappers.constants import EdifactMessageType
+from ...module_constants import EdifactMessageType
 from ....wrappers.segments import SegmentUNT
 from ....wrappers.segments.base import AbstractEdifactMessage
 

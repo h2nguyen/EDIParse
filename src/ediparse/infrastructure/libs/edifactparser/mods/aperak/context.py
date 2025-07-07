@@ -11,7 +11,7 @@ from .segments import (
     EdifactAperakMessage, SegmentGroup2, SegmentGroup3, SegmentGroup4, SegmentGroup5
 )
 from ...wrappers.context import ParsingContext
-from ...wrappers.constants import EdifactMessageType
+from ..module_constants import EdifactMessageType
 
 
 class APERAKParsingContext(ParsingContext):
