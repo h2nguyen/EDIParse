@@ -2,21 +2,21 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.erc_segment_converter import ERCSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.erc_segment_handler import ERCSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.erc_segment_handler import APERAKERCSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments import EdifactAperakMessage
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments import EdifactAperakMessage, SegmentGroup4
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments.error_code import SegmentERC, Anwendungsfehler
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
-class TestERCSegmentHandler(unittest.TestCase):
-    """Test case for the ERCSegmentHandler class."""
+class TestAPERAKERCSegmentHandler(unittest.TestCase):
+    """Test case for the APERAKERCSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = ERCSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = APERAKERCSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = APERAKParsingContext()
         self.context.current_message = EdifactAperakMessage()
         self.segment = SegmentERC(fehlercode=Anwendungsfehler(anwendungsfehler_code="E12"))

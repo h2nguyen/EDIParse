@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.lin_segment_converter import LINSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.lin_segment_handler import LINSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.lin_segment_handler import MSCONSLINSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
@@ -10,12 +10,12 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.segments import Segment
 
 
 class TestLINSegmentHandler(unittest.TestCase):
-    """Test case for the LINSegmentHandler class."""
+    """Test case for the MSCONSLINSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = LINSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSLINSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentLIN()

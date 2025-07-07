@@ -1,35 +1,21 @@
 # coding: utf-8
 
-import logging
 import importlib
 import inspect
+import logging
 import os
 import pkgutil
 from typing import Optional, Type
 
+from .bgm_segment_handler import BGMSegmentHandler
+from .segment_handler import SegmentHandler
+from .una_segment_handler import UNASegmentHandler
+from .unb_segment_handler import UNBSegmentHandler
+from .unt_segment_handler import UNTSegmentHandler
+from .unz_segment_handler import UNZSegmentHandler
 from ..utils.edifact_syntax_helper import EdifactSyntaxHelper
 from ..wrappers.constants import SegmentType, EdifactMessageType
 from ..wrappers.context import ParsingContext
-
-from .segment_handler import SegmentHandler
-from .bgm_segment_handler import BGMSegmentHandler
-from .cci_segment_handler import CCISegmentHandler
-from .dtm_segment_handler import DTMSegmentHandler
-from .lin_segment_handler import LINSegmentHandler
-from .loc_segment_handler import LOCSegmentHandler
-from .nad_segment_handler import NADSegmentHandler
-from .pia_segment_handler import PIASegmentHandler
-from .qty_segment_handler import QTYSegmentHandler
-from .rff_segment_handler import RFFSegmentHandler
-from .sts_segment_handler import STSSegmentHandler
-from .una_segment_handler import UNASegmentHandler
-from .unb_segment_handler import UNBSegmentHandler
-from .unh_segment_handler import UNHSegmentHandler
-from .uns_segment_handler import UNSSegmentHandler
-from .unt_segment_handler import UNTSegmentHandler
-from .unz_segment_handler import UNZSegmentHandler
-from .erc_segment_handler import ERCSegmentHandler
-from .ftx_segment_handler import FTXSegmentHandler
 
 logger = logging.getLogger(__name__)
 
@@ -63,31 +49,44 @@ class SegmentHandlerFactory:
         Initialize and register the handlers dictionary with instances of all segment handlers.
         """
         # Import segment handler base classes only when needed to avoid circular imports
+        from .cci_segment_handler import CCISegmentHandler
         from .com_segment_handler import COMSegmentHandler
         from .cta_segment_handler import CTASegmentHandler
+        from .dtm_segment_handler import DTMSegmentHandler
+        from .erc_segment_handler import ERCSegmentHandler
+        from .ftx_segment_handler import FTXSegmentHandler
+        from .lin_segment_handler import LINSegmentHandler
+        from .loc_segment_handler import LOCSegmentHandler
+        from .nad_segment_handler import NADSegmentHandler
+        from .pia_segment_handler import PIASegmentHandler
+        from .rff_segment_handler import RFFSegmentHandler
+        from .sts_segment_handler import STSSegmentHandler
+        from .qty_segment_handler import QTYSegmentHandler
+        from .unh_segment_handler import UNHSegmentHandler
+        from .uns_segment_handler import UNSSegmentHandler
 
         # Initialize handlers for each segment type
         self.__handlers = {
             SegmentType.UNA: UNASegmentHandler(syntax_parser),
             SegmentType.UNB: UNBSegmentHandler(syntax_parser),
-            SegmentType.UNH: UNHSegmentHandler(syntax_parser),
+            SegmentType.UNH: self.__discover_segment_handlers(SegmentType.UNH.value, syntax_parser, UNHSegmentHandler),
             SegmentType.BGM: BGMSegmentHandler(syntax_parser),
-            SegmentType.DTM: DTMSegmentHandler(syntax_parser),
-            SegmentType.RFF: RFFSegmentHandler(syntax_parser),
-            SegmentType.NAD: NADSegmentHandler(syntax_parser),
+            SegmentType.DTM: self.__discover_segment_handlers(SegmentType.DTM.value, syntax_parser, DTMSegmentHandler),
+            SegmentType.RFF: self.__discover_segment_handlers(SegmentType.RFF.value, syntax_parser, RFFSegmentHandler),
+            SegmentType.NAD: self.__discover_segment_handlers(SegmentType.NAD.value, syntax_parser, NADSegmentHandler),
             SegmentType.CTA: self.__discover_segment_handlers(SegmentType.CTA.value, syntax_parser, CTASegmentHandler),
             SegmentType.COM: self.__discover_segment_handlers(SegmentType.COM.value, syntax_parser, COMSegmentHandler),
-            SegmentType.UNS: UNSSegmentHandler(syntax_parser),
-            SegmentType.LOC: LOCSegmentHandler(syntax_parser),
-            SegmentType.CCI: CCISegmentHandler(syntax_parser),
-            SegmentType.LIN: LINSegmentHandler(syntax_parser),
-            SegmentType.PIA: PIASegmentHandler(syntax_parser),
-            SegmentType.QTY: QTYSegmentHandler(syntax_parser),
-            SegmentType.STS: STSSegmentHandler(syntax_parser),
+            SegmentType.UNS: self.__discover_segment_handlers(SegmentType.UNS.value, syntax_parser, UNSSegmentHandler),
+            SegmentType.LOC: self.__discover_segment_handlers(SegmentType.LOC.value, syntax_parser, LOCSegmentHandler),
+            SegmentType.CCI: self.__discover_segment_handlers(SegmentType.CCI.value, syntax_parser, CCISegmentHandler),
+            SegmentType.LIN: self.__discover_segment_handlers(SegmentType.LIN.value, syntax_parser, LINSegmentHandler),
+            SegmentType.PIA: self.__discover_segment_handlers(SegmentType.PIA.value, syntax_parser, PIASegmentHandler),
+            SegmentType.QTY: self.__discover_segment_handlers(SegmentType.QTY.value, syntax_parser, QTYSegmentHandler),
+            SegmentType.STS: self.__discover_segment_handlers(SegmentType.STS.value, syntax_parser, STSSegmentHandler),
+            SegmentType.ERC: self.__discover_segment_handlers(SegmentType.ERC.value, syntax_parser, ERCSegmentHandler),
+            SegmentType.FTX: self.__discover_segment_handlers(SegmentType.FTX.value, syntax_parser, FTXSegmentHandler),
             SegmentType.UNT: UNTSegmentHandler(syntax_parser),
             SegmentType.UNZ: UNZSegmentHandler(syntax_parser),
-            SegmentType.ERC: ERCSegmentHandler(syntax_parser),
-            SegmentType.FTX: FTXSegmentHandler(syntax_parser),
         }
 
     def __discover_segment_handlers(self, segment_type: str, syntax_parser: EdifactSyntaxHelper, segment_handler_base: Type) -> dict[str, SegmentHandler]:
@@ -133,10 +132,10 @@ class SegmentHandlerFactory:
                                         message_type = EdifactMessageType(message_type_name)
                                         # Instantiate the handler and add it to the dictionary
                                         handlers[message_type] = obj(syntax_parser)
-                                        logger.debug(
-                                            f"Registered {segment_type} segment handler "
-                                            f"for message type {message_type}."
-                                        )
+                                        #logger.debug(
+                                        #    f"Registered {segment_type} segment handler "
+                                        #    f"for message type {message_type}."
+                                        #)
                                     except ValueError:
                                         logger.warning(
                                             f"Message type {message_type_name} not found in EdifactMessageType enum."

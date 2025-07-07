@@ -5,8 +5,8 @@ from typing import Optional
 from . import SegmentHandler
 from ..converters import UNASegmentConverter
 from ..utils import EdifactSyntaxHelper
-from ..wrappers.context import ParsingContext
 from ..wrappers.constants import SegmentGroup
+from ..wrappers.context import ParsingContext
 from ..wrappers.segments import SegmentUNA
 
 

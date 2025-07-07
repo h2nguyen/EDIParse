@@ -2,20 +2,21 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.dtm_segment_converter import DTMSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.dtm_segment_handler import DTMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.dtm_segment_handler import MSCONSDTMSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentDTM
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
-class TestDTMSegmentHandler(unittest.TestCase):
-    """Test case for the DTMSegmentHandler class."""
+class TestMSCONSDTMSegmentHandler(unittest.TestCase):
+    """Test case for the MSCONSDTMSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = DTMSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSDTMSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentDTM()
@@ -24,8 +25,8 @@ class TestDTMSegmentHandler(unittest.TestCase):
         """Test that the handler initializes with the correct converter."""
         self.assertIsInstance(self.handler.converter, DTMSegmentConverter)
 
-    def test_update_context_updates_context_correctly(self):
-        """Test that _update_context updates the context correctly."""
+    def test_update_context_updates_context_correctly_for_header(self):
+        """Test that _update_context updates the context correctly for the header."""
         # Arrange
         current_segment_group = None
 
@@ -33,9 +34,46 @@ class TestDTMSegmentHandler(unittest.TestCase):
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
-        self.assertIsNotNone(self.context.current_message)
+        self.assertIn(self.segment, self.context.current_message.dtm_nachrichtendatum)
+
+    def test_update_context_updates_context_correctly_for_sg1(self):
+        """Test that _update_context updates the context correctly for SG1."""
+        # Arrange
+        current_segment_group = SegmentGroup.SG1
+        self.context.current_sg1 = MagicMock()
+        self.context.current_sg1.dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma = []
+
+        # Act
+        self.handler._update_context(self.segment, current_segment_group, self.context)
+
+        # Assert
+        self.assertIn(self.segment, self.context.current_sg1.dtm_versionsangabe_marktlokationsscharfe_allokationsliste_gas_mmma)
+
+    def test_update_context_updates_context_correctly_for_sg6(self):
+        """Test that _update_context updates the context correctly for SG6."""
+        # Arrange
+        current_segment_group = SegmentGroup.SG6
+        self.context.current_sg6 = MagicMock()
+        self.context.current_sg6.dtm_zeitraeume = []
+
+        # Act
+        self.handler._update_context(self.segment, current_segment_group, self.context)
+
+        # Assert
+        self.assertIn(self.segment, self.context.current_sg6.dtm_zeitraeume)
+
+    def test_update_context_updates_context_correctly_for_sg10(self):
+        """Test that _update_context updates the context correctly for SG10."""
+        # Arrange
+        current_segment_group = SegmentGroup.SG10
+        self.context.current_sg10 = MagicMock()
+        self.context.current_sg10.dtm_zeitangaben = []
+
+        # Act
+        self.handler._update_context(self.segment, current_segment_group, self.context)
+
+        # Assert
+        self.assertIn(self.segment, self.context.current_sg10.dtm_zeitangaben)
 
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""

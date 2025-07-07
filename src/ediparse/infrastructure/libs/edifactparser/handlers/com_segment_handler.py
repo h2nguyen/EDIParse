@@ -1,13 +1,9 @@
 # coding: utf-8
-
-from abc import ABC, abstractmethod
-from typing import Optional
+from abc import ABC
 
 from . import SegmentHandler
 from ..converters import COMSegmentConverter
 from ..utils import EdifactSyntaxHelper
-from ..wrappers.context import ParsingContext
-from ..wrappers.constants import SegmentGroup
 from ..wrappers.segments import SegmentCOM
 
 

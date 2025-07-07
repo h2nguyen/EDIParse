@@ -2,20 +2,21 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.nad_segment_converter import NADSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.nad_segment_handler import NADSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.nad_segment_handler import MSCONSNADSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage, SegmentGroup2, SegmentGroup5
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentNAD
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
-class TestNADSegmentHandler(unittest.TestCase):
-    """Test case for the NADSegmentHandler class."""
+class TestMSCONSNADSegmentHandler(unittest.TestCase):
+    """Test case for the MSCONSNADSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = NADSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSNADSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentNAD()
@@ -24,18 +25,33 @@ class TestNADSegmentHandler(unittest.TestCase):
         """Test that the handler initializes with the correct converter."""
         self.assertIsInstance(self.handler.converter, NADSegmentConverter)
 
-    def test_update_context_updates_context_correctly(self):
-        """Test that _update_context updates the context correctly."""
+    def test_update_context_updates_context_correctly_for_sg2(self):
+        """Test that _update_context updates the context correctly for SG2."""
         # Arrange
-        current_segment_group = None
+        current_segment_group = SegmentGroup.SG2
+        self.context.current_sg2 = None
 
         # Act
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
-        self.assertIsNotNone(self.context.current_message)
+        self.assertIsNotNone(self.context.current_sg2)
+        self.assertEqual(self.segment, self.context.current_sg2.nad_marktpartner)
+        self.assertIn(self.context.current_sg2, self.context.current_message.sg2_marktpartnern)
+
+    def test_update_context_updates_context_correctly_for_sg5(self):
+        """Test that _update_context updates the context correctly for SG5."""
+        # Arrange
+        current_segment_group = SegmentGroup.SG5
+        self.context.current_sg5 = None
+
+        # Act
+        self.handler._update_context(self.segment, current_segment_group, self.context)
+
+        # Assert
+        self.assertIsNotNone(self.context.current_sg5)
+        self.assertEqual(self.segment, self.context.current_sg5.nad_name_und_adresse)
+        self.assertIn(self.context.current_sg5, self.context.current_message.sg5_liefer_bzw_bezugsorte)
 
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""

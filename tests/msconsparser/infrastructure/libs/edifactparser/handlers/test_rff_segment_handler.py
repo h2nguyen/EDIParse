@@ -2,20 +2,21 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.rff_segment_converter import RFFSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.rff_segment_handler import RFFSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.rff_segment_handler import MSCONSRFFSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage, SegmentGroup1, SegmentGroup7
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentRFF
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
-class TestRFFSegmentHandler(unittest.TestCase):
-    """Test case for the RFFSegmentHandler class."""
+class TestMSCONSRFFSegmentHandler(unittest.TestCase):
+    """Test case for the MSCONSRFFSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = RFFSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSRFFSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentRFF()
@@ -24,18 +25,35 @@ class TestRFFSegmentHandler(unittest.TestCase):
         """Test that the handler initializes with the correct converter."""
         self.assertIsInstance(self.handler.converter, RFFSegmentConverter)
 
-    def test_update_context_updates_context_correctly(self):
-        """Test that _update_context updates the context correctly."""
+    def test_update_context_updates_context_correctly_for_sg1(self):
+        """Test that _update_context updates the context correctly for SG1."""
         # Arrange
-        current_segment_group = None
+        current_segment_group = SegmentGroup.SG1
+        self.context.current_sg1 = None
 
         # Act
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
-        self.assertIsNotNone(self.context.current_message)
+        self.assertIsNotNone(self.context.current_sg1)
+        self.assertEqual(self.segment, self.context.current_sg1.rff_referenzangaben)
+        self.assertIn(self.context.current_sg1, self.context.current_message.sg1_referenzen)
+
+    def test_update_context_updates_context_correctly_for_sg7(self):
+        """Test that _update_context updates the context correctly for SG7."""
+        # Arrange
+        current_segment_group = SegmentGroup.SG7
+        self.context.current_sg7 = None
+        self.context.current_sg6 = MagicMock()
+        self.context.current_sg6.sg7_referenzangaben = []
+
+        # Act
+        self.handler._update_context(self.segment, current_segment_group, self.context)
+
+        # Assert
+        self.assertIsNotNone(self.context.current_sg7)
+        self.assertEqual(self.segment, self.context.current_sg7.rff_referenzangabe)
+        self.assertIn(self.context.current_sg7, self.context.current_sg6.sg7_referenzangaben)
 
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""

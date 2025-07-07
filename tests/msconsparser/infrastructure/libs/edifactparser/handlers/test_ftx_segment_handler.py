@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.ftx_segment_converter import FTXSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.ftx_segment_handler import FTXSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.ftx_segment_handler import APERAKFTXSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments import (
@@ -12,13 +12,13 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.constants import Segmen
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments.error_code import SegmentFTX
 
 
-class TestFTXSegmentHandler(unittest.TestCase):
-    """Test case for the FTXSegmentHandler class."""
+class TestAPERAKFTXSegmentHandler(unittest.TestCase):
+    """Test case for the APERAKFTXSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = FTXSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = APERAKFTXSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = APERAKParsingContext()
         self.context.current_message = EdifactAperakMessage()
         self.context.current_sg4 = SegmentGroup4()

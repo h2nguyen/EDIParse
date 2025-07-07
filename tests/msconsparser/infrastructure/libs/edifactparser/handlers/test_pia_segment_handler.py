@@ -2,20 +2,21 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.pia_segment_converter import PIASegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.pia_segment_handler import PIASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.pia_segment_handler import MSCONSPIASegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentPIA
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 
 
 class TestPIASegmentHandler(unittest.TestCase):
-    """Test case for the PIASegmentHandler class."""
+    """Test case for the MSCONSPIASegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = PIASegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSPIASegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentPIA()
@@ -24,18 +25,17 @@ class TestPIASegmentHandler(unittest.TestCase):
         """Test that the handler initializes with the correct converter."""
         self.assertIsInstance(self.handler.converter, PIASegmentConverter)
 
-    def test_update_context_updates_context_correctly(self):
-        """Test that _update_context updates the context correctly."""
+    def test_update_context_updates_context_correctly_for_sg9(self):
+        """Test that _update_context updates the context correctly for SG9."""
         # Arrange
-        current_segment_group = None
+        current_segment_group = SegmentGroup.SG9
+        self.context.current_sg9 = MagicMock()
 
         # Act
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
-        self.assertIsNotNone(self.context.current_message)
+        self.assertEqual(self.segment, self.context.current_sg9.pia_produktidentifikation)
 
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""

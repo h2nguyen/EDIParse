@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.uns_segment_converter import UNSSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers import UNSSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.uns_segment_handler import MSCONSUNSSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
@@ -10,12 +10,12 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.segments import Segment
 
 
 class TestUNSSegmentHandler(unittest.TestCase):
-    """Test case for the UNSSegmentHandler class."""
+    """Test case for the MSCONSUNSSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = UNSSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSUNSSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentUNS()
@@ -33,9 +33,7 @@ class TestUNSSegmentHandler(unittest.TestCase):
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
-        self.assertIsNotNone(self.context.current_message)
+        self.assertEqual(self.segment, self.context.current_message.uns_abschnitts_kontrollsegment)
 
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""

@@ -1,25 +1,33 @@
 import unittest
 from unittest import mock
 
+# Import message-type-specific segment handlers
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.com_segment_handler import MSCONSCOMSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.com_segment_handler import APERAKCOMSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.cta_segment_handler import MSCONSCTASegmentHandler
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.cta_segment_handler import APERAKCTASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.dtm_segment_handler import MSCONSDTMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.dtm_segment_handler import APERAKDTMSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.ftx_segment_handler import APERAKFTXSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.nad_segment_handler import MSCONSNADSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.nad_segment_handler import APERAKNADSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.rff_segment_handler import MSCONSRFFSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.rff_segment_handler import APERAKRFFSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.unh_segment_handler import MSCONSUNHSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.unh_segment_handler import APERAKUNHSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.erc_segment_handler import APERAKERCSegmentHandler
+
+# Import standard segment handlers
 from ediparse.infrastructure.libs.edifactparser.handlers.erc_segment_handler import ERCSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.ftx_segment_handler import FTXSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.unb_segment_handler import UNBSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.bgm_segment_handler import BGMSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.cci_segment_handler import CCISegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.dtm_segment_handler import DTMSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.lin_segment_handler import LINSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.loc_segment_handler import LOCSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.nad_segment_handler import NADSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.pia_segment_handler import PIASegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.qty_segment_handler import QTYSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.rff_segment_handler import RFFSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.sts_segment_handler import STSSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.una_segment_handler import UNASegmentHandler
-from ediparse.infrastructure.libs.edifactparser.handlers.unh_segment_handler import UNHSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.uns_segment_handler import UNSSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.unt_segment_handler import UNTSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.handlers.unz_segment_handler import UNZSegmentHandler
@@ -38,17 +46,7 @@ class TestSegmentHandlerFactory(unittest.TestCase):
 
     def test_get_handler_returns_correct_handler_for_each_segment_type(self):
         """Test that get_handler returns the correct handler for each segment type."""
-        # Test for each segment type
-        self.assertIsInstance(self.factory.get_handler(SegmentType.UNA), UNASegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.UNB), UNBSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.UNH), UNHSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.BGM), BGMSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.DTM), DTMSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.ERC), ERCSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.FTX), FTXSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.RFF), RFFSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.NAD), NADSegmentHandler)
-        # For CTA and COM segments, we need to provide a context with a message type
+        # For segment types that require a message-type-specific context
         from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
         from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
         from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
@@ -56,23 +54,36 @@ class TestSegmentHandlerFactory(unittest.TestCase):
         # Create contexts with message types
         mscons_context = MSCONSParsingContext()
         mscons_context.message_type = EdifactMessageType.MSCONS
+        mscons_context.current_message = mock.MagicMock()
+
         aperak_context = APERAKParsingContext()
         aperak_context.message_type = EdifactMessageType.APERAK
+        aperak_context.current_message = mock.MagicMock()
 
-        # Test that the factory returns the correct handler for each message type
-        self.assertIsInstance(self.factory.get_handler(SegmentType.COM, mscons_context), MSCONSCOMSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.COM, aperak_context), APERAKCOMSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.CTA, mscons_context), MSCONSCTASegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.CTA, aperak_context), APERAKCTASegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.UNS), UNSSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.LOC), LOCSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.CCI), CCISegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.LIN), LINSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.PIA), PIASegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.QTY), QTYSegmentHandler)
-        self.assertIsInstance(self.factory.get_handler(SegmentType.STS), STSSegmentHandler)
+        # Test standard segment handlers (no message type required)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.UNA), UNASegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.UNB), UNBSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.BGM), BGMSegmentHandler)
         self.assertIsInstance(self.factory.get_handler(SegmentType.UNT), UNTSegmentHandler)
         self.assertIsInstance(self.factory.get_handler(SegmentType.UNZ), UNZSegmentHandler)
+
+        # Test message-type-specific segment handlers for MSCONS
+        self.assertIsInstance(self.factory.get_handler(SegmentType.COM, mscons_context), MSCONSCOMSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.CTA, mscons_context), MSCONSCTASegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.DTM, mscons_context), MSCONSDTMSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.NAD, mscons_context), MSCONSNADSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.RFF, mscons_context), MSCONSRFFSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.UNH, mscons_context), MSCONSUNHSegmentHandler)
+
+        # Test message-type-specific segment handlers for APERAK
+        self.assertIsInstance(self.factory.get_handler(SegmentType.COM, aperak_context), APERAKCOMSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.CTA, aperak_context), APERAKCTASegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.DTM, aperak_context), APERAKDTMSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.ERC, aperak_context), APERAKERCSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.FTX, aperak_context), APERAKFTXSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.NAD, aperak_context), APERAKNADSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.RFF, aperak_context), APERAKRFFSegmentHandler)
+        self.assertIsInstance(self.factory.get_handler(SegmentType.UNH, aperak_context), APERAKUNHSegmentHandler)
 
     def test_get_handler_returns_none_for_unknown_segment_type(self):
         """Test that get_handler returns None for an unknown segment type."""
@@ -93,76 +104,134 @@ class TestSegmentHandlerFactory(unittest.TestCase):
         # Create a new factory instance
         factory = SegmentHandlerFactory(syntax_parser=self.syntax_parser)
 
-        # Create contexts with message types for testing COM segment handler
+        # Create contexts with message types for testing message-type-specific handlers
         from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+        from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
         from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
+        from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
+
+        # MSCONS context
         mscons_context = MSCONSParsingContext()
         mscons_context.message_type = EdifactMessageType.MSCONS
+        mscons_context.current_message = mock.MagicMock()
+        mscons_context.interchange = mock.MagicMock(spec=EdifactInterchange)
+
+        # APERAK context
+        aperak_context = APERAKParsingContext()
+        aperak_context.message_type = EdifactMessageType.APERAK
+        aperak_context.current_message = mock.MagicMock()
+        aperak_context.interchange = mock.MagicMock(spec=EdifactInterchange)
+
+        # Standard segment types (no message type required)
+        standard_segments = {
+            SegmentType.UNA, SegmentType.UNB, SegmentType.BGM, 
+            SegmentType.UNT, SegmentType.UNZ
+        }
+
+        # Message-type-specific segment types for MSCONS
+        mscons_specific_segments = {
+            SegmentType.COM, SegmentType.CTA, SegmentType.DTM, SegmentType.NAD, 
+            SegmentType.RFF, SegmentType.UNH, SegmentType.UNS, SegmentType.LOC, 
+            SegmentType.CCI, SegmentType.LIN, SegmentType.PIA, SegmentType.QTY, 
+            SegmentType.STS
+        }
+
+        # Message-type-specific segment types for APERAK
+        aperak_specific_segments = {
+            SegmentType.COM, SegmentType.CTA, SegmentType.DTM, SegmentType.ERC, SegmentType.FTX, 
+            SegmentType.NAD, SegmentType.RFF, SegmentType.UNH
+        }
 
         # Verify that all registered handlers are detected
         for segment_type in SegmentType:
             # Act
-            # For COM and CTA segments, we need to provide a context with a message type
-            if segment_type == SegmentType.COM or segment_type == SegmentType.CTA:
-                handler = factory.get_handler(segment_type, mscons_context)
-                # Assert
-                self.assertIsNotNone(handler, f"Handler for {segment_type} should not be None")
-                self.assertEqual(handler.__class__.__name__, f"MSCONS{segment_type}SegmentHandler", 
-                                f"Handler class name should be MSCONS{segment_type}SegmentHandler")
-            else:
+            if segment_type in standard_segments:
+                # For standard segment types, no context is needed
                 handler = factory.get_handler(segment_type)
                 # Assert
                 self.assertIsNotNone(handler, f"Handler for {segment_type} should not be None")
                 self.assertEqual(handler.__class__.__name__, f"{segment_type}SegmentHandler", 
                                 f"Handler class name should be {segment_type}SegmentHandler")
+            elif segment_type in mscons_specific_segments:
+                # For MSCONS-specific segments, we need to provide a MSCONS context
+                handler = factory.get_handler(segment_type, mscons_context)
+                # Assert
+                self.assertIsNotNone(handler, f"Handler for {segment_type} should not be None")
+                self.assertEqual(handler.__class__.__name__, f"MSCONS{segment_type}SegmentHandler", 
+                                f"Handler class name should be MSCONS{segment_type}SegmentHandler")
+            elif segment_type in aperak_specific_segments and segment_type not in mscons_specific_segments:
+                # For APERAK-only segments, we need to provide an APERAK context
+                handler = factory.get_handler(segment_type, aperak_context)
+                # Assert
+                self.assertIsNotNone(handler, f"Handler for {segment_type} should not be None")
+                self.assertEqual(handler.__class__.__name__, f"APERAK{segment_type}SegmentHandler", 
+                                f"Handler class name should be APERAK{segment_type}SegmentHandler")
 
-    def test_all_message_types_have_com_segment_handlers(self):
-        """Test that all message types defined in EdifactMessageType have a corresponding COM segment handler."""
+    def test_all_message_types_have_message_specific_segment_handlers(self):
+        """Test that all message types defined in EdifactMessageType have corresponding message-specific segment handlers."""
         # Arrange
         from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
         from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+        from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 
         # Create a new factory instance
         factory = SegmentHandlerFactory(syntax_parser=self.syntax_parser)
 
-        # For each message type, create a context and check if a COM segment handler exists
+        # Common message-type-specific segment types (implemented for all message types)
+        common_message_type_specific_segments = [
+            SegmentType.COM, SegmentType.CTA, SegmentType.DTM, 
+            SegmentType.NAD, SegmentType.RFF, SegmentType.UNH
+        ]
+
+        # MSCONS-specific segment types
+        mscons_specific_segments = [
+            SegmentType.UNS, SegmentType.LOC, SegmentType.CCI, 
+            SegmentType.LIN, SegmentType.PIA, SegmentType.QTY, 
+            SegmentType.STS
+        ]
+
+        # APERAK-specific segment types
+        aperak_specific_segments = [SegmentType.FTX, SegmentType.ERC]
+
+        # For each message type, create a context and check if all message-specific segment handlers exist
         for message_type in EdifactMessageType:
             # Create a mock context with the message type
             context = mock.MagicMock(spec=ParsingContext)
             context.message_type = message_type
             context.current_message = mock.MagicMock()
+            context.interchange = mock.MagicMock(spec=EdifactInterchange)
 
-            # Act
-            handler = factory.get_handler(SegmentType.COM, context)
+            # Test common message-type-specific segments
+            for segment_type in common_message_type_specific_segments:
+                # Act
+                handler = factory.get_handler(segment_type, context)
 
-            # Assert
-            self.assertIsNotNone(handler, f"No COM segment handler found for message type {message_type}")
-            self.assertEqual(handler.__class__.__name__, f"{message_type}COMSegmentHandler", 
-                            f"Handler class name should be {message_type}COMSegmentHandler")
+                # Assert
+                self.assertIsNotNone(handler, f"No {segment_type} segment handler found for message type {message_type}")
+                self.assertEqual(handler.__class__.__name__, f"{message_type}{segment_type}SegmentHandler", 
+                                f"Handler class name should be {message_type}{segment_type}SegmentHandler")
 
-    def test_all_message_types_have_cta_segment_handlers(self):
-        """Test that all message types defined in EdifactMessageType have a corresponding CTA segment handler."""
-        # Arrange
-        from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
-        from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
+            # Test MSCONS-specific segments
+            if message_type == EdifactMessageType.MSCONS:
+                for segment_type in mscons_specific_segments:
+                    # Act
+                    handler = factory.get_handler(segment_type, context)
 
-        # Create a new factory instance
-        factory = SegmentHandlerFactory(syntax_parser=self.syntax_parser)
+                    # Assert
+                    self.assertIsNotNone(handler, f"No {segment_type} segment handler found for message type {message_type}")
+                    self.assertEqual(handler.__class__.__name__, f"{message_type}{segment_type}SegmentHandler", 
+                                    f"Handler class name should be {message_type}{segment_type}SegmentHandler")
 
-        # For each message type, create a context and check if a CTA segment handler exists
-        for message_type in EdifactMessageType:
-            # Create a mock context with the message type
-            context = mock.MagicMock(spec=ParsingContext)
-            context.message_type = message_type
-            context.current_message = mock.MagicMock()
+            # Test APERAK-specific segments
+            if message_type == EdifactMessageType.APERAK:
+                for segment_type in aperak_specific_segments:
+                    # Act
+                    handler = factory.get_handler(segment_type, context)
 
-            # Act
-            handler = factory.get_handler(SegmentType.CTA, context)
-
-            # Assert
-            self.assertIsNotNone(handler, f"No CTA segment handler found for message type {message_type}")
-            self.assertEqual(handler.__class__.__name__, f"{message_type}CTASegmentHandler", 
-                            f"Handler class name should be {message_type}CTASegmentHandler")
+                    # Assert
+                    self.assertIsNotNone(handler, f"No {segment_type} segment handler found for message type {message_type}")
+                    self.assertEqual(handler.__class__.__name__, f"{message_type}{segment_type}SegmentHandler", 
+                                    f"Handler class name should be {message_type}{segment_type}SegmentHandler")
 
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.cci_segment_converter import CCISegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.cci_segment_handler import CCISegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.cci_segment_handler import MSCONSCCISegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
@@ -10,12 +10,12 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.segments import Segment
 
 
 class TestCCISegmentHandler(unittest.TestCase):
-    """Test case for the CCISegmentHandler class."""
+    """Test case for the MSCONSCCISegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = CCISegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSCCISegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentCCI()
@@ -24,18 +24,21 @@ class TestCCISegmentHandler(unittest.TestCase):
         """Test that the handler initializes with the correct converter."""
         self.assertIsInstance(self.handler.converter, CCISegmentConverter)
 
-    def test_update_context_updates_context_correctly(self):
-        """Test that _update_context updates the context correctly."""
+    def test_update_context_updates_context_correctly_for_sg8(self):
+        """Test that _update_context updates the context correctly for SG8."""
         # Arrange
-        current_segment_group = None
+        from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
+        current_segment_group = SegmentGroup.SG8
+        self.context.current_sg6 = MagicMock()
+        self.context.current_sg6.sg8_zeitreihentypen = []
 
         # Act
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
-        self.assertIsNotNone(self.context.current_message)
+        self.assertIsNotNone(self.context.current_sg8)
+        self.assertEqual(self.segment, self.context.current_sg8.cci_zeitreihentyp)
+        self.assertIn(self.context.current_sg8, self.context.current_sg6.sg8_zeitreihentypen)
 
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""

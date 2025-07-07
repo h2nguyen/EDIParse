@@ -3,23 +3,28 @@ from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.unh_segment_converter import UNHSegmentConverter
 from ediparse.infrastructure.libs.edifactparser.exceptions import EdifactParserException
-from ediparse.infrastructure.libs.edifactparser.handlers.unh_segment_handler import UNHSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.unh_segment_handler import MSCONSUNHSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentUNH
+from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactMessageType
 
 
-class TestUNHSegmentHandler(unittest.TestCase):
-    """Test case for the UNHSegmentHandler class."""
+class TestMSCONSUNHSegmentHandler(unittest.TestCase):
+    """Test case for the MSCONSUNHSegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = UNHSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSUNHSegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.interchange = EdifactInterchange()
         self.segment = SegmentUNH()
+        # Set up a nachrichten_kennung for the segment
+        self.segment.nachrichten_kennung = MagicMock()
+        self.segment.nachrichten_kennung.nachrichtentyp_kennung = EdifactMessageType.MSCONS
 
     def test_init_creates_with_correct_converter(self):
         """Test that the handler initializes with the correct converter."""
@@ -36,6 +41,21 @@ class TestUNHSegmentHandler(unittest.TestCase):
             self.handler._update_context(self.segment, current_segment_group, self.context)
 
         self.assertEqual(str(context.exception), "nachrichten_kennung should not be None.")
+
+    def test_update_context_creates_mscons_message(self):
+        """Test that _update_context creates an MSCONS message."""
+        # Arrange
+        current_segment_group = None
+
+        # Act
+        self.handler._update_context(self.segment, current_segment_group, self.context)
+
+        # Assert
+        self.assertIsNotNone(self.context.current_message)
+        self.assertIsInstance(self.context.current_message, EdifactMSconsMessage)
+        self.assertEqual(self.segment, self.context.current_message.unh_nachrichtenkopfsegment)
+        self.assertIn(self.context.current_message, self.context.interchange.unh_unt_nachrichten)
+        self.assertEqual(self.context.message_type, EdifactMessageType.MSCONS)
 
     def test_can_handle_returns_true_when_interchange_exists(self):
         """Test that _can_handle returns True when interchange exists."""
