@@ -8,6 +8,7 @@ from ....utils import EdifactSyntaxHelper
 from ....wrappers.context import ParsingContext
 from ....wrappers.constants import SegmentGroup
 from ....wrappers.segments import SegmentDTM
+from ..converters.dtm_segment_converter import APERAKDTMSegmentConverter
 
 logger = logging.getLogger(__name__)
 
@@ -25,12 +26,15 @@ class APERAKDTMSegmentHandler(DTMSegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the APERAK DTM segment handler with the appropriate converter.
+        Initialize the APERAK DTM segment handler with the APERAK-specific DTM converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
+        # Initialize the parent class
         super().__init__(syntax_parser)
+        # Set the converter to the APERAK-specific DTM converter
+        self.converter = APERAKDTMSegmentConverter(syntax_parser)
 
     def _update_context(self, segment: SegmentDTM, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:
@@ -49,4 +53,4 @@ class APERAKDTMSegmentHandler(DTMSegmentHandler):
             context.current_sg2.dtm_referenzdatum.append(segment)
         else:
             # Unknown segment group
-            logger.debug(f"Keine Behandlung für DTM-Segment '{segment}' definiert.")
+            logger.debug(f"No handling defined for DTM-Segment '{segment}'.")

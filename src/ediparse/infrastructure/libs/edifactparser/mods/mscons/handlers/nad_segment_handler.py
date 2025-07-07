@@ -7,6 +7,7 @@ from ....utils import EdifactSyntaxHelper
 from ....wrappers.context import ParsingContext
 from ....wrappers.constants import SegmentGroup
 from ....wrappers.segments import SegmentNAD
+from ..converters.nad_segment_converter import MSCONSNADSegmentConverter
 from ..segments import (
     SegmentGroup2 as MscSG2, SegmentGroup5 as MscSG5
 )
@@ -25,12 +26,15 @@ class MSCONSNADSegmentHandler(NADSegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS NAD segment handler with the appropriate converter.
+        Initialize the MSCONS NAD segment handler with the MSCONS-specific NAD converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
+        # Initialize the parent class
         super().__init__(syntax_parser)
+        # Set the converter to the MSCONS-specific NAD converter
+        self.converter = MSCONSNADSegmentConverter(syntax_parser)
 
     def _update_context(self, segment: SegmentNAD, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

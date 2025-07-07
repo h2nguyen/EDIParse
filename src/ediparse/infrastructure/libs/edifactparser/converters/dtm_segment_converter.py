@@ -1,22 +1,24 @@
 # coding: utf-8
-
+from abc import ABC
 from typing import Optional
 
 from . import SegmentConverter
-from ..mods.module_constants import EdifactMessageType
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.context import ParsingContext
 from ..wrappers.constants import SegmentGroup
 from ..wrappers.segments import SegmentDTM
 
 
-class DTMSegmentConverter(SegmentConverter[SegmentDTM]):
+class DTMSegmentConverter(SegmentConverter[SegmentDTM], ABC):
     """
-    Converter for DTM (Date/Time/Period) segments.
+    Abstract converter for DTM (Date/Time/Period) segments.
 
     This converter transforms DTM segment data from EDIFACT format into a structured
     SegmentDTM object. The DTM segment specifies dates, times, periods, and their 
     function within the message.
+
+    Specific implementations for different message types (e.g., MSCONS, APERAK) should be
+    provided in their respective mods folders.
     """
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
@@ -76,69 +78,3 @@ class DTMSegmentConverter(SegmentConverter[SegmentDTM]):
             datum_oder_uhrzeit_oder_zeitspanne_wert=datum_oder_uhrzeit_oder_zeitspanne_wert,
             datums_oder_uhrzeit_oder_zeitspannen_format_code=datums_oder_uhrzeit_oder_zeitspannen_format_code
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        """
-        Maps DTM qualifier codes to human-readable identifier names based on segment group context.
-
-        This method provides specific mappings for date/time function qualifiers to meaningful
-        names that describe their purpose in the message, taking into account the current
-        segment group context.
-
-        Args:
-            qualifier_code: The date/time function qualifier code from the DTM segment
-            current_segment_group: The current segment group being processed
-            context: The parsing context containing the message type and segment group context information
-
-        Returns:
-            A human-readable identifier name for the date/time function, or None if no mapping exists
-        """
-        if EdifactMessageType.MSCONS == context.message_type:
-            if not qualifier_code:
-                return None
-            elif qualifier_code == "7":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Nutzungszeitpunkt"
-            elif qualifier_code == "9":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Ablesedatum"
-            elif qualifier_code == "60":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Ausführungs- / Änderungszeitpunkt"
-            elif qualifier_code == "137":
-                return "Nachrichtendatum"
-            elif qualifier_code == "157":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Gültigkeit, Beginndatum Profilschar"
-            elif qualifier_code == "163":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Beginn Messperiode Übertragungszeitraum"
-                elif current_segment_group == SegmentGroup.SG10:
-                    return "Beginn Messperiode"
-            elif qualifier_code == "164":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Ende Messperiode Übertragungszeitraum"
-                elif current_segment_group == SegmentGroup.SG10:
-                    return "Ende Messperiode"
-            elif qualifier_code == "293":
-                if current_segment_group == SegmentGroup.SG1:
-                    return "Versionsangabe marktlokationsscharfe Allokationsliste Gas (MMMA)"
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Versionsangabe"
-            elif qualifier_code == "306":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Leistungsperiode"
-            elif qualifier_code == "492":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Bilanzierungsmonat"
-
-        if EdifactMessageType.APERAK == context.message_type:
-            if qualifier_code == "137":
-                return "Dokumentendatum"
-
-        return None

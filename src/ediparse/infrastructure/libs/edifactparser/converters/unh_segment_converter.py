@@ -83,3 +83,11 @@ class UNHSegmentConverter(SegmentConverter[SegmentUNH]):
                 erste_und_letzte_uebermittlung=status_der_uebermittlung_details[1]
             ) if status_der_uebermittlung_details else None
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from abc import ABC
 from typing import Optional
 
 from . import SegmentConverter
@@ -11,14 +12,17 @@ from ..wrappers.segments import (
 )
 
 
-class STSSegmentConverter(SegmentConverter[SegmentSTS]):
+class STSSegmentConverter(SegmentConverter[SegmentSTS], ABC):
     """
-    Converter for STS (Status) segments.
+    Abstract converter for STS (Status) segments.
 
     This converter transforms STS segment data from EDIFACT format into a structured
     SegmentSTS object. The STS segment is used to specify status information such as 
     correction reason, gas quality, replacement value formation procedure, or 
     plausibility note.
+
+    Specific implementations for different message types (e.g., MSCONS) should be
+    provided in their respective mods folders.
     """
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
@@ -77,39 +81,3 @@ class STSSegmentConverter(SegmentConverter[SegmentSTS]):
                 statusanlass_code=statusanlass_code
             ) if statusanlass_code else None
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        """
-        Maps STS status category codes to human-readable identifier names.
-
-        This method provides specific mappings for status category codes to meaningful
-        names that describe the type of status information being provided.
-
-        Args:
-            qualifier_code: The status category code from the STS segment
-            current_segment_group: The current segment group being processed
-            context: The parsing context containing the message type and segment group context information
-
-        Returns:
-            A human-readable identifier name for the status category, or None if no mapping exists
-        """
-        if not qualifier_code:
-            return None
-        if qualifier_code == "10":
-            return "Grundlage der Energiemenge"
-        if qualifier_code == "Z31":
-            return "Gasqualität"
-        if qualifier_code == "Z32":
-            return "Ersatzwertbildungsverfahren"
-        if qualifier_code == "Z33":
-            return "Plausibilisierungshinweis"
-        if qualifier_code == "Z34":
-            return "Korrekturgrund"
-        if qualifier_code == "Z40":
-            return "Grund der Ersatzwertbildung"
-        return None

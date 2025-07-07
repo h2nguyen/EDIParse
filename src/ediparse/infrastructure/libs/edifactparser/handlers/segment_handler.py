@@ -28,12 +28,12 @@ class SegmentHandler(ABC, Generic[T]):
     a concrete handler implementation will process.
     """
 
-    def __init__(self, converter: SegmentConverter[T]):
+    def __init__(self, converter: Optional[SegmentConverter[T]] = None):
         """
         Initialize the handler with a converter for the specific segment type.
 
         Args:
-            converter: The converter to use for converting the segment data.
+            converter: The optional converter to use for converting the segment data.
         """
         self.converter = converter
 

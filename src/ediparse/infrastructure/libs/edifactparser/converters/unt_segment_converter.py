@@ -59,3 +59,11 @@ class UNTSegmentConverter(SegmentConverter[SegmentUNT]):
             anzahl_der_segmente_in_einer_nachricht=anzahl_der_segmente_in_einer_nachricht,
             nachrichten_referenznummer=nachrichten_referenznummer
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

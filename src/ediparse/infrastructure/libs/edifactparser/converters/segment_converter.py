@@ -98,6 +98,7 @@ class SegmentConverter(ABC, Generic[T]):
         """
         pass
 
+    @abstractmethod
     def _get_identifier_name(
             self,
             qualifier_code: Optional[str],
@@ -107,9 +108,9 @@ class SegmentConverter(ABC, Generic[T]):
         """
         Helper method to get a human-readable identifier name based on qualifier code.
 
-        This method can be overridden by subclasses to provide specific mappings
-        from qualifier codes to human-readable names, often depending on the
-        current segment group context.
+        This abstract method must be implemented by all concrete converter classes.
+        It provides specific mappings from qualifier codes to human-readable names,
+        often depending on the current segment group context and message type.
 
         Args:
             qualifier_code: The qualifier code from the segment
@@ -146,9 +147,9 @@ class SegmentConverter(ABC, Generic[T]):
         except AttributeError as ex:
             decimal_mark = EdifactConstants.DOT_DECIMAL
             logger.debug(
-                f"Decimal mark not found in UNA service string advice."
-                f" Using '{EdifactConstants.DOT_DECIMAL}' as default value."
-                f" Original error: '{ex}'"
+                f"Decimal mark not found in UNA service string advice. "
+                f"Using '{EdifactConstants.DOT_DECIMAL}' as default value. "
+                f"Original error: '{ex}'"
             )
         number = string_number.replace(decimal_mark, EdifactConstants.DOT_DECIMAL)
         return float(number)

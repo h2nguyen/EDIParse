@@ -73,3 +73,11 @@ class PIASegmentConverter(SegmentConverter[SegmentPIA]):
                 art_der_produkt_leistungsnummer_code=art_der_produkt_leistungsnummer_code
             )
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

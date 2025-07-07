@@ -66,3 +66,11 @@ class CTASegmentConverter(SegmentConverter[SegmentCTA]):
                 abteilung_oder_bearbeiter=abteilung_oder_bearbeiter[1]
             ) if abteilung_oder_bearbeiter is not None and len(abteilung_oder_bearbeiter) > 1 else None
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

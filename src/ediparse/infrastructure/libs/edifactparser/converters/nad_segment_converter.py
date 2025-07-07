@@ -1,5 +1,6 @@
 # coding: utf-8
 
+from abc import ABC
 from typing import Optional
 
 from . import SegmentConverter
@@ -11,13 +12,16 @@ from ..wrappers.segments import (
 )
 
 
-class NADSegmentConverter(SegmentConverter[SegmentNAD]):
+class NADSegmentConverter(SegmentConverter[SegmentNAD], ABC):
     """
-    Converter for NAD (Name and Address) segments.
+    Abstract converter for NAD (Name and Address) segments.
 
     This converter transforms NAD segment data from EDIFACT format into a structured
     SegmentNAD object. The NAD segment is used to identify the market partners and 
     the delivery location.
+
+    Specific implementations for different message types (e.g., MSCONS, APERAK) should be
+    provided in their respective mods folders.
     """
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
@@ -73,33 +77,3 @@ class NADSegmentConverter(SegmentConverter[SegmentNAD]):
                 verantwortliche_stelle_fuer_die_codepflege_code=identifikation_des_beteiligten[2]
             ) if identifikation_des_beteiligten and len(identifikation_des_beteiligten) > 2 else None
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        """
-        Maps NAD qualifier codes to human-readable identifier names.
-
-        This method provides specific mappings for NAD party qualifier codes to meaningful
-        names that describe the role of the party in the message.
-
-        Args:
-            qualifier_code: The party qualifier code from the NAD segment
-            current_segment_group: The current segment group being processed
-            context: The parsing context containing the message type and segment group context information
-
-        Returns:
-            A human-readable identifier name for the party role, or None if no mapping exists
-        """
-        if not qualifier_code:
-            return None
-        if qualifier_code in ["DP", "DED", "Z15"]:
-            return "Name und Adresse"
-        if qualifier_code == "MR":
-            return "MP-ID Empfänger"
-        if qualifier_code == "MS":
-            return "MP-ID Absender"
-        return None

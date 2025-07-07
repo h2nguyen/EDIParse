@@ -58,3 +58,11 @@ class UNZSegmentConverter(SegmentConverter[SegmentUNZ]):
             datenaustauschzaehler=anzahl_msg,
             datenaustauschreferenz=datenaustauschreferenz
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

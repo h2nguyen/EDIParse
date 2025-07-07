@@ -55,3 +55,11 @@ class ERCSegmentConverter(SegmentConverter[SegmentERC]):
         return SegmentERC(
             fehlercode=Anwendungsfehler(anwendungsfehler_code=element_components[1])
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

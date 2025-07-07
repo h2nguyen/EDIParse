@@ -54,3 +54,11 @@ class LINSegmentConverter(SegmentConverter[SegmentLIN]):
         return SegmentLIN(
             positionsnummer=element_components[1]
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

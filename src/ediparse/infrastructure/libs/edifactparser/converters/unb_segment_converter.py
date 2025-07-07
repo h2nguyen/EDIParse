@@ -112,3 +112,11 @@ class UNBSegmentConverter(SegmentConverter[SegmentUNB]):
             anwendungsreferenz=anwendungsreferenz,
             test_kennzeichen=test_kennzeichen,
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

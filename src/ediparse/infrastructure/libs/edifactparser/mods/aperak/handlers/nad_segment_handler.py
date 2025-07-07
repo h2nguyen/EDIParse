@@ -7,6 +7,7 @@ from ....utils import EdifactSyntaxHelper
 from ....wrappers.context import ParsingContext
 from ....wrappers.constants import SegmentGroup
 from ....wrappers.segments import SegmentNAD
+from ..converters.nad_segment_converter import APERAKNADSegmentConverter
 from ..segments import (
     SegmentGroup3 as ApkSG3,
 )
@@ -25,12 +26,15 @@ class APERAKNADSegmentHandler(NADSegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the APERAK NAD segment handler with the appropriate converter.
+        Initialize the APERAK NAD segment handler with the APERAK-specific NAD converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
+        # Initialize the parent class
         super().__init__(syntax_parser)
+        # Set the converter to the APERAK-specific NAD converter
+        self.converter = APERAKNADSegmentConverter(syntax_parser)
 
     def _update_context(self, segment: SegmentNAD, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

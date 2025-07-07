@@ -3,7 +3,6 @@
 from abc import ABC
 
 from . import SegmentHandler
-from ..converters import RFFSegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.segments import SegmentRFF
 
@@ -23,9 +22,10 @@ class RFFSegmentHandler(SegmentHandler[SegmentRFF], ABC):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the RFF segment handler with the appropriate converter.
+        Initialize the RFF segment handler.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
-        super().__init__(RFFSegmentConverter(syntax_parser=syntax_parser))
+        # The converter will be provided by the message-specific implementation
+        super().__init__(None)

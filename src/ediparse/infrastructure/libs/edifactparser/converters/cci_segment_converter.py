@@ -64,3 +64,11 @@ class CCISegmentConverter(SegmentConverter[SegmentCCI]):
                 merkmal_code=merkmal_code
             ) if merkmal_code else None
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

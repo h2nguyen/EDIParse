@@ -3,7 +3,6 @@
 from abc import ABC
 
 from . import SegmentHandler
-from ..converters import STSSegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.segments import SegmentSTS
 
@@ -23,9 +22,10 @@ class STSSegmentHandler(SegmentHandler[SegmentSTS], ABC):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the STS segment handler with the appropriate converter.
+        Initialize the STS segment handler.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
-        super().__init__(STSSegmentConverter(syntax_parser=syntax_parser))
+        # The converter will be provided by the message-specific implementation
+        super().__init__(None)

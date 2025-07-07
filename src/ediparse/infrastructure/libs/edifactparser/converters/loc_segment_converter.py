@@ -70,3 +70,11 @@ class LOCSegmentConverter(SegmentConverter[SegmentLOC]):
                 erster_zugehoeriger_platz_ort_code=erster_zugehoeriger_platz_ort_code
             ) if erster_zugehoeriger_platz_ort_code else None,
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

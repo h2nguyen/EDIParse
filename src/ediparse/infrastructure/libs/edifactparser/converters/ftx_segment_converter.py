@@ -66,3 +66,11 @@ class FTXSegmentConverter(SegmentConverter[SegmentFTX]):
                 freier_text_c=text_details[1] if len(text_details) > 1 else None,
             ),
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

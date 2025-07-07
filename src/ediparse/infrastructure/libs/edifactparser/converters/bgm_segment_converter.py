@@ -65,3 +65,11 @@ class BGMSegmentConverter(SegmentConverter[SegmentBGM]):
             ),
             nachrichtenfunktion_code=nachrichtenfunktion_code
         )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        pass

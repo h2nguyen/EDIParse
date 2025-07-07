@@ -7,6 +7,7 @@ from ....utils import EdifactSyntaxHelper
 from ....wrappers.context import ParsingContext
 from ....wrappers.constants import SegmentGroup
 from ....wrappers.segments import SegmentRFF
+from ..converters.rff_segment_converter import MSCONSRFFSegmentConverter
 from ..segments import (
     SegmentGroup1 as MscSG1, SegmentGroup7 as MscSG7
 )
@@ -26,12 +27,15 @@ class MSCONSRFFSegmentHandler(RFFSegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS RFF segment handler with the appropriate converter.
+        Initialize the MSCONS RFF segment handler with the MSCONS-specific RFF converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
+        # Initialize the parent class
         super().__init__(syntax_parser)
+        # Set the converter to the MSCONS-specific RFF converter
+        self.converter = MSCONSRFFSegmentConverter(syntax_parser)
 
     def _update_context(self, segment: SegmentRFF, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:
