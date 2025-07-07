@@ -56,7 +56,7 @@ class SegmentHandler(ABC, Generic[T]):
             context: The parsing context to update.
         """
         # Check if the context is valid for this handler
-        if not self._can_handle(context):
+        if not self.can_handle(context):
             return
 
         # Convert the segment
@@ -71,7 +71,7 @@ class SegmentHandler(ABC, Generic[T]):
         # Update the context with the converted segment
         self._update_context(segment, current_segment_group, context)
 
-    def _can_handle(self, context: ParsingContext) -> bool:
+    def can_handle(self, context: ParsingContext) -> bool:
         """
         Check if the context is valid for this handler.
 

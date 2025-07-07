@@ -119,7 +119,7 @@ class EdifactParser:
                 context=self.__context
             )
 
-            segment_handler = self.__handler_factory.get_handler(segment_type)
+            segment_handler = self.__handler_factory.get_handler(segment_type, self.__context)
             if segment_handler:
                 # Use the dedicated handler
                 segment_handler.handle(
@@ -157,7 +157,7 @@ class EdifactParser:
             una_segment (str): The UNA segment to initialize
         """
         # Process the UNA segment to set the delimiters
-        una_handler = self.__handler_factory.get_handler(SegmentType.UNA)
+        una_handler = self.__handler_factory.get_handler(SegmentType.UNA, self.__context)
         if una_handler:
             una_handler.handle(
                 line_number=1,

@@ -34,7 +34,7 @@ class UNHSegmentHandler(SegmentHandler[SegmentUNH]):
         """
         super().__init__(UNHSegmentConverter(syntax_parser=syntax_parser))
 
-    def _can_handle(self, context: ParsingContext) -> bool:
+    def can_handle(self, context: ParsingContext) -> bool:
         """
         Check if the context is valid for this handler.
         UNH segments can always be handled if the interchange exists.

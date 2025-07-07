@@ -40,7 +40,7 @@ class TestUNTSegmentHandler(unittest.TestCase):
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""
         # Act
-        result = self.handler._can_handle(self.context)
+        result = self.handler.can_handle(self.context)
 
         # Assert
         self.assertTrue(result)
@@ -51,7 +51,7 @@ class TestUNTSegmentHandler(unittest.TestCase):
         self.context.current_message = None
 
         # Act
-        result = self.handler._can_handle(self.context)
+        result = self.handler.can_handle(self.context)
 
         # Assert
         self.assertFalse(result)

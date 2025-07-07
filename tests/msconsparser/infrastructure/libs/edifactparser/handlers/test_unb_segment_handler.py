@@ -38,7 +38,7 @@ class TestUNBSegmentHandler(unittest.TestCase):
     def test_can_handle_returns_true_when_interchange_exists(self):
         """Test that _can_handle returns True when interchange exists."""
         # Act
-        result = self.handler._can_handle(self.context)
+        result = self.handler.can_handle(self.context)
 
         # Assert
         self.assertTrue(result)
@@ -49,7 +49,7 @@ class TestUNBSegmentHandler(unittest.TestCase):
         self.context.interchange = None
 
         # Act
-        result = self.handler._can_handle(self.context)
+        result = self.handler.can_handle(self.context)
 
         # Assert
         self.assertFalse(result)

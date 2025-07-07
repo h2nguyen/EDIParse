@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.cta_segment_converter import CTASegmentConverter
-from ediparse.infrastructure.libs.edifactparser.handlers.cta_segment_handler import CTASegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.cta_segment_handler import MSCONSCTASegmentHandler
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
@@ -10,12 +10,12 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.segments import Segment
 
 
 class TestCTASegmentHandler(unittest.TestCase):
-    """Test case for the CTASegmentHandler class."""
+    """Test case for the MSCONSCTASegmentHandler class."""
 
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = CTASegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSCTASegmentHandler(syntax_parser=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentCTA()
@@ -40,7 +40,7 @@ class TestCTASegmentHandler(unittest.TestCase):
     def test_can_handle_returns_true_when_current_message_exists(self):
         """Test that _can_handle returns True when current_message exists."""
         # Act
-        result = self.handler._can_handle(self.context)
+        result = self.handler.can_handle(self.context)
 
         # Assert
         self.assertTrue(result)
@@ -51,7 +51,7 @@ class TestCTASegmentHandler(unittest.TestCase):
         self.context.current_message = None
 
         # Act
-        result = self.handler._can_handle(self.context)
+        result = self.handler.can_handle(self.context)
 
         # Assert
         self.assertFalse(result)

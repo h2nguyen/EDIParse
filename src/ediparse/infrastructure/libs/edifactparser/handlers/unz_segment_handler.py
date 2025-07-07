@@ -29,7 +29,7 @@ class UNZSegmentHandler(SegmentHandler[SegmentUNZ]):
         """
         super().__init__(UNZSegmentConverter(syntax_parser=syntax_parser))
 
-    def _can_handle(self, context: ParsingContext) -> bool:
+    def can_handle(self, context: ParsingContext) -> bool:
         """
         Check if the context is valid for this handler.
         UNZ segments can be handled if the interchange exists.
