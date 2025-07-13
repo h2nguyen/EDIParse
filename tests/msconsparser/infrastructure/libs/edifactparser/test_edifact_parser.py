@@ -1,6 +1,6 @@
+import json
 import os
 import unittest
-import json
 from pathlib import Path
 
 from ediparse.infrastructure.libs.edifactparser.exceptions import EdifactParserException

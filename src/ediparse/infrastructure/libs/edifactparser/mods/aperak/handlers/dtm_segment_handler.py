@@ -26,15 +26,12 @@ class APERAKDTMSegmentHandler(DTMSegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the APERAK DTM segment handler with the APERAK-specific DTM converter.
+        Initialize the APERAK DTM segment handler with the APERAK-specific DTM __converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.
         """
-        # Initialize the parent class
         super().__init__(syntax_parser)
-        # Set the converter to the APERAK-specific DTM converter
-        self.converter = APERAKDTMSegmentConverter(syntax_parser)
 
     def _update_context(self, segment: SegmentDTM, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

@@ -1,10 +1,11 @@
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.converters.qty_segment_converter import QTYSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
-from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange, SegmentUNA
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments.measurement import SegmentQTY
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange, \
+    SegmentUNA
 
 
 class TestQTYSegmentConverter(unittest.TestCase):
@@ -13,7 +14,7 @@ class TestQTYSegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = QTYSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = QTYSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
 
     def test_convert_internal_with_all_components(self):

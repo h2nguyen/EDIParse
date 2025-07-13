@@ -1,10 +1,10 @@
 import unittest
 
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.exceptions import MSCONSParserException
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
-from ediparse.infrastructure.libs.edifactparser.wrappers.segments import EdifactInterchange, SegmentUNA
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import EdifactConstants, SegmentType
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import EdifactInterchange, SegmentUNA
 
 
 class TestEdifactSyntaxHelper(unittest.TestCase):

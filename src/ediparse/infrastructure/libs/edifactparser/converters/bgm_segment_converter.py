@@ -14,19 +14,19 @@ class BGMSegmentConverter(SegmentConverter[SegmentBGM]):
     """
     Converter for BGM (Beginning of Message) segments.
 
-    This converter transforms BGM segment data from EDIFACT format into a structured
+    This __converter transforms BGM segment data from EDIFACT format into a structured
     SegmentBGM object. The BGM segment identifies the type and function of a message
     and transmits its identifying number.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the BGM segment converter with the syntax parser.
+        Initialize the BGM segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -44,7 +44,7 @@ class BGMSegmentConverter(SegmentConverter[SegmentBGM]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentBGM object with document name, document identification, and message function code
@@ -65,11 +65,3 @@ class BGMSegmentConverter(SegmentConverter[SegmentBGM]):
             ),
             nachrichtenfunktion_code=nachrichtenfunktion_code
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

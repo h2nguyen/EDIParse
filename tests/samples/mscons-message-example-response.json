@@ -62,10 +62,14 @@
           "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
         }
       ],
+      "unt_nachrichtenendsegment": {
+        "anzahl_der_segmente_in_einer_nachricht": 2,
+        "nachrichten_referenznummer": "1"
+      },
       "sg1_referenzen": [
         {
           "rff_referenzangaben": {
-            "bezeichner": "Referenzangaben",
+            "bezeichner": "Beantragungsnummer",
             "referenz_qualifier": "AGI",
             "referenz_identifikation": "AFN9523"
           },
@@ -193,7 +197,7 @@
                 },
                 {
                   "rff_referenzangabe": {
-                    "bezeichner": "Konfigurations-ID",
+                    "bezeichner": "Anwendungsreferenznummer",
                     "referenz_qualifier": "AGK",
                     "referenz_identifikation": "34590456ujdfsdghdlktztwqq-053trg"
                   }
@@ -284,11 +288,7 @@
             }
           ]
         }
-      ],
-      "unt_nachrichtenendsegment": {
-        "anzahl_der_segmente_in_einer_nachricht": 2,
-        "nachrichten_referenznummer": "1"
-      }
+      ]
     },
     {
       "unh_nachrichtenkopfsegment": {
@@ -323,10 +323,14 @@
           "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
         }
       ],
+      "unt_nachrichtenendsegment": {
+        "anzahl_der_segmente_in_einer_nachricht": 2,
+        "nachrichten_referenznummer": "1"
+      },
       "sg1_referenzen": [
         {
           "rff_referenzangaben": {
-            "bezeichner": "Referenzangaben",
+            "bezeichner": "Beantragungsnummer",
             "referenz_qualifier": "AGI",
             "referenz_identifikation": "AFN9523"
           },
@@ -454,7 +458,7 @@
                 },
                 {
                   "rff_referenzangabe": {
-                    "bezeichner": "Konfigurations-ID",
+                    "bezeichner": "Anwendungsreferenznummer",
                     "referenz_qualifier": "AGK",
                     "referenz_identifikation": "34590456ujdfsdghdlktztwqq-053trg"
                   }
@@ -539,11 +543,7 @@
             }
           ]
         }
-      ],
-      "unt_nachrichtenendsegment": {
-        "anzahl_der_segmente_in_einer_nachricht": 2,
-        "nachrichten_referenznummer": "1"
-      }
+      ]
     }
   ],
   "unz_nutzdaten_endsegment": {

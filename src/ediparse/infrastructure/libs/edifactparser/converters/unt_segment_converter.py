@@ -13,19 +13,19 @@ class UNTSegmentConverter(SegmentConverter[SegmentUNT]):
     """
     Converter for UNT (Message Trailer) segments.
 
-    This converter transforms UNT segment data from EDIFACT format into a structured
+    This __converter transforms UNT segment data from EDIFACT format into a structured
     SegmentUNT object. The UNT segment is used to end and check the completeness of a 
     message, containing the count of segments in the message and the message reference number.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNT segment converter with the syntax parser.
+        Initialize the UNT segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -44,7 +44,7 @@ class UNTSegmentConverter(SegmentConverter[SegmentUNT]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentUNT object with segment count and message reference number
@@ -59,11 +59,3 @@ class UNTSegmentConverter(SegmentConverter[SegmentUNT]):
             anzahl_der_segmente_in_einer_nachricht=anzahl_der_segmente_in_einer_nachricht,
             nachrichten_referenznummer=nachrichten_referenznummer
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

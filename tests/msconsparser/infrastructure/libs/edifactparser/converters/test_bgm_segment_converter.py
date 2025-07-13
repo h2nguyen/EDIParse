@@ -1,8 +1,8 @@
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.converters import BGMSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentBGM
 
 
@@ -12,7 +12,7 @@ class TestBGMSegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = BGMSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = BGMSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
 
     def test_convert_internal_with_all_components(self):

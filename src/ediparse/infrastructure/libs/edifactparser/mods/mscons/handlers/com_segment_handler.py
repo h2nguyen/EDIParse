@@ -22,7 +22,7 @@ class MSCONSCOMSegmentHandler(COMSegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS COM segment handler with the appropriate converter.
+        Initialize the MSCONS COM segment handler with the appropriate __converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.

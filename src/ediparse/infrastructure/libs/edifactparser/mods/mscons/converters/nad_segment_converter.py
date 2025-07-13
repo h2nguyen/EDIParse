@@ -10,21 +10,21 @@ from ....wrappers.context import ParsingContext
 
 class MSCONSNADSegmentConverter(NADSegmentConverter):
     """
-    MSCONS-specific converter for NAD (Name and Address) segments.
+    MSCONS-specific __converter for NAD (Name and Address) segments.
 
-    This converter transforms NAD segment data from EDIFACT format into a structured
+    This __converter transforms NAD segment data from EDIFACT format into a structured
     SegmentNAD object for MSCONS messages. It provides MSCONS-specific mappings from
     qualifier codes to human-readable names.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS NAD segment converter with the syntax parser.
+        Initialize the MSCONS NAD segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _get_identifier_name(
             self,
@@ -46,12 +46,12 @@ class MSCONSNADSegmentConverter(NADSegmentConverter):
         Returns:
             A human-readable identifier name for the party role, or None if no mapping exists
         """
-        if not qualifier_code:
-            return None
+
         if qualifier_code in ["DP", "DED", "Z15"]:
             return "Name und Adresse"
-        if qualifier_code == "MR":
-            return "MP-ID Empfänger"
-        if qualifier_code == "MS":
-            return "MP-ID Absender"
-        return None
+
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

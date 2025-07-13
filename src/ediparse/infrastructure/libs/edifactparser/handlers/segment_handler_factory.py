@@ -7,12 +7,7 @@ import os
 import pkgutil
 from typing import Optional, Type
 
-from .bgm_segment_handler import BGMSegmentHandler
 from .segment_handler import SegmentHandler
-from .una_segment_handler import UNASegmentHandler
-from .unb_segment_handler import UNBSegmentHandler
-from .unt_segment_handler import UNTSegmentHandler
-from .unz_segment_handler import UNZSegmentHandler
 from ..mods.module_constants import EdifactMessageType
 from ..utils.edifact_syntax_helper import EdifactSyntaxHelper
 from ..wrappers.constants import SegmentType
@@ -48,47 +43,54 @@ class SegmentHandlerFactory:
     def __register_handlers(self, syntax_parser: EdifactSyntaxHelper) -> None:
         """
         Initialize and register the handlers dictionary with instances of all segment handlers.
+        Automatically discovers and registers handlers for all segment types defined in SegmentType enum.
         """
-        # Import segment handler base classes only when needed to avoid circular imports
-        from .cci_segment_handler import CCISegmentHandler
-        from .com_segment_handler import COMSegmentHandler
-        from .cta_segment_handler import CTASegmentHandler
-        from .dtm_segment_handler import DTMSegmentHandler
-        from .erc_segment_handler import ERCSegmentHandler
-        from .ftx_segment_handler import FTXSegmentHandler
-        from .lin_segment_handler import LINSegmentHandler
-        from .loc_segment_handler import LOCSegmentHandler
-        from .nad_segment_handler import NADSegmentHandler
-        from .pia_segment_handler import PIASegmentHandler
-        from .rff_segment_handler import RFFSegmentHandler
-        from .sts_segment_handler import STSSegmentHandler
-        from .qty_segment_handler import QTYSegmentHandler
-        from .unh_segment_handler import UNHSegmentHandler
-        from .uns_segment_handler import UNSSegmentHandler
+        # Initialize handlers dictionary
+        self.__handlers = {}
 
-        # Initialize handlers for each segment type
-        self.__handlers = {
-            SegmentType.UNA: UNASegmentHandler(syntax_parser),
-            SegmentType.UNB: UNBSegmentHandler(syntax_parser),
-            SegmentType.UNH: self.__discover_segment_handlers(SegmentType.UNH.value, syntax_parser, UNHSegmentHandler),
-            SegmentType.BGM: BGMSegmentHandler(syntax_parser),
-            SegmentType.DTM: self.__discover_segment_handlers(SegmentType.DTM.value, syntax_parser, DTMSegmentHandler),
-            SegmentType.RFF: self.__discover_segment_handlers(SegmentType.RFF.value, syntax_parser, RFFSegmentHandler),
-            SegmentType.NAD: self.__discover_segment_handlers(SegmentType.NAD.value, syntax_parser, NADSegmentHandler),
-            SegmentType.CTA: self.__discover_segment_handlers(SegmentType.CTA.value, syntax_parser, CTASegmentHandler),
-            SegmentType.COM: self.__discover_segment_handlers(SegmentType.COM.value, syntax_parser, COMSegmentHandler),
-            SegmentType.UNS: self.__discover_segment_handlers(SegmentType.UNS.value, syntax_parser, UNSSegmentHandler),
-            SegmentType.LOC: self.__discover_segment_handlers(SegmentType.LOC.value, syntax_parser, LOCSegmentHandler),
-            SegmentType.CCI: self.__discover_segment_handlers(SegmentType.CCI.value, syntax_parser, CCISegmentHandler),
-            SegmentType.LIN: self.__discover_segment_handlers(SegmentType.LIN.value, syntax_parser, LINSegmentHandler),
-            SegmentType.PIA: self.__discover_segment_handlers(SegmentType.PIA.value, syntax_parser, PIASegmentHandler),
-            SegmentType.QTY: self.__discover_segment_handlers(SegmentType.QTY.value, syntax_parser, QTYSegmentHandler),
-            SegmentType.STS: self.__discover_segment_handlers(SegmentType.STS.value, syntax_parser, STSSegmentHandler),
-            SegmentType.ERC: self.__discover_segment_handlers(SegmentType.ERC.value, syntax_parser, ERCSegmentHandler),
-            SegmentType.FTX: self.__discover_segment_handlers(SegmentType.FTX.value, syntax_parser, FTXSegmentHandler),
-            SegmentType.UNT: UNTSegmentHandler(syntax_parser),
-            SegmentType.UNZ: UNZSegmentHandler(syntax_parser),
-        }
+        # Dynamically import and register handlers for all segment types
+        for segment_type in SegmentType:
+            try:
+                # Import the base handler class dynamically
+                module_name = f".{segment_type.value.lower()}_segment_handler"
+                module = importlib.import_module(module_name, package=__package__)
+
+                # Find the base handler class
+                handler_class_name = f"{segment_type.value}SegmentHandler"
+                for name, obj in inspect.getmembers(module, inspect.isclass):
+                    if name == handler_class_name:
+                        # Discover message-type-specific handlers
+                        message_specific_handlers = self.__discover_segment_handlers(
+                            segment_type.value, syntax_parser, obj
+                        )
+
+                        # Check if the class is abstract
+                        is_abstract = inspect.isabstract(obj)
+
+                        if message_specific_handlers:
+                            if not is_abstract:
+                                # Create an instance of the base handler if it's not abstract
+                                base_handler = obj(syntax_parser)
+                                # Store both the base handler and message-specific handlers
+                                handler_dict = {
+                                    'base': base_handler,
+                                    'message_specific': message_specific_handlers
+                                }
+                                self.__handlers[segment_type.value] = handler_dict
+                            else:
+                                # If the base class is abstract, only store the message-specific handlers
+                                self.__handlers[segment_type.value] = message_specific_handlers
+                        elif not is_abstract:
+                            # If no message-specific handlers were found and the class is not abstract,
+                            # just store the base handler
+                            base_handler = obj(syntax_parser)
+                            self.__handlers[segment_type.value] = base_handler
+                        # If the class is abstract and no message-specific handlers were found,
+                        # we don't register anything for this segment type
+                        break
+            except (ImportError, AttributeError) as e:
+                logger.debug(f"No handler found for segment type '{segment_type.value}': {e}")
+                # Continue with the next segment type if this one doesn't have a handler
 
     def __discover_segment_handlers(self, segment_type: str, syntax_parser: EdifactSyntaxHelper, segment_handler_base: Type) -> dict[str, SegmentHandler]:
         """
@@ -160,8 +162,39 @@ class SegmentHandlerFactory:
             logger.warning(f"No handler found for segment type '{segment_type}'.")
             return None
 
-        # Check if the handler is a dictionary of message-type-specific handlers
-        if isinstance(handler_or_dict, dict):
+        # Check if the handler is a dictionary with our new structure
+        if isinstance(handler_or_dict, dict) and 'base' in handler_or_dict and 'message_specific' in handler_or_dict:
+            # If we have a context with a message type, try to get the message-specific handler
+            if context and context.message_type:
+                message_specific_handlers = handler_or_dict['message_specific']
+                handler = message_specific_handlers.get(context.message_type)
+                if handler:
+                    return handler
+
+                # If no message-specific handler was found, fall back to the base handler
+                logger.debug(
+                    f"No handler defined for segment type '{segment_type}' "
+                    f"and message type '{context.message_type}'. "
+                    f"Falling back to base handler."
+                )
+                return handler_or_dict['base']
+            else:
+                # If no context or message type is provided, use the base handler
+                logger.debug(f"No context or message type provided for segment type '{segment_type}'. Using base handler.")
+                return handler_or_dict['base']
+        # Check if the handler is a dictionary of message-type-specific handlers (for abstract base classes)
+        elif isinstance(handler_or_dict, dict) and context and context.message_type:
+            # If we have a context with a message type, use it to get the appropriate handler
+            handler = handler_or_dict.get(context.message_type)
+            if not handler:
+                logger.debug(
+                    f"No handler defined for segment type '{segment_type}' "
+                    f"and message type '{context.message_type}'."
+                )
+                return None
+            return handler
+        # Check if the handler is a dictionary of message-type-specific handlers (old format)
+        elif isinstance(handler_or_dict, dict):
             # If we have a context with a message type, use it to get the appropriate handler
             if context and context.message_type:
                 handler = handler_or_dict.get(context.message_type)
@@ -173,7 +206,7 @@ class SegmentHandlerFactory:
                     return None
             else:
                 # If no context or message type is provided, we can't determine which handler to use
-                logger.debug(f"No context or message type provided for segment type '{segment_type}' angegeben.")
+                logger.debug(f"No context or message type provided for segment type '{segment_type}'.")
                 return None
         else:
             # If the handler is not a dictionary, use it directly

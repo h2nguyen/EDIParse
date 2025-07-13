@@ -2,12 +2,12 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.dtm_segment_converter import DTMSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.dtm_segment_handler import MSCONSDTMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.dtm_segment_handler import MSCONSDTMSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
-from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentDTM
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentDTM
 
 
 class TestMSCONSDTMSegmentHandler(unittest.TestCase):
@@ -22,8 +22,8 @@ class TestMSCONSDTMSegmentHandler(unittest.TestCase):
         self.segment = SegmentDTM()
 
     def test_init_creates_with_correct_converter(self):
-        """Test that the handler initializes with the correct converter."""
-        self.assertIsInstance(self.handler.converter, DTMSegmentConverter)
+        """Test that the handler initializes with the correct __converter."""
+        self.assertIsInstance(self.handler.__converter, DTMSegmentConverter)
 
     def test_update_context_updates_context_correctly_for_header(self):
         """Test that _update_context updates the context correctly for the header."""
@@ -102,8 +102,8 @@ class TestMSCONSDTMSegmentHandler(unittest.TestCase):
         last_segment_type = None
         current_segment_group = None
 
-        # Mock the converter's convert method to return a known segment
-        self.handler.converter.convert = MagicMock(return_value=self.segment)
+        # Mock the __converter's convert method to return a known segment
+        self.handler.__converter.convert = MagicMock(return_value=self.segment)
 
         # Mock the _update_context method to verify it's called
         self.handler._update_context = MagicMock()
@@ -112,7 +112,7 @@ class TestMSCONSDTMSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_called_once_with(
+        self.handler.__converter.convert.assert_called_once_with(
             line_number=line_number,
             element_components=element_components,
             last_segment_type=last_segment_type,
@@ -130,8 +130,8 @@ class TestMSCONSDTMSegmentHandler(unittest.TestCase):
         current_segment_group = None
         self.context.current_message = None  # This will make _can_handle return False
 
-        # Mock the converter's convert method to verify it's not called
-        self.handler.converter.convert = MagicMock()
+        # Mock the __converter's convert method to verify it's not called
+        self.handler.__converter.convert = MagicMock()
 
         # Mock the _update_context method to verify it's not called
         self.handler._update_context = MagicMock()
@@ -140,7 +140,7 @@ class TestMSCONSDTMSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_not_called()
+        self.handler.__converter.convert.assert_not_called()
         self.handler._update_context.assert_not_called()
 
 

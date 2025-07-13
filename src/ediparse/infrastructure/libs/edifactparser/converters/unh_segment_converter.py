@@ -13,19 +13,19 @@ class UNHSegmentConverter(SegmentConverter[SegmentUNH]):
     """
     Converter for UNH (Message Header) segments.
 
-    This converter transforms UNH segment data from EDIFACT format into a structured
+    This __converter transforms UNH segment data from EDIFACT format into a structured
     SegmentUNH object. The UNH segment is used to head, identify, and specify a message,
     containing the message reference number, message type identifier, and transmission status.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNH segment converter with the syntax parser.
+        Initialize the UNH segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -44,7 +44,7 @@ class UNHSegmentConverter(SegmentConverter[SegmentUNH]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentUNH object with message reference number, message identifier, 
@@ -83,11 +83,3 @@ class UNHSegmentConverter(SegmentConverter[SegmentUNH]):
                 erste_und_letzte_uebermittlung=status_der_uebermittlung_details[1]
             ) if status_der_uebermittlung_details else None
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

@@ -1,8 +1,9 @@
 import unittest
 
-from ediparse.infrastructure.libs.edifactparser.converters.sts_segment_converter import STSSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.converters.sts_segment_converter import \
+    MSCONSSTSSegmentConverter
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentSTS
 
 
@@ -13,7 +14,7 @@ class TestSTSSegmentConverter(unittest.TestCase):
         """Set up the test case."""
         self.context = MSCONSParsingContext()
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = STSSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = MSCONSSTSSegmentConverter(syntax_helper=self.syntax_parser)
 
     def test_convert_internal_with_all_components(self):
         """Test the _convert_internal method with all components."""

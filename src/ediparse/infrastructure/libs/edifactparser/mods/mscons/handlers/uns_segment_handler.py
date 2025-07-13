@@ -20,14 +20,14 @@ class MSCONSUNSSegmentHandler(UNSSegmentHandler):
     In MSCONS messages, UNS segments are used to mark the transition from the header to the detail section.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS UNS segment handler with the appropriate converter.
+        Initialize the MSCONS UNS segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser)
+        super().__init__(syntax_helper)
 
     def _update_context(self, segment: SegmentUNS, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

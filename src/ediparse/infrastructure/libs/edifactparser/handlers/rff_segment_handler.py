@@ -20,12 +20,17 @@ class RFFSegmentHandler(SegmentHandler[SegmentRFF], ABC):
     provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
         Initialize the RFF segment handler.
 
+        The __converter will be auto-detected during the handle method execution based on the message type.
+        If a message-type-specific __converter exists in the mods/<message-type>/converters directory,
+        it will be used; otherwise, the default __converter will be used.
+
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        # The converter will be provided by the message-specific implementation
-        super().__init__(None)
+        super().__init__(
+            syntax_helper=syntax_helper,
+        )

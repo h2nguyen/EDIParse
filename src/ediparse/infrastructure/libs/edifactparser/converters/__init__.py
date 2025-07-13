@@ -2,8 +2,8 @@
 """
 Package for EDIFACT segment converters.
 
-This package contains converter classes that transform raw EDIFACT segment data
-into structured domain model objects. Each converter is specialized for a specific
+This package contains __converter classes that transform raw EDIFACT segment data
+into structured domain model objects. Each __converter is specialized for a specific
 segment type (e.g., DTM, BGM, NAD) and handles the parsing and conversion of that
 segment's components according to the EDIFACT standard.
 

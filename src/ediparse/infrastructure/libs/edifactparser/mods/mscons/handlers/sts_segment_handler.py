@@ -4,10 +4,9 @@ from typing import Optional
 
 from ....handlers.sts_segment_handler import STSSegmentHandler
 from ....utils import EdifactSyntaxHelper
-from ....wrappers.context import ParsingContext
 from ....wrappers.constants import SegmentGroup
+from ....wrappers.context import ParsingContext
 from ....wrappers.segments import SegmentSTS
-from ..converters.sts_segment_converter import MSCONSSTSSegmentConverter
 
 
 class MSCONSSTSSegmentHandler(STSSegmentHandler):
@@ -22,17 +21,14 @@ class MSCONSSTSSegmentHandler(STSSegmentHandler):
     In MSCONS messages, STS segments are used in segment group SG10 to provide status information.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS STS segment handler with the MSCONS-specific STS converter.
+        Initialize the MSCONS STS segment handler with the MSCONS-specific STS __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        # Initialize the parent class
-        super().__init__(syntax_parser)
-        # Set the converter to the MSCONS-specific STS converter
-        self.converter = MSCONSSTSSegmentConverter(syntax_parser)
+        super().__init__(syntax_helper)
 
     def _update_context(self, segment: SegmentSTS, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

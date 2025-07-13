@@ -18,14 +18,14 @@ class UNASegmentConverter(SegmentConverter[SegmentUNA]):
     used as delimiters in the EDIFACT message.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNA segment converter with the syntax parser.
+        Initialize the UNA segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -44,7 +44,7 @@ class UNASegmentConverter(SegmentConverter[SegmentUNA]):
             element_components: List of segment components (should be a single string "UNA:+.? '")
             last_segment_type: The type of the previous segment (should be None as UNA is typically the first segment)
             current_segment_group: The current segment group being processed (should be None)
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentUNA object with the delimiter characters defined in the UNA segment
@@ -76,11 +76,3 @@ class UNASegmentConverter(SegmentConverter[SegmentUNA]):
             reserved=reserved,
             segment_terminator=segment_terminator
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

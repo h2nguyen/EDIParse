@@ -10,21 +10,21 @@ from ....wrappers.context import ParsingContext
 
 class MSCONSSTSSegmentConverter(STSSegmentConverter):
     """
-    MSCONS-specific converter for STS (Status) segments.
+    MSCONS-specific __converter for STS (Status) segments.
 
-    This converter transforms STS segment data from EDIFACT format into a structured
+    This __converter transforms STS segment data from EDIFACT format into a structured
     SegmentSTS object for MSCONS messages. It provides MSCONS-specific mappings from
     status category codes to human-readable names.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS STS segment converter with the syntax parser.
+        Initialize the MSCONS STS segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _get_identifier_name(
             self,
@@ -46,8 +46,7 @@ class MSCONSSTSSegmentConverter(STSSegmentConverter):
         Returns:
             A human-readable identifier name for the status category, or None if no mapping exists
         """
-        if not qualifier_code:
-            return None
+
         if qualifier_code == "10":
             return "Grundlage der Energiemenge"
         if qualifier_code == "Z31":
@@ -60,4 +59,9 @@ class MSCONSSTSSegmentConverter(STSSegmentConverter):
             return "Korrekturgrund"
         if qualifier_code == "Z40":
             return "Grund der Ersatzwertbildung"
-        return None
+
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

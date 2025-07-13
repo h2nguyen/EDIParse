@@ -3,7 +3,6 @@
 from typing import Optional
 
 from . import SegmentHandler
-from ..converters import UNBSegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.constants import SegmentGroup
 from ..wrappers.context import ParsingContext
@@ -20,14 +19,16 @@ class UNBSegmentHandler(SegmentHandler[SegmentUNB]):
     UNB segment information.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNB segment handler with the appropriate converter.
+        Initialize the UNB segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(UNBSegmentConverter(syntax_parser=syntax_parser))
+        super().__init__(
+            syntax_helper=syntax_helper,
+        )
 
     def can_handle(self, context: ParsingContext) -> bool:
         """

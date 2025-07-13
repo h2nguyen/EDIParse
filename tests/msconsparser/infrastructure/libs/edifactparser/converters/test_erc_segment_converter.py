@@ -1,8 +1,8 @@
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.converters.erc_segment_converter import ERCSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentERC
 
 
@@ -12,7 +12,7 @@ class TestERCSegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = ERCSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = ERCSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = APERAKParsingContext()
 
     def test_convert_internal(self):

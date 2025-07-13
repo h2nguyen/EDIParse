@@ -1,8 +1,9 @@
 import unittest
 
-from ediparse.infrastructure.libs.edifactparser.converters.rff_segment_converter import RFFSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.converters.rff_segment_converter import \
+    MSCONSRFFSegmentConverter
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentRFF
 
 
@@ -13,7 +14,7 @@ class TestRFFSegmentConverter(unittest.TestCase):
         """Set up the test case."""
         self.context = MSCONSParsingContext()
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = RFFSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = MSCONSRFFSegmentConverter(syntax_helper=self.syntax_parser)
 
     def test_convert_internal_with_agi_qualifier(self):
         """Test the _convert_internal method with AGI qualifier."""
@@ -32,7 +33,7 @@ class TestRFFSegmentConverter(unittest.TestCase):
 
         # Assert
         self.assertIsInstance(result, SegmentRFF)
-        self.assertEqual(result.bezeichner, "Referenzangaben")
+        self.assertEqual(result.bezeichner, "Beantragungsnummer")
         self.assertEqual(result.referenz_qualifier, "AGI")
         self.assertEqual(result.referenz_identifikation, "AFN9523")
 
@@ -53,7 +54,7 @@ class TestRFFSegmentConverter(unittest.TestCase):
 
         # Assert
         self.assertIsInstance(result, SegmentRFF)
-        self.assertEqual(result.bezeichner, "Konfigurations-ID")
+        self.assertEqual(result.bezeichner, "Anwendungsreferenznummer")
         self.assertEqual(result.referenz_qualifier, "AGK")
         self.assertEqual(result.referenz_identifikation, "12345")
 

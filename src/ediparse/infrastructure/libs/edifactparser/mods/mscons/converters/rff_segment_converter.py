@@ -10,21 +10,21 @@ from ....wrappers.constants import SegmentGroup
 
 class MSCONSRFFSegmentConverter(RFFSegmentConverter):
     """
-    MSCONS-specific converter for RFF (Reference) segments.
+    MSCONS-specific __converter for RFF (Reference) segments.
 
-    This converter transforms RFF segment data from EDIFACT format into a structured
+    This __converter transforms RFF segment data from EDIFACT format into a structured
     SegmentRFF object for MSCONS messages. It provides MSCONS-specific mappings from
     qualifier codes to human-readable names.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS RFF segment converter with the syntax parser.
+        Initialize the MSCONS RFF segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _get_identifier_name(
             self,
@@ -47,25 +47,19 @@ class MSCONSRFFSegmentConverter(RFFSegmentConverter):
         Returns:
             A human-readable identifier name for the reference, or None if no mapping exists
         """
-        if not qualifier_code:
-            return None
-        if qualifier_code in ["ACE", "AGI"]:
-            return "Referenzangaben"
-        if qualifier_code == "ACW":
-            return "Referenznummer der Nachricht"
+        if qualifier_code == "AGI":
+            return "Beantragungsnummer"
         if qualifier_code == "AGK":
-            return "Konfigurations-ID"
-        if qualifier_code == "AGO":
-            return "Dokumentennummer der referenzierten Nachricht"
+            return "Anwendungsreferenznummer"
         if qualifier_code == "MG":
             return "Gerätenummer"
-        if qualifier_code == "TN":
-            return "Referenznummer des Vorgangs"
-        if qualifier_code == "Z08":
-            return "Netzbetreiber"
         if qualifier_code == "Z13":
             return "Prüfidentifikator"
         if qualifier_code == "Z30":
             return "Referenz auf vorherige Stammdatenmeldung des MSB"
 
-        return None
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

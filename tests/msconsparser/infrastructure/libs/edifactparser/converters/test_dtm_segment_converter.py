@@ -1,8 +1,9 @@
 import unittest
 
-from ediparse.infrastructure.libs.edifactparser.converters.dtm_segment_converter import DTMSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.converters.dtm_segment_converter import \
+    MSCONSDTMSegmentConverter
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentDTM
 
@@ -13,7 +14,7 @@ class TestDTMSegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = DTMSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = MSCONSDTMSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
 
     def test_convert_internal_with_all_components(self):

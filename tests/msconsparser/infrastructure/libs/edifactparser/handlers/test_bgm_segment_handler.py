@@ -1,12 +1,12 @@
 import unittest
 from unittest.mock import MagicMock
 
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.converters.bgm_segment_converter import BGMSegmentConverter
 from ediparse.infrastructure.libs.edifactparser.handlers.bgm_segment_handler import BGMSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentBGM
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentBGM
 
 
 class TestBGMSegmentHandler(unittest.TestCase):
@@ -15,14 +15,16 @@ class TestBGMSegmentHandler(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = BGMSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = BGMSegmentHandler(syntax_helper=self.syntax_parser)
+        # Initialize the converter attribute for testing
+        self.handler._SegmentHandler__converter = BGMSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentBGM()
 
     def test_init_creates_with_correct_converter(self):
-        """Test that the handler initializes with the correct converter."""
-        self.assertIsInstance(self.handler.converter, BGMSegmentConverter)
+        """Test that the handler initializes with the correct __converter."""
+        self.assertIsInstance(self.handler._SegmentHandler__converter, BGMSegmentConverter)
 
     def test_update_context_sets_bgm_beginn_der_nachricht(self):
         """Test that _update_context sets the bgm_beginn_der_nachricht on the current message."""
@@ -62,8 +64,8 @@ class TestBGMSegmentHandler(unittest.TestCase):
         last_segment_type = None
         current_segment_group = None
 
-        # Mock the converter's convert method to return a known segment
-        self.handler.converter.convert = MagicMock(return_value=self.segment)
+        # Mock the __converter's convert method to return a known segment
+        self.handler._SegmentHandler__converter.convert = MagicMock(return_value=self.segment)
 
         # Mock the _update_context method to verify it's called
         self.handler._update_context = MagicMock()
@@ -72,7 +74,7 @@ class TestBGMSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_called_once_with(
+        self.handler._SegmentHandler__converter.convert.assert_called_once_with(
             line_number=line_number,
             element_components=element_components,
             last_segment_type=last_segment_type,
@@ -90,8 +92,8 @@ class TestBGMSegmentHandler(unittest.TestCase):
         current_segment_group = None
         self.context.current_message = None  # This will make _can_handle return False
 
-        # Mock the converter's convert method to verify it's not called
-        self.handler.converter.convert = MagicMock()
+        # Mock the __converter's convert method to verify it's not called
+        self.handler._SegmentHandler__converter.convert = MagicMock()
 
         # Mock the _update_context method to verify it's not called
         self.handler._update_context = MagicMock()
@@ -100,7 +102,7 @@ class TestBGMSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_not_called()
+        self.handler._SegmentHandler__converter.convert.assert_not_called()
         self.handler._update_context.assert_not_called()
 
 

@@ -10,21 +10,21 @@ from ....wrappers.context import ParsingContext
 
 class MSCONSDTMSegmentConverter(DTMSegmentConverter):
     """
-    MSCONS-specific converter for DTM (Date/Time/Period) segments.
+    MSCONS-specific __converter for DTM (Date/Time/Period) segments.
 
-    This converter transforms DTM segment data from EDIFACT format into a structured
+    This __converter transforms DTM segment data from EDIFACT format into a structured
     SegmentDTM object for MSCONS messages. It provides MSCONS-specific mappings from
     qualifier codes to human-readable names.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS DTM segment converter with the syntax parser.
+        Initialize the MSCONS DTM segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _get_identifier_name(
             self,
@@ -47,42 +47,44 @@ class MSCONSDTMSegmentConverter(DTMSegmentConverter):
         Returns:
             A human-readable identifier name for the date/time function, or None if no mapping exists
         """
-        if not qualifier_code:
-            return None
-        elif qualifier_code == "7":
+        if qualifier_code == "7":
             if current_segment_group == SegmentGroup.SG10:
                 return "Nutzungszeitpunkt"
-        elif qualifier_code == "9":
+        if qualifier_code == "9":
             if current_segment_group == SegmentGroup.SG10:
                 return "Ablesedatum"
-        elif qualifier_code == "60":
+        if qualifier_code == "60":
             if current_segment_group == SegmentGroup.SG10:
                 return "Ausführungs- / Änderungszeitpunkt"
-        elif qualifier_code == "137":
+        if qualifier_code == "137":
             return "Nachrichtendatum"
-        elif qualifier_code == "157":
+        if qualifier_code == "157":
             if current_segment_group == SegmentGroup.SG6:
                 return "Gültigkeit, Beginndatum Profilschar"
-        elif qualifier_code == "163":
+        if qualifier_code == "163":
             if current_segment_group == SegmentGroup.SG6:
                 return "Beginn Messperiode Übertragungszeitraum"
             elif current_segment_group == SegmentGroup.SG10:
                 return "Beginn Messperiode"
-        elif qualifier_code == "164":
+        if qualifier_code == "164":
             if current_segment_group == SegmentGroup.SG6:
                 return "Ende Messperiode Übertragungszeitraum"
             elif current_segment_group == SegmentGroup.SG10:
                 return "Ende Messperiode"
-        elif qualifier_code == "293":
+        if qualifier_code == "293":
             if current_segment_group == SegmentGroup.SG1:
                 return "Versionsangabe marktlokationsscharfe Allokationsliste Gas (MMMA)"
             if current_segment_group == SegmentGroup.SG6:
                 return "Versionsangabe"
-        elif qualifier_code == "306":
+        if qualifier_code == "306":
             if current_segment_group == SegmentGroup.SG10:
                 return "Leistungsperiode"
-        elif qualifier_code == "492":
+        if qualifier_code == "492":
             if current_segment_group == SegmentGroup.SG6:
                 return "Bilanzierungsmonat"
 
-        return None
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

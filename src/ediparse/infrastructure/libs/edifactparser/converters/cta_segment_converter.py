@@ -15,19 +15,19 @@ class CTASegmentConverter(SegmentConverter[SegmentCTA]):
     """
     Converter for CTA (Contact Information) segments.
 
-    This converter transforms CTA segment data from EDIFACT format into a structured
+    This __converter transforms CTA segment data from EDIFACT format into a structured
     SegmentCTA object. The CTA segment identifies a person or department to whom 
     communication should be directed.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the CTA segment converter with the syntax parser.
+        Initialize the CTA segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -45,7 +45,7 @@ class CTASegmentConverter(SegmentConverter[SegmentCTA]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentCTA object with contact function code and department or employee information
@@ -66,11 +66,3 @@ class CTASegmentConverter(SegmentConverter[SegmentCTA]):
                 abteilung_oder_bearbeiter=abteilung_oder_bearbeiter[1]
             ) if abteilung_oder_bearbeiter is not None and len(abteilung_oder_bearbeiter) > 1 else None
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

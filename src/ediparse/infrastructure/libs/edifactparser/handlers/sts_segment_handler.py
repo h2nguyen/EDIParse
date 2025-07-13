@@ -20,12 +20,14 @@ class STSSegmentHandler(SegmentHandler[SegmentSTS], ABC):
     provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
         Initialize the STS segment handler.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        # The converter will be provided by the message-specific implementation
-        super().__init__(None)
+        # The __converter will be provided by the message-specific implementation
+        super().__init__(
+            syntax_helper=syntax_helper,
+        )

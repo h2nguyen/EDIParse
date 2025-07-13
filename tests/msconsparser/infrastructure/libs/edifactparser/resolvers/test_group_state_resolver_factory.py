@@ -2,10 +2,10 @@ import unittest
 from unittest import mock
 
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.group_state_resolver import AperakGroupStateResolver
+from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.group_state_resolver import MsconsGroupStateResolver
 from ediparse.infrastructure.libs.edifactparser.resolvers.group_state_resolver import GroupStateResolver
 from ediparse.infrastructure.libs.edifactparser.resolvers.group_state_resolver_factory import GroupStateResolverFactory
-from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
 
 
 class TestGroupStateResolverFactory(unittest.TestCase):

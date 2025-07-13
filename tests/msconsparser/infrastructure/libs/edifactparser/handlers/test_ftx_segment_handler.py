@@ -2,12 +2,12 @@ import unittest
 from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.ftx_segment_converter import FTXSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.ftx_segment_handler import APERAKFTXSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.aperak.handlers.ftx_segment_handler import APERAKFTXSegmentHandler
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.segments import (
     EdifactAperakMessage, SegmentGroup4, SegmentGroup5
 )
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments.error_code import SegmentFTX
 
@@ -18,7 +18,7 @@ class TestAPERAKFTXSegmentHandler(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = APERAKFTXSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = APERAKFTXSegmentHandler(syntax_helper=self.syntax_parser)
         self.context = APERAKParsingContext()
         self.context.current_message = EdifactAperakMessage()
         self.context.current_sg4 = SegmentGroup4()
@@ -26,8 +26,8 @@ class TestAPERAKFTXSegmentHandler(unittest.TestCase):
         self.segment = SegmentFTX()
 
     def test_init_creates_with_correct_converter(self):
-        """Test that the handler initializes with the correct converter."""
-        self.assertIsInstance(self.handler.converter, FTXSegmentConverter)
+        """Test that the handler initializes with the correct __converter."""
+        self.assertIsInstance(self.handler.__converter, FTXSegmentConverter)
 
     def test_update_context_with_sg4(self):
         """Test that _update_context updates the context correctly for SG4."""
@@ -78,8 +78,8 @@ class TestAPERAKFTXSegmentHandler(unittest.TestCase):
         last_segment_type = None
         current_segment_group = SegmentGroup.SG4
 
-        # Mock the converter's convert method to return a known segment
-        self.handler.converter.convert = MagicMock(return_value=self.segment)
+        # Mock the __converter's convert method to return a known segment
+        self.handler.__converter.convert = MagicMock(return_value=self.segment)
 
         # Mock the _update_context method to verify it's called
         self.handler._update_context = MagicMock()
@@ -88,7 +88,7 @@ class TestAPERAKFTXSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_called_once_with(
+        self.handler.__converter.convert.assert_called_once_with(
             line_number=line_number,
             element_components=element_components,
             last_segment_type=last_segment_type,

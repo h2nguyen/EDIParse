@@ -1,8 +1,8 @@
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.converters.pia_segment_converter import PIASegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentPIA
 
 
@@ -12,7 +12,7 @@ class TestPIASegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = PIASegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = PIASegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
 
     def test_convert_internal_with_obis_code(self):

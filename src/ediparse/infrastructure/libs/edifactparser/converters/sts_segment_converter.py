@@ -1,6 +1,5 @@
 # coding: utf-8
 
-from abc import ABC
 from typing import Optional
 
 from . import SegmentConverter
@@ -12,11 +11,11 @@ from ..wrappers.segments import (
 )
 
 
-class STSSegmentConverter(SegmentConverter[SegmentSTS], ABC):
+class STSSegmentConverter(SegmentConverter[SegmentSTS]):
     """
-    Abstract converter for STS (Status) segments.
+    Abstract __converter for STS (Status) segments.
 
-    This converter transforms STS segment data from EDIFACT format into a structured
+    This __converter transforms STS segment data from EDIFACT format into a structured
     SegmentSTS object. The STS segment is used to specify status information such as 
     correction reason, gas quality, replacement value formation procedure, or 
     plausibility note.
@@ -25,14 +24,14 @@ class STSSegmentConverter(SegmentConverter[SegmentSTS], ABC):
     provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the STS segment converter with the syntax parser.
+        Initialize the STS segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -51,7 +50,7 @@ class STSSegmentConverter(SegmentConverter[SegmentSTS], ABC):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentSTS object with status category, status code, and status reason

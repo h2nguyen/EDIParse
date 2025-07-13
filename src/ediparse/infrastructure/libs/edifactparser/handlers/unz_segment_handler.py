@@ -20,14 +20,17 @@ class UNZSegmentHandler(SegmentHandler[SegmentUNZ]):
     interchange reference.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNZ segment handler with the appropriate converter.
+        Initialize the UNZ segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(UNZSegmentConverter(syntax_parser=syntax_parser))
+        super().__init__(
+            syntax_helper=syntax_helper,
+            converter=UNZSegmentConverter(syntax_helper=syntax_helper)
+        )
 
     def can_handle(self, context: ParsingContext) -> bool:
         """

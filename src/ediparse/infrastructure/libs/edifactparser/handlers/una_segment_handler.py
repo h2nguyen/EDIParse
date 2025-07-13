@@ -3,7 +3,6 @@
 from typing import Optional
 
 from . import SegmentHandler
-from ..converters import UNASegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.constants import SegmentGroup
 from ..wrappers.context import ParsingContext
@@ -18,14 +17,16 @@ class UNASegmentHandler(SegmentHandler[SegmentUNA]):
     When present, it overrides the default delimiters defined by the EDIFACT standard.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNA segment handler with the appropriate converter.
+        Initialize the UNA segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(UNASegmentConverter(syntax_parser=syntax_parser))
+        super().__init__(
+            syntax_helper=syntax_helper,
+        )
 
     def can_handle(self, context: ParsingContext) -> bool:
         """

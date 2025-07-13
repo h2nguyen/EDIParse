@@ -1,8 +1,8 @@
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.converters.ftx_segment_converter import FTXSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.aperak.context import APERAKParsingContext
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentFTX
 
 
@@ -12,7 +12,7 @@ class TestFTXSegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = FTXSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = FTXSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = APERAKParsingContext()
 
     def test_convert_internal_with_all_components(self):

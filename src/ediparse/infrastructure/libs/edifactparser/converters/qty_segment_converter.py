@@ -16,19 +16,19 @@ class QTYSegmentConverter(SegmentConverter[SegmentQTY]):
     """
     Converter for QTY (Quantity) segments.
 
-    This converter transforms QTY segment data from EDIFACT format into a structured
+    This __converter transforms QTY segment data from EDIFACT format into a structured
     SegmentQTY object. The QTY segment is used to specify quantities for the current 
     item position, including the quantity value and unit of measurement.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the QTY segment converter with the syntax parser.
+        Initialize the QTY segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -46,7 +46,7 @@ class QTYSegmentConverter(SegmentConverter[SegmentQTY]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentQTY object with quantity qualifier, the quantity and unit measurement code
@@ -72,11 +72,3 @@ class QTYSegmentConverter(SegmentConverter[SegmentQTY]):
             menge=menge,
             masseinheit_code=masseinheit_code
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

@@ -23,7 +23,7 @@ class MSCONSCCISegmentHandler(CCISegmentHandler):
 
     def __init__(self, syntax_parser: EdifactSyntaxHelper):
         """
-        Initialize the MSCONS CCI segment handler with the appropriate converter.
+        Initialize the MSCONS CCI segment handler with the appropriate __converter.
 
         Args:
             syntax_parser: The syntax parser to use for parsing segment components.

@@ -1,8 +1,8 @@
 import unittest
 
 from ediparse.infrastructure.libs.edifactparser.converters.unh_segment_converter import UNHSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentUNH
 
 
@@ -13,7 +13,7 @@ class TestUNHSegmentConverter(unittest.TestCase):
         """Set up the test case."""
         self.context = MSCONSParsingContext()
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = UNHSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = UNHSegmentConverter(syntax_helper=self.syntax_parser)
 
     def test_convert_internal_with_basic_components(self):
         """Test the _convert_internal method with basic components."""

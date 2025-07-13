@@ -1,5 +1,4 @@
 # coding: utf-8
-from abc import ABC
 from typing import Optional
 
 from . import SegmentConverter
@@ -9,11 +8,11 @@ from ..wrappers.constants import SegmentGroup
 from ..wrappers.segments import SegmentRFF
 
 
-class RFFSegmentConverter(SegmentConverter[SegmentRFF], ABC):
+class RFFSegmentConverter(SegmentConverter[SegmentRFF]):
     """
-    Abstract converter for RFF (Reference) segments.
+    Abstract __converter for RFF (Reference) segments.
 
-    This converter transforms RFF segment data from EDIFACT format into a structured
+    This __converter transforms RFF segment data from EDIFACT format into a structured
     SegmentRFF object. The RFF segment is used to specify reference information, such as 
     verification identifier, configuration ID, device number, or previous master data
     message of the Metering Point Operator (MSB).
@@ -22,14 +21,14 @@ class RFFSegmentConverter(SegmentConverter[SegmentRFF], ABC):
     provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the RFF segment converter with the syntax parser.
+        Initialize the RFF segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -48,7 +47,7 @@ class RFFSegmentConverter(SegmentConverter[SegmentRFF], ABC):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentRFF object with function qualifier, reference qualifier, and identification
@@ -71,4 +70,33 @@ class RFFSegmentConverter(SegmentConverter[SegmentRFF], ABC):
             ),
             referenz_qualifier=qualifier,
             referenz_identifikation=identification
+        )
+
+    def _get_identifier_name(
+            self,
+            qualifier_code: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> Optional[str]:
+        """
+        Maps RFF qualifier codes to human-readable identifier names for APERAK messages.
+
+        This method provides specific mappings for reference qualifier codes to meaningful
+        names that describe their purpose in APERAK messages, taking into account the current
+        segment group context.
+
+        Args:
+            qualifier_code: The reference qualifier code from the RFF segment
+            current_segment_group: The current segment group being processed
+            context: The parsing context containing the message type and segment group context information
+
+        Returns:
+            A human-readable identifier name for the reference, or None if no mapping exists
+        """
+        if qualifier_code == "ACW":
+            return "Referenznummer einer vorangegangenen Nachricht"
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
         )

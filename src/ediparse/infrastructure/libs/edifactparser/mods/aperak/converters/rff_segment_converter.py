@@ -10,21 +10,21 @@ from ....wrappers.constants import SegmentGroup
 
 class APERAKRFFSegmentConverter(RFFSegmentConverter):
     """
-    APERAK-specific converter for RFF (Reference) segments.
+    APERAK-specific __converter for RFF (Reference) segments.
 
-    This converter transforms RFF segment data from EDIFACT format into a structured
+    This __converter transforms RFF segment data from EDIFACT format into a structured
     SegmentRFF object for APERAK messages. It provides APERAK-specific mappings from
     qualifier codes to human-readable names.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the APERAK RFF segment converter with the syntax parser.
+        Initialize the APERAK RFF segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _get_identifier_name(
             self,
@@ -47,17 +47,20 @@ class APERAKRFFSegmentConverter(RFFSegmentConverter):
         Returns:
             A human-readable identifier name for the reference, or None if no mapping exists
         """
-        if not qualifier_code:
-            return None
-        if qualifier_code in ["ACE", "AGI"]:
-            return "Referenzangaben"
-        if qualifier_code == "ACW":
-            return "Referenznummer der Nachricht"
-        if qualifier_code == "AGO":
-            return "Dokumentennummer der referenzierten Nachricht"
-        if qualifier_code == "TN":
-            return "Referenznummer des Vorgangs"
-        if qualifier_code == "Z08":
-            return "Netzbetreiber"
 
-        return None
+        if qualifier_code == "ACE":
+            return "Nummer des zugehörigen Dokuments"
+        if qualifier_code == "AGO":
+            return "Absenderreferenz für die Original-Nachricht"
+        if qualifier_code == "TN":
+            return "Transaktions-Referenznummer"
+        if qualifier_code == "Z02":
+            return "Ortsangabe des AHB-Fehlers"
+        if qualifier_code == "Z08":
+            return "MP-ID des nachfolgenden Netzbetreibers"
+
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

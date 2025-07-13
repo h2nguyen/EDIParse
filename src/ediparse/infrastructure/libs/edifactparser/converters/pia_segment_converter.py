@@ -15,19 +15,19 @@ class PIASegmentConverter(SegmentConverter[SegmentPIA]):
     """
     Converter for PIA (Product Identification) segments.
 
-    This converter transforms PIA segment data from EDIFACT format into a structured
+    This __converter transforms PIA segment data from EDIFACT format into a structured
     SegmentPIA object. The PIA segment is used to specify the product identification 
     for the current item using the OBIS identifier or the medium.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the PIA segment converter with the syntax parser.
+        Initialize the PIA segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -46,7 +46,7 @@ class PIASegmentConverter(SegmentConverter[SegmentPIA]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentPIA object with product identification qualifier, goods/service number
@@ -73,11 +73,3 @@ class PIASegmentConverter(SegmentConverter[SegmentPIA]):
                 art_der_produkt_leistungsnummer_code=art_der_produkt_leistungsnummer_code
             )
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        pass

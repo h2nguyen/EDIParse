@@ -21,14 +21,14 @@ class APERAKERCSegmentHandler(ERCSegmentHandler):
     In APERAK messages, ERC segments are used in segment group SG4 to provide error codes and details.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the APERAK ERC segment handler with the appropriate converter.
+        Initialize the APERAK ERC segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser)
+        super().__init__(syntax_helper)
 
     def _update_context(self, segment: SegmentERC, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

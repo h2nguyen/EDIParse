@@ -1,8 +1,9 @@
 import unittest
 
-from ediparse.infrastructure.libs.edifactparser.converters.nad_segment_converter import NADSegmentConverter
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.converters.nad_segment_converter import \
+    MSCONSNADSegmentConverter
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentNAD
 
 
@@ -12,7 +13,7 @@ class TestNADSegmentConverter(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.converter = NADSegmentConverter(syntax_parser=self.syntax_parser)
+        self.converter = MSCONSNADSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
 
     def test_convert_internal_with_all_components(self):

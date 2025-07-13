@@ -3,7 +3,6 @@
 from typing import Optional
 
 from . import SegmentHandler
-from ..converters import BGMSegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.constants import SegmentGroup
 from ..wrappers.context import ParsingContext
@@ -22,14 +21,16 @@ class BGMSegmentHandler(SegmentHandler[SegmentBGM]):
     are used in the header of the message to identify the message type and function.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the BGM segment handler with the appropriate converter.
+        Initialize the BGM segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(BGMSegmentConverter(syntax_parser=syntax_parser))
+        super().__init__(
+            syntax_helper=syntax_helper,
+        )
 
     def _update_context(self, segment: SegmentBGM, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

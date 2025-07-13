@@ -3,13 +3,13 @@ from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters.unh_segment_converter import UNHSegmentConverter
 from ediparse.infrastructure.libs.edifactparser.exceptions import EdifactParserException
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.unh_segment_handler import MSCONSUNHSegmentHandler
-from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
-from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
-from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
-from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentUNH
 from ediparse.infrastructure.libs.edifactparser.mods.module_constants import EdifactMessageType
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCONSParsingContext
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.handlers.unh_segment_handler import MSCONSUNHSegmentHandler
+from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
+from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentUNH
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 
 
 class TestMSCONSUNHSegmentHandler(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestMSCONSUNHSegmentHandler(unittest.TestCase):
     def setUp(self):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
-        self.handler = MSCONSUNHSegmentHandler(syntax_parser=self.syntax_parser)
+        self.handler = MSCONSUNHSegmentHandler(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.interchange = EdifactInterchange()
         self.segment = SegmentUNH()
@@ -27,8 +27,8 @@ class TestMSCONSUNHSegmentHandler(unittest.TestCase):
         self.segment.nachrichten_kennung.nachrichtentyp_kennung = EdifactMessageType.MSCONS
 
     def test_init_creates_with_correct_converter(self):
-        """Test that the handler initializes with the correct converter."""
-        self.assertIsInstance(self.handler.converter, UNHSegmentConverter)
+        """Test that the handler initializes with the correct __converter."""
+        self.assertIsInstance(self.handler.__converter, UNHSegmentConverter)
 
     def test_update_context_raises_exception_when_nachrichten_kennung_is_none(self):
         """Test that _update_context raises an exception when nachrichten_kennung is None."""
@@ -84,8 +84,8 @@ class TestMSCONSUNHSegmentHandler(unittest.TestCase):
         last_segment_type = None
         current_segment_group = None
 
-        # Mock the converter's convert method to return a known segment
-        self.handler.converter.convert = MagicMock(return_value=self.segment)
+        # Mock the __converter's convert method to return a known segment
+        self.handler.__converter.convert = MagicMock(return_value=self.segment)
 
         # Mock the _update_context method to verify it's called
         self.handler._update_context = MagicMock()
@@ -94,7 +94,7 @@ class TestMSCONSUNHSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_called_once_with(
+        self.handler.__converter.convert.assert_called_once_with(
             line_number=line_number,
             element_components=element_components,
             last_segment_type=last_segment_type,
@@ -112,8 +112,8 @@ class TestMSCONSUNHSegmentHandler(unittest.TestCase):
         current_segment_group = None
         self.context.interchange = None  # This will make _can_handle return False
 
-        # Mock the converter's convert method to verify it's not called
-        self.handler.converter.convert = MagicMock()
+        # Mock the __converter's convert method to verify it's not called
+        self.handler.__converter.convert = MagicMock()
 
         # Mock the _update_context method to verify it's not called
         self.handler._update_context = MagicMock()
@@ -122,7 +122,7 @@ class TestMSCONSUNHSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.converter.convert.assert_not_called()
+        self.handler.__converter.convert.assert_not_called()
         self.handler._update_context.assert_not_called()
 
 

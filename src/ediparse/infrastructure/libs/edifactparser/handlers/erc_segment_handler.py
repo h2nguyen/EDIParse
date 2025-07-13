@@ -2,7 +2,6 @@
 from abc import ABC
 
 from . import SegmentHandler
-from ..converters import ERCSegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.segments import SegmentERC
 
@@ -19,11 +18,13 @@ class ERCSegmentHandler(SegmentHandler[SegmentERC], ABC):
     provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the ERC segment handler with the appropriate converter.
+        Initialize the ERC segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(ERCSegmentConverter(syntax_parser=syntax_parser))
+        super().__init__(
+            syntax_helper=syntax_helper,
+        )
