@@ -51,6 +51,8 @@ class MSCONSRFFSegmentConverter(RFFSegmentConverter):
             return "Beantragungsnummer"
         if qualifier_code == "AGK":
             return "Anwendungsreferenznummer"
+        if qualifier_code == "AGO":
+            return "Absenderreferenz für die Original-Nachricht"
         if qualifier_code == "MG":
             return "Gerätenummer"
         if qualifier_code == "Z13":

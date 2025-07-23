@@ -60,7 +60,7 @@ class RFFSegmentConverter(SegmentConverter[SegmentRFF]):
             context=context,
         )
         qualifier = details[0]
-        identification = details[1]
+        identification = details[1] if len(details) > 1 else None
 
         return SegmentRFF(
             bezeichner=self._get_identifier_name(
