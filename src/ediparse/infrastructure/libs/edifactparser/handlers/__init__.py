@@ -16,7 +16,6 @@ from .segment_handler import SegmentHandler
 from .segment_handler_factory import SegmentHandlerFactory
 from .bgm_segment_handler import BGMSegmentHandler
 from .cci_segment_handler import CCISegmentHandler
-from .com_segment_handler import COMSegmentHandler
 from .cta_segment_handler import CTASegmentHandler
 from .dtm_segment_handler import DTMSegmentHandler
 from .erc_segment_handler import ERCSegmentHandler

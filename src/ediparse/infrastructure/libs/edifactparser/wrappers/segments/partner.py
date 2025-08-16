@@ -23,6 +23,7 @@ class IdentifikationDesBeteiligten(BaseModel):
     - Code list responsible agency code (e.g., '9' for GS1)
     """
     beteiligter_identifikation: Optional[str] = None  # Marktpartneridentifikationsnummer MP-ID
+    #codeliste_code: Optional[str] = None
     verantwortliche_stelle_fuer_die_codepflege_code: Optional[str] = None  # e.g., '9' for GS1
 
 

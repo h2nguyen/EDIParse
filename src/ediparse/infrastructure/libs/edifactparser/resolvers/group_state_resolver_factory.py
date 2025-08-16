@@ -11,15 +11,16 @@ The factory pattern centralizes the creation of these resolvers and allows the p
 to dynamically select the appropriate resolver based on the message type being processed.
 """
 
+import importlib
+import inspect
 import logging
-from typing import Dict, Optional
+import os
+import pkgutil
+from typing import Optional
 
 from .group_state_resolver import GroupStateResolver
 
-from ..wrappers.constants import EdifactMessageType
-
-from ..mods.mscons.group_state_resolver import MsconsGroupStateResolver
-from ..mods.aperak.group_state_resolver import AperakGroupStateResolver
+from ..mods.module_constants import EdifactMessageType
 
 logger = logging.getLogger(__name__)
 
@@ -42,18 +43,65 @@ class GroupStateResolverFactory:
         resolver instances, initializing each resolver with the provided syntax parser.
 
         """
-        self.__handlers: Dict[str, GroupStateResolver] = {}
+        self.__handlers: dict[str, GroupStateResolver] = {}
         self.__register_resolvers()
 
     def __register_resolvers(self) -> None:
         """
         Initialize and register the resolver dictionary with instances of all group state resolvers.
         """
-        # Initialize handlers for each segment type
-        self.__handlers = {
-            EdifactMessageType.APERAK: AperakGroupStateResolver(),
-            EdifactMessageType.MSCONS: MsconsGroupStateResolver(),
-        }
+        # Initialize handlers for each message type by discovering them in the mods folder
+        self.__handlers = self.__discover_resolvers()
+
+    @staticmethod
+    def __discover_resolvers() -> dict[str, GroupStateResolver]:
+        """
+        Dynamically discover and instantiate all group state resolvers in the mods folder.
+
+        Returns:
+            A dictionary mapping message types to their respective group state resolver instances.
+        """
+        resolvers = {}
+
+        # Get the path to the mods folder
+        mods_path = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'mods')
+
+        # Iterate through all modules in the mods folder
+        for _, mod_name, is_pkg in pkgutil.iter_modules([mods_path]):
+            if is_pkg:
+                # Check if this module has a group_state_resolver.py file
+                resolver_filename = "group_state_resolver.py"
+                resolver_path = os.path.join(mods_path, mod_name, resolver_filename)
+
+                if os.path.exists(resolver_path):
+                    try:
+                        # Import the module
+                        module_name = f"..mods.{mod_name}.group_state_resolver"
+                        module = importlib.import_module(module_name, package=__package__)
+
+                        # Find all classes in the module that inherit from GroupStateResolver
+                        for name, obj in inspect.getmembers(module, inspect.isclass):
+                            if issubclass(obj, GroupStateResolver) and obj != GroupStateResolver:
+                                # Extract the message type from the class name
+                                # The class name should follow the pattern <MessageType>GroupStateResolver
+                                expected_suffix = "GroupStateResolver"
+                                if name.endswith(expected_suffix):
+                                    message_type_name = name.replace(expected_suffix, '')
+
+                                    # Check if this message type is defined in the EdifactMessageType enum
+                                    try:
+                                        # Convert to uppercase to match the enum values
+                                        message_type = EdifactMessageType(message_type_name.upper())
+                                        # Instantiate the resolver and add it to the dictionary
+                                        resolvers[message_type] = obj()
+                                    except ValueError:
+                                        logger.warning(
+                                            f"Message type {message_type_name} not found in EdifactMessageType enum."
+                                        )
+                    except (ImportError, AttributeError) as e:
+                        logger.warning(f"Error importing group state resolver for module {mod_name}: {e}.")
+
+        return resolvers
 
     def get_resolver(self, message_type: EdifactMessageType) -> Optional[GroupStateResolver]:
         """

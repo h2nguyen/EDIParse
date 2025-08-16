@@ -23,20 +23,20 @@ class SegmentConverter(ABC, Generic[T]):
     consistent conversion pattern for all segment types.
 
     The generic type parameter T represents the specific segment model type that 
-    a concrete converter implementation will return.
+    a concrete __converter implementation will return.
 
     Attributes:
         None
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the converter with the syntax parser to use for parsing segment components.
+        Initialize the __converter with the syntax parser to use for parsing segment components.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        self._syntax_parser = syntax_parser
+        self._syntax_parser = syntax_helper
 
     def convert(
             self,
@@ -58,7 +58,7 @@ class SegmentConverter(ABC, Generic[T]):
             element_components: List of segment components extracted from the EDI file
             last_segment_type: The type of the previous segment (e.g., 'UNH', 'BGM')
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             A typed domain model object of type T
@@ -84,14 +84,14 @@ class SegmentConverter(ABC, Generic[T]):
         """
         Internal method to convert segment components to a typed domain model object.
 
-        This abstract method must be implemented by all concrete converter classes.
+        This abstract method must be implemented by all concrete __converter classes.
         It contains the specific logic for converting a particular segment type.
 
         Args:
             element_components: List of segment components extracted from the EDIFACT file
             last_segment_type: The type of the previous segment (e.g., 'UNH', 'BGM')
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             A typed domain model object of type T
@@ -107,9 +107,9 @@ class SegmentConverter(ABC, Generic[T]):
         """
         Helper method to get a human-readable identifier name based on qualifier code.
 
-        This method can be overridden by subclasses to provide specific mappings
-        from qualifier codes to human-readable names, often depending on the
-        current segment group context.
+        This abstract method must be implemented by all concrete __converter classes.
+        It provides specific mappings from qualifier codes to human-readable names,
+        often depending on the current segment group context and message type.
 
         Args:
             qualifier_code: The qualifier code from the segment
@@ -119,7 +119,7 @@ class SegmentConverter(ABC, Generic[T]):
         Returns:
             A human-readable identifier name, or None if no mapping exists
         """
-        pass
+        return None
 
     @staticmethod
     def _convert_decimal(string_number: str, context: ParsingContext) -> float:
@@ -146,9 +146,9 @@ class SegmentConverter(ABC, Generic[T]):
         except AttributeError as ex:
             decimal_mark = EdifactConstants.DOT_DECIMAL
             logger.debug(
-                f"Decimal mark not found in UNA service string advice."
-                f" Using '{EdifactConstants.DOT_DECIMAL}' as default value."
-                f" Original error: '{ex}'"
+                f"Decimal mark not found in UNA service string advice. "
+                f"Using '{EdifactConstants.DOT_DECIMAL}' as default value. "
+                f"Original error: '{ex}'"
             )
         number = string_number.replace(decimal_mark, EdifactConstants.DOT_DECIMAL)
         return float(number)

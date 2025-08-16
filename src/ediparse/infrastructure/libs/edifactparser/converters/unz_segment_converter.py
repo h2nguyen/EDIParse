@@ -13,19 +13,19 @@ class UNZSegmentConverter(SegmentConverter[SegmentUNZ]):
     """
     Converter for UNZ (Interchange Trailer) segments.
 
-    This converter transforms UNZ segment data from EDIFACT format into a structured
+    This __converter transforms UNZ segment data from EDIFACT format into a structured
     SegmentUNZ object. The UNZ segment is used to end and check the completeness of an 
     interchange, containing the count of messages in the interchange and the interchange reference.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNZ segment converter with the syntax parser.
+        Initialize the UNZ segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -44,7 +44,7 @@ class UNZSegmentConverter(SegmentConverter[SegmentUNZ]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentUNZ object with message count and interchange reference

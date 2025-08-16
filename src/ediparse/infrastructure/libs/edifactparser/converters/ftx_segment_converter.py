@@ -18,14 +18,14 @@ class FTXSegmentConverter(SegmentConverter[SegmentFTX]):
     of errors or to give additional information about the acknowledgement.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the FTX segment converter with the syntax parser.
+        Initialize the FTX segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -44,7 +44,7 @@ class FTXSegmentConverter(SegmentConverter[SegmentFTX]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentFTX object with text details

@@ -138,20 +138,23 @@ To run the server on a Docker container, please execute the following from the r
 
 ### Running Tests
 
-1. **Running All Tests**:
+1. Running all tests with pytest:
    ```bash
    python -m pytest
    ```
 
-2. **Running Specific Tests**:
+2. Running all tests with unittest (standard library):
    ```bash
-   python -m pytest tests/test_simple_parser.py
+   python -m unittest discover -s tests -v
    ```
 
-3. **Running Tests with Verbosity**:
+3. Running a specific test module:
    ```bash
-   python -m pytest -v
+   python -m pytest tests/ediparse/infrastructure/libs/edifactparser/test_edifact_parser.py
    ```
+
+4. Notes:
+   - The repository includes both pytest- and unittest-style tests. If you encounter environment-specific pytest plugin/dependency issues, use the unittest command above as a fallback.
 
 ### Adding New Tests
 
@@ -166,7 +169,7 @@ To run the server on a Docker container, please execute the following from the r
    import unittest
    from pathlib import Path
 
-   from ediparse.infrastructure.libs import EdifactParser
+   from ediparse.infrastructure.libs.edifactparser.parser import EdifactParser
 
 
    class TestSimpleEdifactParsers(unittest.TestCase):
@@ -221,6 +224,17 @@ To run the server on a Docker container, please execute the following from the r
      - MSCONS messages: [mscons-message-example-request.txt](tests/samples/mscons-message-example-request.txt)
      - APERAK messages: [aperak-message-example-request.txt](tests/samples/aperak-message-example-request.txt)
    - Use these for testing or create new ones as needed
+
+### Testing Conventions
+
+- Use Arrange, Act, Verify (AAA) style for tests to improve readability and maintainability.
+- The project contains both unittest and pytest tests; unittest is preferred for unit tests.
+- When testing segment handlers, initialize the converter via the name-mangled private attribute on the handler instance:
+  ```python
+  handler._SegmentHandler__converter = SomeSegmentConverter(syntax_helper)
+  ```
+  This mirrors production behavior where converters are auto-detected but keeps tests deterministic.
+- New unit tests were added for GroupStateResolver and GroupStateResolverFactory; follow similar minimal, focused testing patterns.
 
 ## Code Style and Development Guidelines
 

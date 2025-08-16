@@ -12,7 +12,7 @@ from pydantic import Field
 from .segment_group import (
     SegmentGroup1, SegmentGroup2, SegmentGroup5
 )
-from ....wrappers.constants import EdifactMessageType
+from ...module_constants import EdifactMessageType
 from ....wrappers.segments.base import AbstractEdifactMessage
 from ....wrappers.segments import SegmentUNS
 

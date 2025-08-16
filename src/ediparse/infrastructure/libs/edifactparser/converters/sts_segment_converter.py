@@ -13,22 +13,25 @@ from ..wrappers.segments import (
 
 class STSSegmentConverter(SegmentConverter[SegmentSTS]):
     """
-    Converter for STS (Status) segments.
+    Abstract __converter for STS (Status) segments.
 
-    This converter transforms STS segment data from EDIFACT format into a structured
+    This __converter transforms STS segment data from EDIFACT format into a structured
     SegmentSTS object. The STS segment is used to specify status information such as 
     correction reason, gas quality, replacement value formation procedure, or 
     plausibility note.
+
+    Specific implementations for different message types (e.g., MSCONS) should be
+    provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the STS segment converter with the syntax parser.
+        Initialize the STS segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -47,7 +50,7 @@ class STSSegmentConverter(SegmentConverter[SegmentSTS]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentSTS object with status category, status code, and status reason
@@ -77,39 +80,3 @@ class STSSegmentConverter(SegmentConverter[SegmentSTS]):
                 statusanlass_code=statusanlass_code
             ) if statusanlass_code else None
         )
-
-    def _get_identifier_name(
-            self,
-            qualifier_code: Optional[str],
-            current_segment_group: Optional[SegmentGroup],
-            context: ParsingContext
-    ) -> Optional[str]:
-        """
-        Maps STS status category codes to human-readable identifier names.
-
-        This method provides specific mappings for status category codes to meaningful
-        names that describe the type of status information being provided.
-
-        Args:
-            qualifier_code: The status category code from the STS segment
-            current_segment_group: The current segment group being processed
-            context: The parsing context containing the message type and segment group context information
-
-        Returns:
-            A human-readable identifier name for the status category, or None if no mapping exists
-        """
-        if not qualifier_code:
-            return None
-        if qualifier_code == "10":
-            return "Grundlage der Energiemenge"
-        if qualifier_code == "Z31":
-            return "Gasqualität"
-        if qualifier_code == "Z32":
-            return "Ersatzwertbildungsverfahren"
-        if qualifier_code == "Z33":
-            return "Plausibilisierungshinweis"
-        if qualifier_code == "Z34":
-            return "Korrekturgrund"
-        if qualifier_code == "Z40":
-            return "Grund der Ersatzwertbildung"
-        return None

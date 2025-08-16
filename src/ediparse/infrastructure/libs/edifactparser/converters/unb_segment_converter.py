@@ -15,20 +15,20 @@ class UNBSegmentConverter(SegmentConverter[SegmentUNB]):
     """
     Converter for UNB (Interchange Header) segments.
 
-    This converter transforms UNB segment data from EDIFACT format into a structured
+    This __converter transforms UNB segment data from EDIFACT format into a structured
     SegmentUNB object. The UNB segment identifies an interchange and contains the 
     sender and recipient identification, date and time of preparation, and interchange 
     control reference.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNB segment converter with the syntax parser.
+        Initialize the UNB segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -47,7 +47,7 @@ class UNBSegmentConverter(SegmentConverter[SegmentUNB]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentUNB object with syntax identifier, sender, recipient, creation date/time, 

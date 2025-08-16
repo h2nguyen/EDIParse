@@ -157,3 +157,6 @@ cython_debug/
 !src/ediparse/adapters/inbound/rest/impl/**
 !src/ediparse/adapters/inbound/rest/apis/edifact_parser_api.py
 src/ediparse/adapters/inbound/rest/impl/__pycache__/
+
+# OS specific
+**/.DS_Store

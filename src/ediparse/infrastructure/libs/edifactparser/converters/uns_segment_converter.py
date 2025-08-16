@@ -13,19 +13,19 @@ class UNSSegmentConverter(SegmentConverter[SegmentUNS]):
     """
     Converter for UNS (Section Control) segments.
 
-    This converter transforms UNS segment data from EDIFACT format into a structured
+    This __converter transforms UNS segment data from EDIFACT format into a structured
     SegmentUNS object. The UNS segment is used to separate the header and detail 
     sections of a message.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNS segment converter with the syntax parser.
+        Initialize the UNS segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -43,7 +43,7 @@ class UNSSegmentConverter(SegmentConverter[SegmentUNS]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentUNS object with section identification code

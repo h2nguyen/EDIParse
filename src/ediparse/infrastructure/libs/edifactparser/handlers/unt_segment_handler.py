@@ -5,8 +5,8 @@ from typing import Optional
 from . import SegmentHandler
 from ..converters import UNTSegmentConverter
 from ..utils import EdifactSyntaxHelper
-from ..wrappers.context import ParsingContext
 from ..wrappers.constants import SegmentGroup
+from ..wrappers.context import ParsingContext
 from ..wrappers.segments import SegmentUNT
 
 
@@ -19,14 +19,17 @@ class UNTSegmentHandler(SegmentHandler[SegmentUNT]):
     which includes the count of segments in the message and the message reference number.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the UNT segment handler with the appropriate converter.
+        Initialize the UNT segment handler with the appropriate __converter.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(UNTSegmentConverter(syntax_parser=syntax_parser))
+        super().__init__(
+            syntax_helper=syntax_helper,
+            converter=UNTSegmentConverter(syntax_helper=syntax_helper)
+        )
 
     def _update_context(self, segment: SegmentUNT, current_segment_group: Optional[SegmentGroup],
                         context: ParsingContext) -> None:

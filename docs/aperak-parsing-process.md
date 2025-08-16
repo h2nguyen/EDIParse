@@ -518,7 +518,7 @@ class SegmentHandler(ABC, Generic[T]):
 
       This method orchestrates the segment handling process:
       1. Validates the context is appropriate for this segment
-      2. Converts the segment data using the converter
+      2. Converts the segment data using the __converter
       3. Updates the context with the converted segment
 
       Args:
@@ -585,34 +585,34 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.segments import Segment
 
 
 class BGMSegmentHandler(SegmentHandler[SegmentBGM]):
-   """
-   Handler for BGM (Beginning of Message) segments.
+    """
+    Handler for BGM (Beginning of Message) segments.
+ 
+    This handler processes BGM segments, which identify the type and function of a message
+    and transmit its identifying number. It updates the parsing context with the converted
+    BGM segment information.
+    """
 
-   This handler processes BGM segments, which identify the type and function of a message
-   and transmit its identifying number. It updates the parsing context with the converted
-   BGM segment information.
-   """
+    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+        """
+        Initialize the BGM segment handler with the appropriate __converter.
+  
+        Args:
+            syntax_parser: The syntax parser to use for parsing segment components.
+        """
+        super().__init__(BGMSegmentConverter(syntax_helper=syntax_parser))
 
-   def __init__(self, syntax_parser: EdifactSyntaxHelper):
-      """
-      Initialize the BGM segment handler with the appropriate converter.
-
-      Args:
-          syntax_parser: The syntax parser to use for parsing segment components.
-      """
-      super().__init__(BGMSegmentConverter(syntax_parser=syntax_parser))
-
-   def _update_context(self, segment: SegmentBGM, current_segment_group: Optional[SegmentGroup],
-                       context: ParsingContext) -> None:
-      """
-      Update the context with the converted BGM segment.
-
-      Args:
-          segment: The converted BGM segment.
-          current_segment_group: The current segment group.
-          context: The parsing context to update.
-      """
-      context.current_message.bgm_beginn_der_nachricht = segment
+    def _update_context(self, segment: SegmentBGM, current_segment_group: Optional[SegmentGroup],
+                        context: ParsingContext) -> None:
+        """
+        Update the context with the converted BGM segment.
+  
+        Args:
+            segment: The converted BGM segment.
+            current_segment_group: The current segment group.
+            context: The parsing context to update.
+        """
+        context.current_message.bgm_beginn_der_nachricht = segment
 ```
 
 ### Handler Registration
@@ -705,7 +705,7 @@ class SegmentConverter(ABC, Generic[T]):
 
    def __init__(self, syntax_parser: EdifactSyntaxHelper):
       """
-      Initialize the converter with a syntax parser.
+      Initialize the __converter with a syntax parser.
 
       Args:
           syntax_parser: The syntax parser to use for parsing segment components.
@@ -787,58 +787,58 @@ from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.context import ParsingContext
 from ediparse.infrastructure.libs.edifactparser.wrappers.constants import SegmentGroup
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import (
-   SegmentERC, Anwendungsfehler
+    SegmentERC, Anwendungsfehler
 )
 
 
 class ERCSegmentConverter(SegmentConverter[SegmentERC]):
-   """
-   Converter for ERC (Application Error) segments.
+    """
+    Converter for ERC (Application Error) segments.
+ 
+    This __converter transforms ERC segment data from EDIFACT format into a structured
+    SegmentERC object. The ERC segment contains error code information.
+    """
 
-   This converter transforms ERC segment data from EDIFACT format into a structured
-   SegmentERC object. The ERC segment contains error code information.
-   """
+    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+        """
+        Initialize the ERC segment __converter with the syntax parser.
+  
+        Args:
+            syntax_parser: The syntax parser to use for parsing segment components.
+        """
+        super().__init__(syntax_helper=syntax_parser)
 
-   def __init__(self, syntax_parser: EdifactSyntaxHelper):
-      """
-      Initialize the ERC segment converter with the syntax parser.
+    def _convert_internal(
+            self,
+            element_components: list[str],
+            last_segment_type: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> SegmentERC:
+        """
+        Converts ERC (Application Error) segment components to a SegmentERC object.
+  
+        The ERC segment contains error code information.
+  
+        Args:
+            element_components: List of segment components
+            last_segment_type: The type of the previous segment
+            current_segment_group: The current segment group being processed
+            context: The context to use for the __converter.
+  
+        Returns:
+            SegmentERC object with error code information
+  
+        Example:
+        ERC+Z10'
+        """
+        anwendungsfehler_code = element_components[1]
 
-      Args:
-          syntax_parser: The syntax parser to use for parsing segment components.
-      """
-      super().__init__(syntax_parser=syntax_parser)
-
-   def _convert_internal(
-           self,
-           element_components: list[str],
-           last_segment_type: Optional[str],
-           current_segment_group: Optional[SegmentGroup],
-           context: ParsingContext
-   ) -> SegmentERC:
-      """
-      Converts ERC (Application Error) segment components to a SegmentERC object.
-
-      The ERC segment contains error code information.
-
-      Args:
-          element_components: List of segment components
-          last_segment_type: The type of the previous segment
-          current_segment_group: The current segment group being processed
-          context: The context to use for the converter.
-
-      Returns:
-          SegmentERC object with error code information
-
-      Example:
-      ERC+Z10'
-      """
-      anwendungsfehler_code = element_components[1]
-
-      return SegmentERC(
-         fehlercode=Anwendungsfehler(
-            anwendungsfehler_code=anwendungsfehler_code
-         )
-      )
+        return SegmentERC(
+            fehlercode=Anwendungsfehler(
+                anwendungsfehler_code=anwendungsfehler_code
+            )
+        )
 ```
 
 ### Creating a New Converter
@@ -860,25 +860,25 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.constants import Segmen
 
 
 class XYZSegmentConverter(SegmentConverter[SegmentXYZ]):
-   def __init__(self, syntax_parser: EdifactSyntaxHelper):
-      super().__init__(syntax_parser=syntax_parser)
+    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+        super().__init__(syntax_helper=syntax_parser)
 
-   def _convert_internal(
-           self,
-           element_components: list[str],
-           last_segment_type: Optional[str],
-           current_segment_group: Optional[SegmentGroup],
-           context: ParsingContext
-   ) -> SegmentXYZ:
-      # Extract data from element_components
-      data1 = element_components[1]
-      data2 = element_components[2] if len(element_components) > 2 else None
+    def _convert_internal(
+            self,
+            element_components: list[str],
+            last_segment_type: Optional[str],
+            current_segment_group: Optional[SegmentGroup],
+            context: ParsingContext
+    ) -> SegmentXYZ:
+        # Extract data from element_components
+        data1 = element_components[1]
+        data2 = element_components[2] if len(element_components) > 2 else None
 
-      # Create and return a structured object
-      return SegmentXYZ(
-         data1=data1,
-         data2=data2
-      )
+        # Create and return a structured object
+        return SegmentXYZ(
+            data1=data1,
+            data2=data2
+        )
 ```
 
 ## Parsing Context
@@ -1047,7 +1047,7 @@ To extend the parser to support a new segment type, follow these steps:
 
    class XYZSegmentConverter(SegmentConverter[SegmentXYZ]):
        def __init__(self, syntax_parser: EdifactSyntaxHelper):
-           super().__init__(syntax_parser=syntax_parser)
+           super().__init__(syntax_helper=syntax_parser)
 
        def _convert_internal(
                self,
@@ -1193,7 +1193,7 @@ def __initialize_una_segment_logic_return_if_has_una_segment(self, edifact_text:
    Returns:
        bool: True if UNA segment was found and initialized, False otherwise
    """
-   una_segment = self.__syntax_parser.find_and_get_una_segment(edifact_text)
+   una_segment = self._syntax_parser.find_and_get_una_segment(edifact_text)
    if una_segment:
       self.__initialize_una_segment(una_segment)
       return True

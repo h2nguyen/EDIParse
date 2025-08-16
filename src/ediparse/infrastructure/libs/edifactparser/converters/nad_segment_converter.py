@@ -13,21 +13,24 @@ from ..wrappers.segments import (
 
 class NADSegmentConverter(SegmentConverter[SegmentNAD]):
     """
-    Converter for NAD (Name and Address) segments.
+    Abstract __converter for NAD (Name and Address) segments.
 
-    This converter transforms NAD segment data from EDIFACT format into a structured
+    This __converter transforms NAD segment data from EDIFACT format into a structured
     SegmentNAD object. The NAD segment is used to identify the market partners and 
     the delivery location.
+
+    Specific implementations for different message types (e.g., MSCONS, APERAK) should be
+    provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the NAD segment converter with the syntax parser.
+        Initialize the NAD segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -45,7 +48,7 @@ class NADSegmentConverter(SegmentConverter[SegmentNAD]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentNAD object with function qualifier and either market partner or delivery location
@@ -81,10 +84,10 @@ class NADSegmentConverter(SegmentConverter[SegmentNAD]):
             context: ParsingContext
     ) -> Optional[str]:
         """
-        Maps NAD qualifier codes to human-readable identifier names.
+        Maps NAD qualifier codes to human-readable identifier names for MSCONS messages.
 
         This method provides specific mappings for NAD party qualifier codes to meaningful
-        names that describe the role of the party in the message.
+        names that describe the role of the party in MSCONS messages.
 
         Args:
             qualifier_code: The party qualifier code from the NAD segment
@@ -94,12 +97,14 @@ class NADSegmentConverter(SegmentConverter[SegmentNAD]):
         Returns:
             A human-readable identifier name for the party role, or None if no mapping exists
         """
-        if not qualifier_code:
-            return None
-        if qualifier_code in ["DP", "DED", "Z15"]:
-            return "Name und Adresse"
+
         if qualifier_code == "MR":
             return "MP-ID Empfänger"
         if qualifier_code == "MS":
             return "MP-ID Absender"
-        return None
+
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

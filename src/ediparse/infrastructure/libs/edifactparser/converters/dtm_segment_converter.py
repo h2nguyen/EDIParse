@@ -1,31 +1,33 @@
 # coding: utf-8
-
 from typing import Optional
 
 from . import SegmentConverter
 from ..utils import EdifactSyntaxHelper
 from ..wrappers.context import ParsingContext
-from ..wrappers.constants import SegmentGroup, EdifactMessageType
+from ..wrappers.constants import SegmentGroup
 from ..wrappers.segments import SegmentDTM
 
 
 class DTMSegmentConverter(SegmentConverter[SegmentDTM]):
     """
-    Converter for DTM (Date/Time/Period) segments.
+    Abstract __converter for DTM (Date/Time/Period) segments.
 
-    This converter transforms DTM segment data from EDIFACT format into a structured
+    This __converter transforms DTM segment data from EDIFACT format into a structured
     SegmentDTM object. The DTM segment specifies dates, times, periods, and their 
     function within the message.
+
+    Specific implementations for different message types (e.g., MSCONS, APERAK) should be
+    provided in their respective mods folders.
     """
 
-    def __init__(self, syntax_parser: EdifactSyntaxHelper):
+    def __init__(self, syntax_helper: EdifactSyntaxHelper):
         """
-        Initialize the DTM segment converter with the syntax parser.
+        Initialize the DTM segment __converter with the syntax parser.
 
         Args:
-            syntax_parser: The syntax parser to use for parsing segment components.
+            syntax_helper: The syntax parser to use for parsing segment components.
         """
-        super().__init__(syntax_parser=syntax_parser)
+        super().__init__(syntax_helper=syntax_helper)
 
     def _convert_internal(
             self,
@@ -43,7 +45,7 @@ class DTMSegmentConverter(SegmentConverter[SegmentDTM]):
             element_components: List of segment components
             last_segment_type: The type of the previous segment
             current_segment_group: The current segment group being processed
-            context: The context to use for the converter.
+            context: The context to use for the __converter.
 
         Returns:
             SegmentDTM object with date/time function qualifier, value, and format code
@@ -83,10 +85,10 @@ class DTMSegmentConverter(SegmentConverter[SegmentDTM]):
             context: ParsingContext
     ) -> Optional[str]:
         """
-        Maps DTM qualifier codes to human-readable identifier names based on segment group context.
+        Maps DTM qualifier codes to human-readable identifier names.
 
         This method provides specific mappings for date/time function qualifiers to meaningful
-        names that describe their purpose in the message, taking into account the current
+        names that describe their purpose in EDIFACT messages, taking into account the current
         segment group context.
 
         Args:
@@ -97,47 +99,11 @@ class DTMSegmentConverter(SegmentConverter[SegmentDTM]):
         Returns:
             A human-readable identifier name for the date/time function, or None if no mapping exists
         """
-        if EdifactMessageType.MSCONS == context.message_type:
-            if not qualifier_code:
-                return None
-            elif qualifier_code == "7":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Nutzungszeitpunkt"
-            elif qualifier_code == "9":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Ablesedatum"
-            elif qualifier_code == "60":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Ausführungs- / Änderungszeitpunkt"
-            elif qualifier_code == "137":
-                return "Nachrichtendatum"
-            elif qualifier_code == "157":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Gültigkeit, Beginndatum Profilschar"
-            elif qualifier_code == "163":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Beginn Messperiode Übertragungszeitraum"
-                elif current_segment_group == SegmentGroup.SG10:
-                    return "Beginn Messperiode"
-            elif qualifier_code == "164":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Ende Messperiode Übertragungszeitraum"
-                elif current_segment_group == SegmentGroup.SG10:
-                    return "Ende Messperiode"
-            elif qualifier_code == "293":
-                if current_segment_group == SegmentGroup.SG1:
-                    return "Versionsangabe marktlokationsscharfe Allokationsliste Gas (MMMA)"
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Versionsangabe"
-            elif qualifier_code == "306":
-                if current_segment_group == SegmentGroup.SG10:
-                    return "Leistungsperiode"
-            elif qualifier_code == "492":
-                if current_segment_group == SegmentGroup.SG6:
-                    return "Bilanzierungsmonat"
+        if qualifier_code == "137":
+            return "Dokumenten-/Nachrichtendatum/-zeit"
 
-        if EdifactMessageType.APERAK == context.message_type:
-            if qualifier_code == "137":
-                return "Dokumentendatum"
-
-        return None
+        return super()._get_identifier_name(
+            qualifier_code=qualifier_code,
+            current_segment_group=current_segment_group,
+            context=context
+        )

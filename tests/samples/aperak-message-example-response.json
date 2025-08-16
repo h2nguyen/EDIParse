@@ -46,7 +46,7 @@
       },
       "dtm_nachrichtendatum": [
         {
-          "bezeichner": "Dokumentendatum",
+          "bezeichner": "Dokumenten-/Nachrichtendatum/-zeit",
           "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "137",
           "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081015+00",
           "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
@@ -59,13 +59,13 @@
       "sg2_referenzen": [
         {
           "rff_referenzangaben": {
-            "bezeichner": "Referenzangaben",
+            "bezeichner": "Nummer des zugehörigen Dokuments",
             "referenz_qualifier": "ACE",
             "referenz_identifikation": "TG9523"
           },
           "dtm_referenzdatum": [
             {
-              "bezeichner": null,
+              "bezeichner": "Referenzdatum/-zeit",
               "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "171",
               "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081015+00",
               "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
@@ -74,28 +74,22 @@
         },
         {
           "rff_referenzangaben": {
-            "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+            "bezeichner": "Absenderreferenz für die Original-Nachricht",
             "referenz_qualifier": "AGO",
             "referenz_identifikation": "12312"
           },
           "dtm_referenzdatum": [
             {
-              "bezeichner": null,
+              "bezeichner": "Referenzdatum/-zeit",
               "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "171",
               "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081016+00",
-              "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
-            },
-            {
-              "bezeichner": null,
-              "datums_oder_uhrzeits_oder_zeitspannen_funktion_qualifier": "173",
-              "datum_oder_uhrzeit_oder_zeitspanne_wert": "202104081017+00",
               "datums_oder_uhrzeit_oder_zeitspannen_format_code": "303"
             }
           ]
         },
         {
           "rff_referenzangaben": {
-            "bezeichner": "Referenznummer des Vorgangs",
+            "bezeichner": "Transaktions-Referenznummer",
             "referenz_qualifier": "TN",
             "referenz_identifikation": "1"
           },
@@ -159,7 +153,7 @@
           "sg5_nachrichtenreferenzen": [
             {
               "rff_referenz": {
-                "bezeichner": "Referenznummer der Nachricht",
+                "bezeichner": "Referenznummer einer vorangegangenen Nachricht",
                 "referenz_qualifier": "ACW",
                 "referenz_identifikation": "9878u7987gh7"
               },
@@ -182,7 +176,7 @@
             },
             {
               "rff_referenz": {
-                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "bezeichner": "Absenderreferenz für die Original-Nachricht",
                 "referenz_qualifier": "AGO",
                 "referenz_identifikation": "798790034532"
               },
@@ -215,7 +209,7 @@
           "sg5_nachrichtenreferenzen": [
             {
               "rff_referenz": {
-                "bezeichner": "Referenznummer der Nachricht",
+                "bezeichner": "Referenznummer einer vorangegangenen Nachricht",
                 "referenz_qualifier": "ACW",
                 "referenz_identifikation": "9211574a24fa"
               },
@@ -223,7 +217,7 @@
             },
             {
               "rff_referenz": {
-                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "bezeichner": "Absenderreferenz für die Original-Nachricht",
                 "referenz_qualifier": "AGO",
                 "referenz_identifikation": "9211574a24fa"
               },
@@ -256,7 +250,7 @@
           "sg5_nachrichtenreferenzen": [
             {
               "rff_referenz": {
-                "bezeichner": "Referenznummer des Vorgangs",
+                "bezeichner": "Transaktions-Referenznummer",
                 "referenz_qualifier": "TN",
                 "referenz_identifikation": "200815"
               },
@@ -279,7 +273,7 @@
             },
             {
               "rff_referenz": {
-                "bezeichner": "Netzbetreiber",
+                "bezeichner": "MP-ID des nachfolgenden Netzbetreibers",
                 "referenz_qualifier": "Z08",
                 "referenz_identifikation": "4399901957459"
               },
@@ -297,7 +291,7 @@
           "sg5_nachrichtenreferenzen": [
             {
               "rff_referenz": {
-                "bezeichner": "Referenznummer der Nachricht",
+                "bezeichner": "Referenznummer einer vorangegangenen Nachricht",
                 "referenz_qualifier": "ACW",
                 "referenz_identifikation": "123ABD931EF"
               },
@@ -305,7 +299,7 @@
             },
             {
               "rff_referenz": {
-                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "bezeichner": "Absenderreferenz für die Original-Nachricht",
                 "referenz_qualifier": "AGO",
                 "referenz_identifikation": "123ABD931EF"
               },
@@ -323,7 +317,7 @@
           "sg5_nachrichtenreferenzen": [
             {
               "rff_referenz": {
-                "bezeichner": "Referenznummer der Nachricht",
+                "bezeichner": "Referenznummer einer vorangegangenen Nachricht",
                 "referenz_qualifier": "ACW",
                 "referenz_identifikation": "93AF1274CDQ"
               },
@@ -331,7 +325,7 @@
             },
             {
               "rff_referenz": {
-                "bezeichner": "Dokumentennummer der referenzierten Nachricht",
+                "bezeichner": "Absenderreferenz für die Original-Nachricht",
                 "referenz_qualifier": "AGO",
                 "referenz_identifikation": "93AF1274CDQ"
               },
