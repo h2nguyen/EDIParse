@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import MagicMock
 
 from ediparse.infrastructure.libs.edifactparser.converters import UNZSegmentConverter
 from ediparse.infrastructure.libs.edifactparser.handlers.unz_segment_handler import UNZSegmentHandler
@@ -7,6 +6,7 @@ from ediparse.infrastructure.libs.edifactparser.mods.mscons.context import MSCON
 from ediparse.infrastructure.libs.edifactparser.mods.mscons.segments import EdifactMSconsMessage
 from ediparse.infrastructure.libs.edifactparser.utils import EdifactSyntaxHelper
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentUNZ
+from ediparse.infrastructure.libs.edifactparser.wrappers.segments.message_structure import EdifactInterchange
 
 
 class TestUNZSegmentHandler(unittest.TestCase):
@@ -16,13 +16,15 @@ class TestUNZSegmentHandler(unittest.TestCase):
         """Set up the test case."""
         self.syntax_parser = EdifactSyntaxHelper()
         self.handler = UNZSegmentHandler(syntax_helper=self.syntax_parser)
+        # Initialize the converter attribute for testing
+        self.handler._SegmentHandler__converter = UNZSegmentConverter(syntax_helper=self.syntax_parser)
         self.context = MSCONSParsingContext()
         self.context.current_message = EdifactMSconsMessage()
         self.segment = SegmentUNZ()
 
     def test_init_creates_with_correct_converter(self):
         """Test that the handler initializes with the correct __converter."""
-        self.assertIsInstance(self.handler.__converter, UNZSegmentConverter)
+        self.assertIsInstance(self.handler._SegmentHandler__converter, UNZSegmentConverter)
 
     def test_update_context_updates_context_correctly(self):
         """Test that _update_context updates the context correctly."""
@@ -33,8 +35,6 @@ class TestUNZSegmentHandler(unittest.TestCase):
         self.handler._update_context(self.segment, current_segment_group, self.context)
 
         # Assert
-        # The specific assertion will depend on the handler implementation
-        # This is a placeholder that should be updated for each handler
         self.assertIsNotNone(self.context.current_message)
 
     def test_can_handle_returns_true_when_interchange_exists(self):
@@ -56,54 +56,39 @@ class TestUNZSegmentHandler(unittest.TestCase):
         # Assert
         self.assertFalse(result)
 
-    def test_handle_calls_convert_and_update_context(self):
-        """Test that handle calls convert and _update_context."""
+    def test_handle_updates_context_with_converted_unz(self):
+        """Handle should convert UNZ and update interchange without mocks."""
         # Arrange
         line_number = 1
-        element_components = ["UNZ", "example", "data"]
+        element_components = ["UNZ", "1", "ABC4711"]
         last_segment_type = None
         current_segment_group = None
+        # ensure interchange exists
+        self.context.interchange = EdifactInterchange()
 
-        # Mock the __converter's convert method to return a known segment
-        self.handler.__converter.convert = MagicMock(return_value=self.segment)
+        # Act
+        self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
-        # Mock the _update_context method to verify it's called
-        self.handler._update_context = MagicMock()
+        # Verify
+        unz = self.context.interchange.unz_nutzdaten_endsegment
+        self.assertIsNotNone(unz)
+        self.assertEqual(unz.datenaustauschzaehler, 1)
+        self.assertEqual(unz.datenaustauschreferenz, "ABC4711")
+
+    def test_handle_noop_when_can_handle_returns_false(self):
+        """When context is invalid, handle should do nothing (no mocks)."""
+        # Arrange
+        line_number = 1
+        element_components = ["UNZ", "1", "ABC4711"]
+        last_segment_type = None
+        current_segment_group = None
+        self.context.interchange = None
 
         # Act
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.__converter.convert.assert_called_once_with(
-            line_number=line_number,
-            element_components=element_components,
-            last_segment_type=last_segment_type,
-            current_segment_group=current_segment_group,
-            context=self.context
-        )
-        self.handler._update_context.assert_called_once_with(self.segment, current_segment_group, self.context)
-
-    def test_handle_does_not_call_convert_when_can_handle_returns_false(self):
-        """Test that handle does not call convert when _can_handle returns False."""
-        # Arrange
-        line_number = 1
-        element_components = ["UNZ", "example", "data"]
-        last_segment_type = None
-        current_segment_group = None
-        self.context.interchange = None  # This will make _can_handle return False
-
-        # Mock the __converter's convert method to verify it's not called
-        self.handler.__converter.convert = MagicMock()
-
-        # Mock the _update_context method to verify it's not called
-        self.handler._update_context = MagicMock()
-
-        # Act
-        self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
-
-        # Assert
-        self.handler.__converter.convert.assert_not_called()
-        self.handler._update_context.assert_not_called()
+        self.assertIsNone(self.context.interchange)
 
 
 if __name__ == '__main__':

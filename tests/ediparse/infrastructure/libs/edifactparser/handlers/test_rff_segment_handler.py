@@ -9,7 +9,7 @@ from ediparse.infrastructure.libs.edifactparser.wrappers.constants import Segmen
 from ediparse.infrastructure.libs.edifactparser.wrappers.segments import SegmentRFF
 
 
-class TestMSCONSRFFSegmentHandler(unittest.TestCase):
+class TestRFFSegmentHandler(unittest.TestCase):
     """Test case for the MSCONSRFFSegmentHandler class."""
 
     def setUp(self):
@@ -22,7 +22,7 @@ class TestMSCONSRFFSegmentHandler(unittest.TestCase):
 
     def test_init_creates_without_converter(self):
         """Test that the handler initializes without a __converter."""
-        self.assertIsNone(self.handler.__converter)
+        self.assertIsNone(self.handler._SegmentHandler__converter)
 
     def test_update_context_updates_context_correctly_for_sg1(self):
         """Test that _update_context updates the context correctly for SG1."""
@@ -86,9 +86,9 @@ class TestMSCONSRFFSegmentHandler(unittest.TestCase):
         mock_converter.convert.return_value = self.segment
 
         def side_effect(context):
-            self.handler.__converter = mock_converter
+            self.handler._SegmentHandler__converter = mock_converter
 
-        self.handler.__auto_detect_converter = MagicMock(side_effect=side_effect)
+        self.handler._SegmentHandler__auto_detect_converter = MagicMock(side_effect=side_effect)
 
         # Mock the _update_context method to verify it's called
         self.handler._update_context = MagicMock()
@@ -97,7 +97,7 @@ class TestMSCONSRFFSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.__auto_detect_converter.assert_called_once_with(self.context)
+        self.handler._SegmentHandler__auto_detect_converter.assert_called_once_with(self.context)
         mock_converter.convert.assert_called_once_with(
             line_number=line_number,
             element_components=element_components,
@@ -117,7 +117,7 @@ class TestMSCONSRFFSegmentHandler(unittest.TestCase):
         self.context.current_message = None  # This will make _can_handle return False
 
         # Mock the _auto_detect_converter method to verify it's not called
-        self.handler.__auto_detect_converter = MagicMock()
+        self.handler._SegmentHandler__auto_detect_converter = MagicMock()
 
         # Mock the _update_context method to verify it's not called
         self.handler._update_context = MagicMock()
@@ -126,7 +126,7 @@ class TestMSCONSRFFSegmentHandler(unittest.TestCase):
         self.handler.handle(line_number, element_components, last_segment_type, current_segment_group, self.context)
 
         # Assert
-        self.handler.__auto_detect_converter.assert_not_called()
+        self.handler._SegmentHandler__auto_detect_converter.assert_not_called()
         self.handler._update_context.assert_not_called()
 
 
