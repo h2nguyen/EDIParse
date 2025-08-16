@@ -9,6 +9,10 @@ info:
   license:
     name: Apache License, Version 2.0
     url: https://github.com/h2nguyen/EDIParse/blob/main/LICENSE
+  contact:
+    name: Viet Hai Nguyen
+    url: https://github.com/h2nguyen/EDIParse
+    email: me@viethainguyen.de
 
 servers:
   - url: http://0.0.0.0:{port}
