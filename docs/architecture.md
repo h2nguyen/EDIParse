@@ -22,7 +22,7 @@
       * [5.1.1 REST API Adapter](#511-rest-api-adapter)
       * [5.1.2 Application Services](#512-application-services)
       * [5.1.3 Domain](#513-domain)
-      * [5.1.4 EDIFACT MSCONS Parser Library](#514-edifact-mscons-parser-library)
+      * [5.1.4 EDIFACT Parser Library](#514-edifact-parser-library)
   * [6. Runtime View](#6-runtime-view)
     * [6.1 Sequence Diagrams](#61-sequence-diagrams)
   * [7. Deployment View](#7-deployment-view)
@@ -55,22 +55,22 @@
 ### 1.1 Requirements Overview
 
 **EDIParse** is a lightweight and extensible REST-API service that parses **EDIFACT message** text inputs or files
-(e.g. MSCONS) and returns structured JSON output. The EDIFACT specific messages are used in the energy sector (DE/AT/CH).
+(e.g., APERAK, MSCONS) and returns structured JSON output. The EDIFACT specific messages are used in the energy sector (DE/AT/CH).
 The application provides following REST-API endpoints for: 
 
-- Parsing MSCONS messages from text input
-- Parsing MSCONS messages from file input
-- Downloading parsed MSCONS results as JSON text string
-- Downloading parsed MSCONS results as JSON files
+- Parsing EDIFACT messages (currently MSCONS, APERAK) from text input
+- Parsing EDIFACT messages (currently MSCONS, APERAK) from file input
+- Downloading parsed results as JSON text string
+- Downloading parsed results as JSON files
 
 ### 1.2 Quality Goals
 
-| Priority | Quality Goal    | Scenario                                                                      |
-|----------|-----------------|-------------------------------------------------------------------------------|
-| 1        | Performance     | The system should parse MSCONS messages efficiently, even for large files     |
-| 2        | Usability       | The API should be easy to use with clear documentation                        |
-| 3        | Maintainability | The code should follow hexagonal architecture principles for easy maintenance |
-| 4        | Reliability     | The system should handle malformed MSCONS messages gracefully                 |
+| Priority | Quality Goal    | Scenario                                                                                          |
+|----------|-----------------|---------------------------------------------------------------------------------------------------|
+| 1        | Performance     | The system should parse EDIFACT messages (e.g., MSCONS, APERAK) efficiently, even for large files |
+| 2        | Usability       | The API should be easy to use with clear documentation                                            |
+| 3        | Maintainability | The code should follow hexagonal architecture principles for easy maintenance                     |
+| 4        | Reliability     | The system should handle malformed MSCONS messages gracefully                                     |
 
 ### 1.3 Stakeholders
 
@@ -90,18 +90,21 @@ The application provides following REST-API endpoints for:
 
 ### 2.2 Organizational Constraints
 
-- The application must comply with the EDIFACT MSCONS 2.4c standard
+- The application must comply with the EDIFACT MSCONS 2.4c and APERAK UN D.07B S3 2.1i standards
 - The API must be RESTful
 
 ## 3. Context and Scope
 
 ### 3.1 Business Context
 
-EDIParse serves as a parser for EDIFACT MSCONS messages, which are used in the energy sector for exchanging metered services consumption reports. The application provides a RESTful API for parsing these messages and returning structured JSON results.
+EDIParse serves as a parser for EDIFACT messages (currently MSCONS and APERAK), which are used in the energy sector for
+exchanging metered services consumption reports and acknowledgements. The application provides a RESTful API for parsing
+these messages and returning structured JSON results.
 
 ### 3.2 Technical Context
 
-The application is built using Python and FastAPI, with Docker for containerization. It exposes HTTP endpoints for parsing MSCONS messages and returning structured results.
+The application is built using Python and FastAPI, with Docker for containerization. It exposes HTTP endpoints for
+parsing EDIFACT messages (currently MSCONS and APERAK) and returning structured results.
 
 ### 3.3 Use Case Diagram
 
@@ -127,10 +130,10 @@ skinparam actorFontColor #000000
 actor "API User" as user
 
 rectangle "EDIParse" {
-  usecase "Parse MSCONS Message from Text" as UC1
-  usecase "Parse MSCONS Message from File" as UC2
-  usecase "Download Parsed MSCONS Result as JSON Text String" as UC3
-  usecase "Download Parsed MSCONS Result as JSON File" as UC4
+  usecase "Parse EDIFACT Message (Text)" as UC1
+  usecase "Parse EDIFACT Message (File)" as UC2
+  usecase "Download Parsed Result as JSON Text String" as UC3
+  usecase "Download Parsed Result as JSON File" as UC4
 
   ' Arrange use cases vertically
   UC1 -[hidden]-> UC2
@@ -144,23 +147,23 @@ user --> UC3
 user --> UC4
 
 note right of UC1
-  Parse raw MSCONS message provided as text
-  and return structured JSON result
+  Parse raw EDIFACT message provided as text
+  and return a structured JSON result
 end note
 
 note right of UC2
-  Parse MSCONS message from uploaded file
-  and return structured JSON result
+  Parse EDIFACT message from uploaded file
+  and return a structured JSON result
 end note
 
 note right of UC3
-  Parse MSCONS message and return result
+  Parse EDIFACT message and return result
   as JSON text string
 end note
 
 note right of UC4
-  Parse MSCONS message and return result
-  as downloadable JSON file
+  Parse EDIFACT message and return result
+  as a downloadable JSON file
 end note
 
 @enduml
@@ -168,7 +171,9 @@ end note
 
 ## 4. Solution Strategy
 
-The application follows a hexagonal architecture (also known as ports and adapters architecture), which is very similar to clean architecture. This architectural style organizes the application around the domain, with clear boundaries between the domain and external concerns.
+The application follows a hexagonal architecture (also known as ports and adapters architecture), which is very similar
+to clean architecture. This architectural style organizes the application around the domain, with clear boundaries
+between the domain and external concerns.
 
 The application is structured with the following layers:
 
@@ -187,9 +192,11 @@ The application is structured with the following layers:
   - **Outbound Adapters**: Implement interfaces defined by the domain to interact with external systems
 
 - **Library Layer**: Contains reusable libraries that can be used by other projects
-  - **EDIFACT MSCONS Parser**: Implements the parsing functionality as a reusable library
+  - **EDIFACT Parser Library**: Implements the EDIFACT parsing functionality as a reusable library (currently supports
+    MSCONS and APERAK)
 
-The application uses dependency injection to ensure loose coupling between components and to facilitate testing. This approach allows the domain to remain isolated from external concerns, making it easier to test and maintain.
+The application uses dependency injection to ensure loose coupling between components and to facilitate testing. This
+approach allows the domain to remain isolated from external concerns, making it easier to test and maintain.
 
 ### 4.1 Hexagonal Architecture Diagram
 
@@ -224,7 +231,7 @@ package "Adapters Layer" #d4f1f9 {
 
 ' Supporting Layers
 package "Library Layer" #e1d5e7 {
-  component "EDIFACT MSCONS Parser" as Library
+  component "EDIFACT Parser Library" as Library
 }
 
 ' External connections
@@ -243,7 +250,9 @@ Application --> Library : Uses
 @enduml
 ```
 
-This diagram shows how the different layers interact with each other and with the external world. The Domain Layer is at the core, surrounded by the Application Layer, which implements the use cases. The Adapters Layer provides the interfaces to the external world, and the Library Layer contains reusable components like the EDIFACT MSCONS Parser.
+This diagram shows how the different layers interact with each other and with the external world. The Domain Layer is at
+the core, surrounded by the Application Layer, which implements the use cases. The Adapters Layer provides the
+interfaces to the external world, and the Library Layer contains reusable components like the EDIFACT Parser Library.
 
 ## 5. Building Block View
 
@@ -287,7 +296,7 @@ package "EDIParse" {
 
   ' Library Layer
   package "Library Layer" #e1d5e7 {
-    [EDIFACT MSCONS Parser Library] as Parser
+    [EDIFACT Parser Library] as Parser
   }
 }
 
@@ -322,20 +331,20 @@ note right of Domain
 end note
 
 note right of Parser
-  Reusable library for parsing EDIFACT MSCONS messages
+  Reusable library for parsing EDIFACT messages (e.g., MSCONS, APERAK)
   Implements segment handlers
   Converts raw text to structured data
   Can be used independently in other projects
 end note
 
 note bottom of HttpApi
-  REST API for parsing MSCONS messages
+  REST API for parsing EDIFACT messages (MSCONS, APERAK)
   Endpoints for text and file input
   Returns JSON text strings or downloadable JSON files
 end note
 
 note bottom of ParserPort
-  Interface for parsing MSCONS messages
+  Interface for parsing EDIFACT messages
   Abstracts the actual parser implementation
   Allows for different parser implementations
 end note
@@ -345,19 +354,24 @@ end note
 
 #### 5.1.1 REST API Adapter
 
-The REST API Adapter is responsible for handling HTTP requests and responses. It uses FastAPI to expose endpoints for parsing MSCONS messages and returning structured results, either as JSON text strings or as downloadable JSON files.
+The REST API Adapter is responsible for handling HTTP requests and responses. It uses FastAPI to expose endpoints for
+parsing MSCONS messages and returning structured results, either as JSON text strings or as downloadable JSON files.
 
 #### 5.1.2 Application Services
 
-The Application Services layer implements the application use cases. It coordinates domain operations and manages transaction boundaries.
+The Application Services layer implements the application use cases. It coordinates domain operations and manages
+transaction boundaries.
 
 #### 5.1.3 Domain
 
-The Domain layer contains domain models and business rules. It defines ports for external interactions and contains pure business logic without dependencies.
+The Domain layer contains domain models and business rules. It defines ports for external interactions and contains pure
+business logic without dependencies.
 
-#### 5.1.4 EDIFACT MSCONS Parser Library
+#### 5.1.4 EDIFACT Parser Library
 
-The EDIFACT MSCONS Parser is implemented as a reusable library that can be used by other projects. It is responsible for parsing EDIFACT MSCONS messages, implementing segment handlers, and converting raw text to structured data.
+The EDIFACT Parser Library is implemented as a reusable library that can be used by other projects. It is responsible
+for parsing EDIFACT messages (currently MSCONS and APERAK), implementing segment handlers, and converting raw text to
+structured data.
 
 The parser library consists of several key components:
 - **Parser**: The main entry point that orchestrates the parsing process
@@ -366,34 +380,36 @@ The parser library consists of several key components:
 - **Wrappers**: Define the structure of the parsed data (context models)
 - **Context**: Maintains state during the parsing process
 
-This library is designed to be independent of the application's use cases, allowing it to be reused in different contexts and projects.
+This library is designed to be independent of the application's use cases, allowing it to be reused in different
+contexts and projects.
 
-For detailed information about the parsing process, segment types, handlers, converters, and how to extend the parser, see the [MSCONS Parsing Process Documentation](mscons-parsing-process.md).
+For detailed information about the parsing process, segment types, handlers, converters, and how to extend the parser,
+see the [MSCONS Parsing Process Documentation](mscons-parsing-process.md).
 
 ## 6. Runtime View
 
 ### 6.1 Sequence Diagrams
 
-The following diagram shows the interaction between components when parsing MSCONS messages:
+The following diagram shows the interaction between components when parsing EDIFACT messages:
 
 ```plantuml
 @startuml "EDIParse Sequence Diagram"
 
 actor "API User" as User
 participant "REST API\n(FastAPI)" as API
-participant "ParseMSCONSRouter" as Router
+participant "ParseRouter" as Router
 participant "ParserService" as Service
 participant "ParseMessageUseCase" as UseCase
-participant "EdifactMSCONSParser" as Parser
+participant "EdifactParser" as Parser
 participant "SegmentHandlerFactory" as Factory
 participant "SegmentHandlers" as Handlers
 
-== Parse MSCONS Message from Text ==
+== Parse EDIFACT Message from Text ==
 
 User -> API: POST /parse-raw-format
 activate API
 
-API -> Router: parse_mscons_raw_format(body, limit_mode)
+API -> Router: parse_raw_format(body, limit_mode)
 activate Router
 
 Router -> Service: parse_message(message_content, max_lines_to_parse)
@@ -621,29 +637,39 @@ ProdContainer --> APIClients : HTTP responses
 
 ### 7.1 Development Environment
 
-In the development environment, the application is run using Docker Compose on the developer's workstation. The Docker Compose file defines a single service that builds from the Dockerfile using the "service" target. The service exposes port 8000 and runs the application using uvicorn.
+In the development environment, the application is run using Docker Compose on the developer's workstation. The Docker
+Compose file defines a single service that builds from the Dockerfile using the "service" target. The service exposes
+port 8000 and runs the application using uvicorn.
 
 ### 7.2 Testing Environment
 
-The testing environment is part of a CI/CD pipeline that builds the Docker image, runs tests, and produces an artifact (Docker image) that can be deployed to production. The Dockerfile includes a dedicated test stage that runs the tests using pytest.
+The testing environment is part of a CI/CD pipeline that builds the Docker image, runs tests, and produces an artifact
+(Docker image) that can be deployed to production. The Dockerfile includes a dedicated test stage that runs the tests
+using pytest.
 
 ### 7.3 Production Environment
 
-In the production environment, the application is deployed as a Docker container in a cloud platform with container orchestration capabilities. The container runs the FastAPI application with the EDIFACT MSCONS Parser library. Clients interact with the application through HTTP requests to the exposed API endpoints.
+In the production environment, the application is deployed as a Docker container in a cloud platform with container
+orchestration capabilities. The container runs the FastAPI application with the EDIFACT MSCONS Parser library. Clients
+interact with the application through HTTP requests to the exposed API endpoints.
 
 ## 8. Cross-cutting Concepts
 
 ### 8.1 Domain Models
 
-The application uses domain models to represent EDIFACT MSCONS messages and their components. These models are defined in the Domain layer and are used throughout the application.
+The application uses domain models to represent EDIFACT MSCONS messages and their components. These models are defined
+in the Domain layer and are used throughout the application.
 
-The domain models include representations of MSCONS message structures, segment types, segment groups, and context models. These models are essential for the parsing process and for representing the parsed data in a structured format.
+The domain models include representations of MSCONS message structures, segment types, segment groups, and context
+models. These models are essential for the parsing process and for representing the parsed data in a structured format.
 
-For detailed information about MSCONS message structure, segment types, segment groups, and context models, see the [MSCONS Parsing Process Documentation](mscons-parsing-process.md).
+For detailed information about MSCONS message structure, segment types, segment groups, and context models, see the
+[MSCONS Parsing Process Documentation](mscons-parsing-process.md).
 
 ### 8.2 Exception Handling
 
-The application uses custom exceptions to handle errors during parsing. These exceptions are caught and converted to appropriate HTTP responses.
+The application uses custom exceptions to handle errors during parsing. These exceptions are caught and converted to
+appropriate HTTP responses.
 
 ### 8.3 Handlers and Converters
 
@@ -653,21 +679,26 @@ The EDIFACT MSCONS Parser Library uses a system of handlers and converters to pr
 - **Segment Converters**: Transform raw segment data into structured context objects
 - **Parsing Context**: Maintains state during the parsing process
 
-This approach allows for a modular and extensible parsing system where each segment type is handled by a dedicated handler and converter.
+This approach allows for a modular and extensible parsing system where each segment type is handled by a dedicated
+handler and converter.
 
-For detailed information about segment handlers, converters, and the parsing context, see the [MSCONS Parsing Process Documentation](mscons-parsing-process.md).
+For detailed information about segment handlers, converters, and the parsing context, see the
+[MSCONS Parsing Process Documentation](mscons-parsing-process.md).
 
 ### 8.4 Logging
 
-The application uses Python's logging module to log events and errors. The logging configuration is defined in the infrastructure layer.
+The application uses Python's logging module to log events and errors. The logging configuration is defined in the
+infrastructure layer.
 
 ## 9. Architecture Decisions
 
-This section documents the key architectural decisions made for the EDIParse project using the Architecture Decision Record (ADR) format. Each decision is presented in a structured format for better readability and maintainability.
+This section documents the key architectural decisions made for the EDIParse project using the Architecture Decision
+Record (ADR) format. Each decision is presented in a structured format for better readability and maintainability.
 
 ### 9.1 Architecture Decision Records (ADRs) Overview
 
-Architecture Decision Records (ADRs) are documents that capture important architectural decisions made along with their context and consequences. The ADR format used in this document includes the following elements:
+Architecture Decision Records (ADRs) are documents that capture important architectural decisions made along with their
+context and consequences. The ADR format used in this document includes the following elements:
 
 - **Title/ID**: A unique identifier and descriptive title for the decision
 - **Status**: The current status of the decision (proposed, accepted, deprecated, etc.)
@@ -720,11 +751,13 @@ Architecture Decision Records (ADRs) are documents that capture important archit
 
 ### 10.1 Performance
 
-The application should be able to parse MSCONS messages efficiently, even for large files. The parsing process is optimized to handle large messages with minimal memory usage.
+The application should be able to parse MSCONS messages efficiently, even for large files. The parsing process is
+optimized to handle large messages with minimal memory usage.
 
 ### 10.2 Usability
 
-The API is designed to be easy to use with clear documentation. The OpenAPI specification provides detailed information about the endpoints and their parameters.
+The API is designed to be easy to use with clear documentation. The OpenAPI specification provides detailed information
+about the endpoints and their parameters.
 
 ### 10.3 Maintainability
 
@@ -736,32 +769,43 @@ The application handles malformed MSCONS messages gracefully and provides clear 
 
 ## 11. Risks and Technical Debt
 
-- The application currently has a limit on the number of lines it can parse (2442 lines by default). This may need to be increased for larger messages. However, this limit was introduced because the Swagger-UI crashed when trying to load large response payloads, particularly for endpoints that return JSON text strings for display in the UI.
-- The application does not currently support all EDIFACT message types. Additional segment handlers may need to be implemented.
+- The application currently has a limit on the number of lines it can parse (2442 lines by default). This may need to be
+  increased for larger messages. However, this limit was introduced because the Swagger-UI crashed when trying to load
+  large response payloads, particularly for endpoints that return JSON text strings for display in the UI.
+- The application does not currently support all EDIFACT message types. Additional segment handlers may need to be
+  implemented.
 
 ### 11.1 Extending the Parser Library
 
-The EDIFACT Parser is implemented as a reusable library that can be used by other projects. The library is designed to be extensible, allowing developers to add support for new segment types or modify existing behavior.
+The EDIFACT Parser is implemented as a reusable library that can be used by other projects. The library is designed to
+be extensible, allowing developers to add support for new segment types or modify existing behavior.
 
-The parser can be extended to support new segment types by implementing new handlers and converters, creating context models for the new segments, and registering the handlers with the `SegmentHandlerFactory`.
+The parser can be extended to support new segment types by implementing new handlers and converters, creating context
+models for the new segments, and registering the handlers with the `SegmentHandlerFactory`.
 
-Some segments, like UNA (Service String Advice), require special handling due to their role in defining the syntax of the EDIFACT message.
+Some segments, like UNA (Service String Advice), require special handling due to their role in defining the syntax of
+the EDIFACT message.
 
-For detailed information about how to extend the parser and handle special segments, see the [MSCONS Parsing Process Documentation](mscons-parsing-process.md) and [APERAK Parsing Process Documentation](aperak-parsing-process.md).
+For detailed information about how to extend the parser and handle special segments, see the
+[MSCONS Parsing Process Documentation](mscons-parsing-process.md) and [APERAK Parsing Process Documentation](aperak-parsing-process.md).
 
 ### 11.2 Extending with New Message Types
 
-The application is designed to support multiple EDIFACT message types (currently MSCONS and APERAK) through a flexible architecture that uses composition, inheritance, and Pydantic v2's Discriminated Unions feature.
+The application is designed to support multiple EDIFACT message types (currently MSCONS and APERAK) through a flexible
+architecture that uses composition, inheritance, and Pydantic v2's Discriminated Unions feature.
 
 #### 11.2.1 Design Patterns for Message Type Extension
 
 The application uses several design patterns to facilitate the extension with new message types:
 
-1. **Inheritance Pattern**: All message types inherit from an abstract base class `AbstractEdifactMessage` that defines the common structure and interface.
+1. **Inheritance Pattern**: All message types inherit from an abstract base class `AbstractEdifactMessage` that defines
+   the common structure and interface.
 
-2. **Composition Pattern**: The `EdifactInterchange` class uses composition to combine different types of EDIFACT messages within a single interchange.
+2. **Composition Pattern**: The `EdifactInterchange` class uses composition to combine different types of EDIFACT
+   messages within a single interchange.
 
-3. **Discriminated Unions**: Pydantic v2's Discriminated Unions feature is used to automatically determine the correct message type during deserialization based on a 'message_type' field.
+3. **Discriminated Unions**: Pydantic v2's Discriminated Unions feature is used to automatically determine the correct
+   message type during deserialization based on a 'message_type' field.
 
 Here's a class diagram illustrating these patterns:
 
@@ -866,7 +910,8 @@ src/ediparse/infrastructure/libs/edifactparser/
     └── ...
 ```
 
-This structure allows new message types to be added without modifying existing code, by creating a new directory under the 'mods' folder.
+This structure allows new message types to be added without modifying existing code, by creating a new directory under
+the 'mods' folder.
 
 #### 11.2.3 Adding a New Message Type
 

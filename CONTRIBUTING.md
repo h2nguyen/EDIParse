@@ -39,9 +39,21 @@ Please refer to the [README.md](README.md) for detailed instructions on setting 
 
 ## Testing
 
-- Ensure all tests pass before submitting a pull request
-- Write new tests for new features or bug fixes
-- Run tests using `python -m pytest`
+- Ensure all tests pass before submitting a pull request.
+- Write new tests for new features or bug fixes.
+- You can run tests with pytest:
+  ```bash
+  python -m pytest -v
+  ```
+  Or, as a fallback when encountering environment-specific pytest/plugin issues, use unittest:
+  ```bash
+  python -m unittest discover -s tests -v
+  ```
+- Follow Arrange, Act, Verify (AAA) style in tests.
+- When testing segment handlers, initialize the converter via the name-mangled private attribute to keep tests deterministic:
+  ```python
+  handler._SegmentHandler__converter = SomeSegmentConverter(syntax_helper)
+  ```
 
 ## Pull Request Process
 
